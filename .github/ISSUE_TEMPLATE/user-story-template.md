@@ -11,6 +11,6 @@ type: Feature
 ### User Story
 As a user, ...
 
-### Acceptance criteria
+### Definition of Done
 - Registration page is accessible
 - ...
