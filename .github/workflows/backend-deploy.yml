@@ -1,0 +1,44 @@
+name: Deploy Backend to Elastic Beanstalk
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+          cache-dependency-path: ./backend/package-lock.json
+
+      - name: Install and Build Backend
+        working-directory: ./backend
+        run: |
+          npm install
+          npm run build
+
+      - name: Generate Deployment Package
+        run: |
+          cd backend
+          zip -r ../deploy.zip dist package.json package-lock.json node_modules
+
+      - name: Deploy to Elastic Beanstalk
+        uses: einaregilsson/beanstalk-deploy@v22
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: flowstate
+          environment_name: Flowstate-env
+          version_label: 'backend-${{ github.sha }}'
+          region: eu-north-1
+          deployment_package: deploy.zip
