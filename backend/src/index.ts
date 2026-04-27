@@ -17,7 +17,7 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 const MONGO_URI = process.env.MONGO_URI || '';
 
-// Database connection (Kommentoitu pois testauksen ajaksi)
+// Database connection (commented for testing.)
 /*
 if (MONGO_URI) {
   mongoose
