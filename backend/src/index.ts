@@ -25,6 +25,7 @@ mongoose
  *
  * */
 
+//basic routes for testing
 app.get('/', (req, res) => res.send('Backend rullaa siististi! 🚀'));
 
 app.listen(PORT, () => console.log(`✅ Server portissa ${PORT}`));
