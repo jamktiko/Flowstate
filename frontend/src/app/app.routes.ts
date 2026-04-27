@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { WelcomePage } from './features/landing/welcome/welcome-page';
+import { WelcomePage } from './features/welcome/welcome-page';
 
 export const routes: Routes = [
   {
