@@ -1,9 +1,17 @@
 import dotenv from 'dotenv';
+// Load environment variables before importing modules that read process.env at import time.
 dotenv.config();
 
 import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
+/* 
+ROUTES WILL BE IMPORTED HERE
+*
+*
+*
+* 
+*/
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -18,11 +26,17 @@ if (MONGO_URI) {
     .catch((err) => console.error('❌ Connection error:', err));
 }
 */
-//seuraavat on AWS testailua varten
+/*Route connections
+ *
+ *
+ *
+ */
+
+// Created for testing purposes, can be removed later
 app.use(cors());
 app.use(express.json());
 
-// Luodaan router
+// Create a router for API endpoints
 const router = express.Router();
 
 router.get('/', (req, res) => {
@@ -33,10 +47,10 @@ router.get('/health', (req, res) => {
   res.status(200).send('OK');
 });
 
-// Kaikki routerin reitit vastaavat polkuun /api/...
+// All routes will be prefixed with /api
 app.use('/api', router);
 
-// Tämä on "pohja-URL" (esim. suoraan Beanstalk-osoitteeseen mentäessä)
+// This route is for testing the server root, it can be removed later
 app.get('/', (req, res) => {
   res.send('Tämä on backendin juuri. API löytyy polusta /api');
 });
