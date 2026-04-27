@@ -1,31 +1,44 @@
 import dotenv from 'dotenv';
-// Load environment variables before importing modules that read process.env at import time.
 dotenv.config();
 
 import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 
-/* 
-ROUTES WILL BE IMPORTED HERE
-*/
-
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 const MONGO_URI = process.env.MONGO_URI || '';
 
-// Database connection
-mongoose
-  .connect(MONGO_URI)
-  .then(() => console.log('✅ MongoDB connected'))
-  .catch((err) => console.error('❌ Connection error:', err));
+// Database connection (Kommentoitu pois testauksen ajaksi)
+/*
+if (MONGO_URI) {
+  mongoose
+    .connect(MONGO_URI)
+    .then(() => console.log('✅ MongoDB connected'))
+    .catch((err) => console.error('❌ Connection error:', err));
+}
+*/
+//seuraavat on AWS testailua varten
+app.use(cors());
+app.use(express.json());
 
-/*Route connections
- *
- *
- * */
+// Luodaan router
+const router = express.Router();
 
-//basic routes for testing
-app.get('/', (req, res) => res.send('Backend rullaa siististi! 🚀'));
+router.get('/', (req, res) => {
+  res.send('Backend rullaa siististi CloudFrontin läpi! 🚀');
+});
+
+router.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
+
+// Kaikki routerin reitit vastaavat polkuun /api/...
+app.use('/api', router);
+
+// Tämä on "pohja-URL" (esim. suoraan Beanstalk-osoitteeseen mentäessä)
+app.get('/', (req, res) => {
+  res.send('Tämä on backendin juuri. API löytyy polusta /api');
+});
 
 app.listen(PORT, () => console.log(`✅ Server portissa ${PORT}`));
