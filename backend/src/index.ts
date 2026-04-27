@@ -19,3 +19,12 @@ mongoose
   .connect(MONGO_URI)
   .then(() => console.log('✅ MongoDB connected'))
   .catch((err) => console.error('❌ Connection error:', err));
+
+/*Route connections
+ *
+ *
+ * */
+
+app.get('/', (req, res) => res.send('Backend rullaa siististi! 🚀'));
+
+app.listen(PORT, () => console.log(`✅ Server portissa ${PORT}`));
