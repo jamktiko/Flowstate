@@ -4,6 +4,7 @@ dotenv.config();
 
 import express from 'express';
 import cors from 'cors';
+import { checkAuth } from './modules/auth/auth.middleware';
 
 /* 
 ROUTES WILL BE IMPORTED HERE
@@ -23,7 +24,7 @@ app.use(express.json());
 const router = express.Router();
 
 router.get('/', (req, res) => {
-  res.send('Backend rullaa siististi CloudFrontin läpi! 🚀');
+  res.send('Backend API is running. Use /api/* for endpoints.');
 });
 
 router.get('/health', (req, res) => {
@@ -41,7 +42,17 @@ app.use('/api', router);
 
 // This route is for testing the server root, it can be removed later
 app.get('/', (req, res) => {
-  res.send('Tämä on backendin juuri. API löytyy polusta /api');
+  res.send(
+    'This is the root of the backend server. For API endpoints, use /api/*',
+  );
+});
+
+// Secured test route to verify that authentication middleware works correctly
+app.get('/api/auth-test', checkAuth, (req, res) => {
+  res.json({
+    message: 'Token is valid and you are authenticated. 🔓',
+    cognitoData: (req as any).user, // Shows the token's content (sub, username etc.)
+  });
 });
 
 export default app; // No app.listen() here — allows Supertest to import without starting a server
