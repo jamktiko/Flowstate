@@ -34,14 +34,14 @@ h1 {
 
 p {
   margin: 0;
-  margin-top: 32vh;
+  margin-top: 15vh;
   color: #111;
   font-size: clamp(20px, 3vw, 18px);
   text-align: center;
 }
 
 button {
-  margin-top: 20vh;
+  margin-top: 17vh;
   width: min(100%, 280px);
   height: 54px;
   border: none;
@@ -52,4 +52,10 @@ button {
   font-size: clamp(20px, 3vw, 20px);
   font-weight: 600;
   cursor: pointer;
+}
+
+.logo {
+  width: clamp(150px, 40vw, 260px);
+  margin-top: 12vh;
+  transform: translateX(-8px);
 }
