@@ -1,8 +1,9 @@
+import { NgOptimizedImage } from '@angular/common';
 import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-welcome',
-  imports: [],
+  imports: [NgOptimizedImage],
   templateUrl: './welcome-page.html',
   styleUrl: './welcome-page.css',
 })
