@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { NavBar } from "../nav-bar/nav-bar";
-import { RouterOutlet } from "../../../../../node_modules/@angular/router/types/_router_module-chunk";
+import { NavBar } from '../nav-bar/nav-bar';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-page-layout',
