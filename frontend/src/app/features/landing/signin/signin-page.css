@@ -1,0 +1,86 @@
+/* PAGE */
+.signin-page {
+  min-height: calc(100vh - 3.875rem); /* navbarin korkeus pois */
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 1.5rem;
+}
+
+/* LOGO */
+.logo {
+  display: block;
+  width: clamp(150px, 40vw, 260px);
+  margin-top: clamp(80px, 12vh, 140px);
+}
+
+/* ACTIONS CONTAINER */
+.actions {
+  width: 100%;
+  max-width: 18rem;
+  margin-top: clamp(130px, 35vh, 230px);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* BUTTON BASE */
+button {
+  width: 100%;
+  height: 2.6rem;
+  border-radius: 0.5rem;
+  font-size: 1.3rem;
+  font-style: italic;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* SIGN IN BUTTON */
+.signin-btn {
+  border: none;
+  background-color: #b4dcff;
+  color: #000;
+}
+
+.signin-btn:hover {
+  border: 3px solid #4c90ff;
+  background-color: #b4dcff;
+}
+
+/* DIVIDER */
+.divider {
+  margin: 2rem 0;
+  font-size: 1.2rem;
+  font-style: italic;
+  font-weight: 600;
+}
+
+/* CREATE ACCOUNT BUTTON */
+.create-btn {
+  background-color: transparent;
+  border: 1px solid #4c90ff;
+  color: #000;
+}
+
+.create-btn:hover {
+  border: 3px solid #4c90ff;
+}
+
+/* DESKTOP */
+@media (min-width: 768px) {
+  .signin-page {
+    max-width: 420px;
+    margin: 0 auto;
+  }
+
+  .actions {
+    max-width: 20rem;
+  }
+}
+p {
+  font-family: kanit, Arial, sans-serif;
+}
