@@ -1,1 +1,50 @@
-<p>login-page works!</p>
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" aria-labelledby="login-title">
+  <h1 id="login-title">Sign In</h1>
+
+  <!-- Email Field -->
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input 
+      id="email" 
+      type="email" 
+      formControlName="email" 
+      autocomplete="email"
+      aria-required="true"
+      [attr.aria-invalid]="loginForm.controls.email.invalid && loginForm.controls.email.touched"
+      aria-describedby="email-error"
+    >
+    
+    @if (loginForm.controls.email.invalid && loginForm.controls.email.touched) {
+      <div id="email-error" class="error-message" role="alert">
+        @if (loginForm.controls.email.errors?.['required']) {
+          <span>Email is required.</span>
+        }
+        @if (loginForm.controls.email.errors?.['email']) {
+          <span>Please enter a valid email address.</span>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Password Field -->
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input 
+      id="password" 
+      type="password" 
+      formControlName="password" 
+      autocomplete="current-password"
+      aria-required="true"
+      [attr.aria-invalid]="loginForm.controls.password.invalid && loginForm.controls.password.touched"
+      aria-describedby="password-error"
+    >
+    
+    @if (loginForm.controls.password.invalid && loginForm.controls.password.touched) {
+      <div id="password-error" class="error-message" role="alert">
+        Password is required.
+      </div>
+    }
+  </div>
+
+  <button type="submit" [disabled]="loginForm.invalid">Login</button>
+</form>
