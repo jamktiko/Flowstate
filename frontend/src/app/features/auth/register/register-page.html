@@ -1,1 +1,25 @@
-<p>register-page works!</p>
+<app-auth-layout title="Create an Account">
+  <form [formGroup]="registerForm" (ngSubmit)="register()">
+    <div>
+      <label for="firstName">First Name</label>
+      <input id="firstName" type="text" formControlName="firstName" />
+    </div>
+
+    <div>
+      <label for="surname">Surname</label>
+      <input id="surname" type="text" formControlName="surname" />
+    </div>
+
+    <div>
+      <label for="email">Email</label>
+      <input id="email" type="email" formControlName="email" />
+    </div>
+
+    <div>
+      <label for="password">Password</label>
+      <input id="password" type="password" formControlName="password" />
+    </div>
+
+    <button type="submit" [disabled]="registerForm.invalid">Register</button>
+  </form>
+</app-auth-layout>
