@@ -1,0 +1,18 @@
+<div class="auth-container">
+  <div class="auth-card">
+          <img
+        ngSrc="images/flogo.svg"
+        alt="Company Logo"
+        width="250"
+        height="60"
+        alt="Company Logo"
+        priority
+        class="logo"
+      />
+    <h2>{{ title() }}</h2>
+    
+    <!-- Projection slot for Login or Register forms -->
+    <ng-content></ng-content>
+    
+  </div>
+</div>
