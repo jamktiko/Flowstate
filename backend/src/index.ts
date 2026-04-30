@@ -8,7 +8,10 @@ const MONGO_URI = process.env.MONGO_URI || '';
 /*
 if (MONGO_URI) {
   mongoose
-    .connect(MONGO_URI)
+    .connect(MONGO_URI,, {
+   autoIndex: true   //  default in dev — creates indexes on startup
+    // autoIndex: false  //  recommended for production 
+}) //
     .then(() => console.log('✅ MongoDB connected'))
     .catch((err) => console.error('❌ Connection error:', err));
 }
