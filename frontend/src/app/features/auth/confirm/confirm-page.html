@@ -1,1 +1,15 @@
-<p>confirm-page works!</p>
+<app-auth-layout title="Confirm Account">
+  <h2>Confirm Your Account</h2>
+  <p>
+    We sent a 6-digit code to: <strong>{{ email }}</strong>
+  </p>
+
+  <form [formGroup]="confirmForm" (ngSubmit)="onConfirm()">
+    <div>
+      <label for="code">Verification Code</label>
+      <input id="code" type="text" formControlName="code" placeholder="123456" maxlength="6" />
+    </div>
+
+    <button type="submit" [disabled]="confirmForm.invalid">Verify Account</button>
+  </form>
+</app-auth-layout>
