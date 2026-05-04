@@ -1,17 +1,41 @@
-import { User, IUserPreferences, INotificationPrefs } from './user.model';
+import {
+  User,
+  IUserPreferences,
+  INotificationPrefs,
+  IUser,
+} from './user.model';
 import { Board } from '../boards/board.model';
 import { CalendarEvent } from '../calendar/calendarEvent.model';
 import { Types } from 'mongoose';
 
 /**
- * Fetches the authenticated user's full profile from the database.
- * @param sub - The Cognito subject ID extracted from the verified JWT by auth.middleware
- * @returns The full user document, or null if not found
+ * Creates a new user document in the database.
+ * Called after successful Cognito registration to store profile data.
+ * @param data - Partial user object containing required registration fields
+ * @returns The newly created user document
  */
+export const createUser = async (data: Partial<IUser>) => {
+  return await User.create(data);
+};
+
+/**
+ * Finds a user by their Cognito subject ID.
+ * This is the primary login lookup — called after JWT verification
+ * to bridge Cognito identity → MongoDB profile.
+ * @param sub - Cognito subject ID extracted from verified JWT
+ * @returns The user document, or null if not found
+ */
+
 export const getUserByCognitoSub = async (sub: string) => {
   return await User.findOne({ cognitoSub: sub });
 };
 
+/**
+ * Finds a user by their MongoDB _id.
+ * Used internally when userId is already known (e.g. board operations).
+ * @param id - MongoDB ObjectId of the user
+ * @returns The user document, or null if not found
+ */
 export const getUserById = async (id: Types.ObjectId) => {
   return await User.findOne(id);
 };
