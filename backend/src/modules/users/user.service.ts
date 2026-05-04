@@ -1,12 +1,12 @@
+import { Types } from 'mongoose';
 import {
   User,
+  IUser,
   IUserPreferences,
   INotificationPrefs,
-  IUser,
 } from './user.model';
 import { Board } from '../boards/board.model';
 import { CalendarEvent } from '../calendar/calendarEvent.model';
-import { Types } from 'mongoose';
 
 /**
  * Creates a new user document in the database.
@@ -25,7 +25,6 @@ export const createUser = async (data: Partial<IUser>) => {
  * @param sub - Cognito subject ID extracted from verified JWT
  * @returns The user document, or null if not found
  */
-
 export const getUserByCognitoSub = async (sub: string) => {
   return await User.findOne({ cognitoSub: sub });
 };
@@ -37,59 +36,77 @@ export const getUserByCognitoSub = async (sub: string) => {
  * @returns The user document, or null if not found
  */
 export const getUserById = async (id: Types.ObjectId) => {
-  return await User.findOne(id);
+  return await User.findById(id);
 };
+
 /**
- * Updates the authenticated user's UI preferences (default view, theme, default board).
- * Uses findOneAndUpdate with { new: true } to return the updated document, not the old one.
- * runValidators ensures Mongoose schema rules (e.g. valid enum values) are enforced on update.
- * @param sub - Cognito subject ID from JWT
- * @param data - Partial preferences object — only provided fields are updated via $set
- * @returns The updated user document, or null if user not found
+ * Updates the authenticated user's UI preferences (theme, defaultView, defaultBoardId).
+ * Uses userId instead of cognitoSub — by the time this is called,
+ * the controller has already resolved sub → user._id.
+ * @param userId - MongoDB ObjectId of the user
+ * @param prefs - Partial preferences object — only provided fields are updated via $set
+ * @returns The updated user document
  */
 export const updatePreferences = async (
-  sub: string,
-  data: Partial<IUserPreferences>,
+  userId: Types.ObjectId,
+  prefs: Partial<IUserPreferences>,
 ) => {
-  return await User.findOneAndUpdate(
-    { cognitoSub: sub },
-    { $set: { preferences: data } },
+  return await User.findByIdAndUpdate(
+    userId,
+    { $set: { preferences: prefs } },
     { new: true, runValidators: true },
   );
 };
 
 /**
- * Updates the authenticated user's notification settings (master toggle, lead time).
- * Same pattern as updatePreferences — $set only touches the notifications field,
- * leaving all other user fields untouched.
- * @param sub - Cognito subject ID from JWT
- * @param data - Partial notifications object — only provided fields are updated
+ * Updates the authenticated user's notification settings (enabled toggle, leadTime).
+ * Uses userId instead of cognitoSub — controller resolves sub → user._id first.
+ * @param userId - MongoDB ObjectId of the user
+ * @param data - Partial notifications object — only provided fields are updated via $set
  * @returns The updated user document, or null if user not found
  */
 export const updateNotifications = async (
-  sub: string,
+  userId: Types.ObjectId,
   data: Partial<INotificationPrefs>,
 ) => {
-  return await User.findOneAndUpdate(
-    { cognitoSub: sub },
+  return await User.findByIdAndUpdate(
+    userId,
     { $set: { notifications: data } },
     { new: true, runValidators: true },
   );
 };
 
 /**
- * Deletes the authenticated user's account and all associated data.
- * Runs all three deletions in parallel using Promise.all() for efficiency.
- * @param sub - Cognito subject ID from JWT
- * @returns null if user not found, otherwise the deletion results
+ * Keeps users.boards[].name in sync when a board is renamed.
+ * Board name is duplicated in the user document for fast board list rendering.
+ * Must be called alongside every board rename operation.
+ * @param userId - MongoDB ObjectId of the user
+ * @param boardId - MongoDB ObjectId of the board being renamed
+ * @param newName - The new board name to set
  */
+export const syncBoardName = async (
+  userId: Types.ObjectId,
+  boardId: Types.ObjectId,
+  newName: string,
+) => {
+  await User.updateOne(
+    { _id: userId, 'boards.boardId': boardId },
+    { $set: { 'boards.$.name': newName } },
+  );
+};
 
-export const deleteUser = async (sub: string) => {
-  const user = await User.findOne({ cognitoSub: sub });
+/**
+ * Deletes the user account and all associated data in parallel.
+ * Removes user document, all boards, and all calendar events.
+ * @param userId - MongoDB ObjectId of the user to delete
+ * @returns null if user not found, otherwise deletion results
+ */
+export const deleteUser = async (userId: Types.ObjectId) => {
+  const user = await User.findById(userId);
   if (!user) return null;
   return await Promise.all([
-    User.findOneAndDelete({ cognitoSub: sub }),
-    Board.deleteMany({ userId: user._id }),
-    CalendarEvent.deleteMany({ userId: user._id }),
+    User.findByIdAndDelete(userId),
+    Board.deleteMany({ userId }),
+    CalendarEvent.deleteMany({ userId }),
   ]);
 };

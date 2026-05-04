@@ -9,17 +9,15 @@ import { sendSuccess, sendError } from '../../utils/responseHelpers';
 
 /**
  * GET /users/me
- * Returns the authenticated user's full profile from MongoDB.
- * sub is extracted from the JWT payload attached by checkAuth middleware.
+ * Returns the authenticated user's full profile.
+ * Bridges Cognito identity (sub) → MongoDB profile via getUserByCognitoSub.
  */
 export const getMeController = async (req: Request, res: Response) => {
   try {
     const sub = (req as any).user.sub; // cognitoSub from verified JWT
-
     const user = await getUserByCognitoSub(sub);
 
     if (!user) return sendError(res, 'User not found', 404);
-
     return sendSuccess(res, user);
   } catch (error) {
     return sendError(res, 'Internal server error', 500);
@@ -28,22 +26,20 @@ export const getMeController = async (req: Request, res: Response) => {
 
 /**
  * PATCH /users/me/preferences
- * Updates the authenticated user's UI preferences (theme, defaultView, defaultBoardId).
- * Only fields provided in req.body are updated — other fields are left untouched.
+ * Updates UI preferences (theme, defaultView, defaultBoardId).
+ * Resolves sub → user._id first, then passes _id to service.
  */
 export const updatePreferencesController = async (
   req: Request,
   res: Response,
 ) => {
   try {
-    const sub = (req as any).user.sub; // cognitoSub from verified JWT
-    const data = req.body; // partial preferences object from client
+    const sub = (req as any).user.sub;
+    const user = await getUserByCognitoSub(sub);
+    if (!user) return sendError(res, 'User not found', 404);
 
-    const preferences = await updatePreferences(sub, data);
-
-    if (!preferences) return sendError(res, 'User not found', 404);
-
-    return sendSuccess(res, preferences);
+    const updated = await updatePreferences(user._id, req.body);
+    return sendSuccess(res, updated);
   } catch (error) {
     return sendError(res, 'Internal server error', 500);
   }
@@ -51,22 +47,20 @@ export const updatePreferencesController = async (
 
 /**
  * PATCH /users/me/notifications
- * Updates the authenticated user's notification settings (enabled toggle, leadTime).
- * Only fields provided in req.body are updated — other fields are left untouched.
+ * Updates notification settings (enabled toggle, leadTime).
+ * Resolves sub → user._id first, then passes _id to service.
  */
 export const updateNotificationsController = async (
   req: Request,
   res: Response,
 ) => {
   try {
-    const sub = (req as any).user.sub; // cognitoSub from verified JWT
-    const data = req.body; // partial notifications object from client
+    const sub = (req as any).user.sub;
+    const user = await getUserByCognitoSub(sub);
+    if (!user) return sendError(res, 'User not found', 404);
 
-    const notifications = await updateNotifications(sub, data);
-
-    if (!notifications) return sendError(res, 'User not found', 404);
-
-    return sendSuccess(res, notifications);
+    const updated = await updateNotifications(user._id, req.body);
+    return sendSuccess(res, updated);
   } catch (error) {
     return sendError(res, 'Internal server error', 500);
   }
@@ -74,22 +68,18 @@ export const updateNotificationsController = async (
 
 /**
  * DELETE /users/me
- * Deletes the authenticated user's account and all associated data.
- * Removes the user document, all their boards, and all their calendar events.
- * Uses Promise.all() in the service layer to delete from all collections in parallel.
+ * Deletes the user account and all associated data (boards, calendar events).
+ * Resolves sub → user._id first, then passes _id to service.
  */
 export const deleteUserController = async (req: Request, res: Response) => {
   try {
-    const sub = (req as any).user.sub; // cognitoSub from verified JWT
+    const sub = (req as any).user.sub;
+    const user = await getUserByCognitoSub(sub);
+    if (!user) return sendError(res, 'User not found', 404);
 
-    const result = await deleteUser(sub);
-
-    // deleteUser returns null if no user was found with this cognitoSub
-    if (!result) return sendError(res, 'User not found', 404);
-
+    await deleteUser(user._id);
     return sendSuccess(res, { message: 'User deleted successfully' });
   } catch (error) {
-    // Catches unexpected errors e.g. database connection failure
     return sendError(res, 'Internal server error', 500);
   }
 };
