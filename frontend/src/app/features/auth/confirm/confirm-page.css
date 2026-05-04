@@ -1,0 +1,87 @@
+h2 {
+  font-family: 'Kanit', Arial, sans-serif;
+  font-weight: 500;
+  font-size: 20px;
+  text-align: center;
+  margin: 0 0 22px;
+  margin-bottom: 60px;
+  color: #000;
+}
+
+p {
+  font-family: 'Kanit', Arial, sans-serif;
+  font-size: 14px;
+  color: #333;
+  text-align: center;
+  margin: 30px 0 22px;
+  line-height: 1.4;
+}
+
+p strong {
+  font-weight: 600;
+  color: #4f8df7;
+}
+
+form {
+  width: 100%;
+}
+
+form div {
+  margin-bottom: 25px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-family: 'Kanit', Arial, sans-serif;
+  font-size: 16px;
+  font-style: italic;
+  font-weight: 500;
+}
+
+input {
+  width: 100%;
+  height: 43px;
+  padding: 0 10px;
+  border: 1px solid #cfddea;
+  border-radius: 8px;
+  background: #f9fafb;
+  font-family: 'Kanit', Arial, sans-serif;
+  font-size: 14px;
+  box-sizing: border-box;
+  outline: none;
+}
+
+input:focus {
+  border-color: #8fb8ff;
+  box-shadow: 0 0 0 2px rgba(79, 141, 247, 0.15);
+}
+
+button {
+  display: block;
+  width: 220px;
+  height: 40px;
+  margin: 28px auto 0;
+  border: 0;
+  border-radius: 22px;
+  background: #4f8df7;
+  color: #f9fafb;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+button:not(:disabled):hover {
+  background-color: #3c7be0;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+:host {
+  display: block;
+  padding-top: 80px;
+  background-color: #f9fafb;
+}
