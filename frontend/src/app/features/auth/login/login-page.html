@@ -1,4 +1,4 @@
-<app-auth-layout class="login-layout" title="Sign In">
+<app-auth-layout class="login-layout">
   <h2>Sign in</h2>
   <form [formGroup]="loginForm" (ngSubmit)="login()">
     <!-- Email Field -->
@@ -13,6 +13,7 @@
       <input id="password" type="password" formControlName="password" placeholder="••••••••" />
     </div>
 
+        <!-- Submit Button -->
     <button class="submit-btn" type="submit" [disabled]="loginForm.invalid">Sign in</button>
   </form>
 
@@ -29,11 +30,4 @@
       </button>
     </div>
   </div>
-  <!-- Submit Button -->
-  <button type="submit" [disabled]="loginForm.invalid">Sign In</button>
-
-  <!-- Link to Register -->
-  <p class="auth-redirect">
-    Don't have an account? <a routerLink="/auth/register">Sign up here</a>.
-  </p>
 </app-auth-layout>
