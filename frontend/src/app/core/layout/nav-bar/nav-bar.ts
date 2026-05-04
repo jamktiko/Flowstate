@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { Location } from '@angular/common';
+import { NavBarService } from './nav-bar.service';
 
 @Component({
   selector: 'app-nav-bar',
@@ -6,4 +8,16 @@ import { Component } from '@angular/core';
   templateUrl: './nav-bar.html',
   styleUrl: './nav-bar.css',
 })
-export class NavBar {}
+export class NavBar {
+  protected navBarService = inject(NavBarService);
+  private location = inject(Location);
+
+  handleBack() {
+    const customAction = this.navBarService.customBackAction();
+    if (customAction) {
+      customAction();
+    } else {
+      this.location.back();
+    }
+  }
+}
