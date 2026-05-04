@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { Location } from '@angular/common';
-import { NavBarService } from './nav-bar.service';
+import { NavBarService } from './nav-bar-service';
 
 @Component({
   selector: 'app-nav-bar',
@@ -9,7 +9,7 @@ import { NavBarService } from './nav-bar.service';
   styleUrl: './nav-bar.css',
 })
 export class NavBar {
-  protected navBarService = inject(NavBarService);
+  protected navBarService: NavBarService = inject(NavBarService);
   private location = inject(Location);
 
   handleBack() {
