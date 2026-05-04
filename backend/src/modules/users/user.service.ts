@@ -1,5 +1,6 @@
 import { User, IUserPreferences, INotificationPrefs } from './user.model';
-
+import { Board } from '../boards/board.model';
+import { CalendarEvent } from '../calendar/calendarEvent.model';
 /**
  * Fetches the authenticated user's full profile from the database.
  * @param sub - The Cognito subject ID extracted from the verified JWT by auth.middleware
@@ -45,4 +46,14 @@ export const updateNotifications = async (
     { $set: { notifications: data } },
     { new: true, runValidators: true },
   );
+};
+
+export const deleteUser = async (sub: string) => {
+  const user = await User.findOne({ cognitoSub: sub });
+  if (!user) return null;
+  return await Promise.all([
+    User.findOneAndDelete({ cognitoSub: sub }),
+    Board.deleteMany({ userId: user._id }),
+    CalendarEvent.deleteMany({ userId: user._id }),
+  ]);
 };
