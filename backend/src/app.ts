@@ -5,6 +5,9 @@ dotenv.config();
 import express from 'express';
 import cors from 'cors';
 import { checkAuth } from './modules/auth/auth.middleware';
+import userRouter from './modules/users/user.routes';
+
+const app = express();
 
 /* 
 ROUTES WILL BE IMPORTED HERE
@@ -14,7 +17,8 @@ ROUTES WILL BE IMPORTED HERE
 * 
 */
 
-const app = express();
+// Use user routers
+app.use('/users', userRouter);
 
 // Created for testing purposes, can be removed later
 app.use(cors());
