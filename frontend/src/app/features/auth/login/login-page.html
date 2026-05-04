@@ -1,4 +1,5 @@
-<app-auth-layout title="Welcome Back">
+<app-auth-layout class="login-layout" title="Sign In">
+  <h2>Sign in</h2>
   <form [formGroup]="loginForm" (ngSubmit)="login()">
     <!-- Email Field -->
     <div>
@@ -12,6 +13,22 @@
       <input id="password" type="password" formControlName="password" placeholder="••••••••" />
     </div>
 
+    <button class="submit-btn" type="submit" [disabled]="loginForm.invalid">Sign in</button>
+  </form>
+
+  <div class="social-section">
+    <p>Or sign in with</p>
+
+    <div class="social-buttons">
+      <button type="button" class="social-btn">
+        <p>M</p>
+      </button>
+
+      <button type="button" class="social-btn">
+        <p>G</p>
+      </button>
+    </div>
+  </div>
     <!-- Submit Button -->
     <button type="submit" [disabled]="loginForm.invalid">Sign In</button>
   </form>
