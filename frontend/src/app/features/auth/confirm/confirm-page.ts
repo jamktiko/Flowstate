@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthLayout } from '../../../core/layout/auth-layout/auth-layout';
 import { AuthService } from '../../../core/auth/auth-service';
 
+//comment to laucn frontend deployment pipeline again
 @Component({
   selector: 'app-confirm-page',
   standalone: true,

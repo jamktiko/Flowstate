@@ -7,6 +7,10 @@ on:
     paths:
       - 'backend/**'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -19,18 +23,20 @@ jobs:
         with:
           node-version: 22
           cache: 'npm'
-          cache-dependency-path: ./backend/package-lock.json
+          cache-dependency-path: backend/package-lock.json
 
-      - name: Install and Build Backend
+      - name: Install Dependencies
         working-directory: ./backend
-        run: |
-          npm install
-          npm run build
+        run: npm ci
+
+      - name: Build Backend
+        working-directory: ./backend
+        run: npm run build
 
       - name: Generate Deployment Package
         run: |
           cd backend
-          zip -r ../deploy.zip dist package.json package-lock.json node_modules
+          zip -r ../deploy.zip dist package.json package-lock.json
 
       - name: Deploy to Elastic Beanstalk
         uses: einaregilsson/beanstalk-deploy@v22
