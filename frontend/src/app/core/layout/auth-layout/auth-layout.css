@@ -1,0 +1,32 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.auth-container {
+  min-height: calc(100vh - 3.875rem);
+  background: #f9fafb;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 0;
+  box-sizing: border-box;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 327px;
+  min-height: calc(100vh - 3.875rem);
+  background: #f9fafb;
+  padding: 12px 30px 28px;
+  box-sizing: border-box;
+  border-radius: 0;
+}
+
+h2 {
+  margin: 5px 0 40px;
+  text-align: center;
+  font-family: kanit, Arial, sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+}

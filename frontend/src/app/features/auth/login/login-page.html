@@ -1,50 +1,23 @@
-<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" aria-labelledby="login-title">
-  <h1 id="login-title">Sign In</h1>
+<app-auth-layout title="Welcome Back">
+  <form [formGroup]="loginForm" (ngSubmit)="login()">
+    <!-- Email Field -->
+    <div>
+      <label for="email">Email address</label>
+      <input id="email" type="email" formControlName="email" placeholder="you@example.com" />
+    </div>
 
-  <!-- Email Field -->
-  <div class="form-group">
-    <label for="email">Email</label>
-    <input 
-      id="email" 
-      type="email" 
-      formControlName="email" 
-      autocomplete="email"
-      aria-required="true"
-      [attr.aria-invalid]="loginForm.controls.email.invalid && loginForm.controls.email.touched"
-      aria-describedby="email-error"
-    >
-    
-    @if (loginForm.controls.email.invalid && loginForm.controls.email.touched) {
-      <div id="email-error" class="error-message" role="alert">
-        @if (loginForm.controls.email.errors?.['required']) {
-          <span>Email is required.</span>
-        }
-        @if (loginForm.controls.email.errors?.['email']) {
-          <span>Please enter a valid email address.</span>
-        }
-      </div>
-    }
-  </div>
+    <!-- Password Field -->
+    <div>
+      <label for="password">Password</label>
+      <input id="password" type="password" formControlName="password" placeholder="••••••••" />
+    </div>
 
-  <!-- Password Field -->
-  <div class="form-group">
-    <label for="password">Password</label>
-    <input 
-      id="password" 
-      type="password" 
-      formControlName="password" 
-      autocomplete="current-password"
-      aria-required="true"
-      [attr.aria-invalid]="loginForm.controls.password.invalid && loginForm.controls.password.touched"
-      aria-describedby="password-error"
-    >
-    
-    @if (loginForm.controls.password.invalid && loginForm.controls.password.touched) {
-      <div id="password-error" class="error-message" role="alert">
-        Password is required.
-      </div>
-    }
-  </div>
+    <!-- Submit Button -->
+    <button type="submit" [disabled]="loginForm.invalid">Sign In</button>
+  </form>
 
-  <button type="submit" [disabled]="loginForm.invalid">Login</button>
-</form>
+  <!-- Link to Register -->
+  <p class="auth-redirect">
+    Don't have an account? <a routerLink="/auth/register">Sign up here</a>.
+  </p>
+</app-auth-layout>

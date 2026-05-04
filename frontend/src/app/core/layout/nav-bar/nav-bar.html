@@ -1,1 +1,15 @@
-<p>nav-bar works!</p>
+<nav>
+  @if (navBarService.showBackButton()) {
+    <button class="back-btn" (click)="handleBack()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="50" height="39" viewBox="0 0 50 39" fill="none">
+        <path
+          d="M39.5833 19.5H10.4166M10.4166 19.5L25 30.875M10.4166 19.5L25 8.125"
+          stroke="white"
+          stroke-width="3"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+  }
+</nav>

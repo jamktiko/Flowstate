@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { WelcomePage } from './features/welcome/welcome-page';
+import { WelcomePage } from './features/landing/welcome/welcome-page';
 import { PageLayout } from './core/layout/page-layout/page-layout';
 
 export const routes: Routes = [
@@ -15,14 +15,19 @@ export const routes: Routes = [
     component: PageLayout,
     children: [
       {
+        path: 'signin',
+        loadComponent: () =>
+          import('./features/landing/signin/signin-page').then((m) => m.SigninPage),
+      },
+      {
         path: 'auth',
         loadChildren: () => import('./features/auth/auth.routes').then((m) => m.AUTH_ROUTES),
       },
-      /* Example for future            {
+      {
         path: 'dashboard',
-        canActivate: [authGuard], // <-- PROTECT THE ROUTE HERE
-        loadChildren: () => import('./features/dashboard/dashboard.routes').then(m => m.DASHBOARD_ROUTES),
-      } */
+        // canActivate: [authGuard], // <-- PROTECT THE ROUTE HERE
+        loadChildren: () => import('./features/features.routes').then((m) => m.FEATURES_ROUTES),
+      },
     ],
   },
 ];

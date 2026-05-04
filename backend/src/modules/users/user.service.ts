@@ -48,6 +48,13 @@ export const updateNotifications = async (
   );
 };
 
+/**
+ * Deletes the authenticated user's account and all associated data.
+ * Runs all three deletions in parallel using Promise.all() for efficiency.
+ * @param sub - Cognito subject ID from JWT
+ * @returns null if user not found, otherwise the deletion results
+ */
+
 export const deleteUser = async (sub: string) => {
   const user = await User.findOne({ cognitoSub: sub });
   if (!user) return null;
