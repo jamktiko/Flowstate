@@ -4,6 +4,7 @@ import {
   getMeController,
   updatePreferencesController,
   updateNotificationsController,
+  deleteUserController,
 } from './user.controller';
 
 const router = Router();
@@ -16,4 +17,6 @@ router.patch('/me/preferences', checkAuth, updatePreferencesController);
 
 // PATCH /users/me/notifications — updates enabled toggle and leadTime
 router.patch('/me/notifications', checkAuth, updateNotificationsController);
+
+router.delete('/me', checkAuth, deleteUserController);
 export default router;
