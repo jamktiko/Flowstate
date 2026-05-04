@@ -18,5 +18,6 @@ router.patch('/me/preferences', checkAuth, updatePreferencesController);
 // PATCH /users/me/notifications — updates enabled toggle and leadTime
 router.patch('/me/notifications', checkAuth, updateNotificationsController);
 
+// DELETE /users/me — deletes the authenticated user's account and all associated data
 router.delete('/me', checkAuth, deleteUserController);
 export default router;
