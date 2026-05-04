@@ -51,11 +51,14 @@ export const updatePreferences = async (
   userId: Types.ObjectId,
   prefs: Partial<IUserPreferences>,
 ) => {
-  return await User.findByIdAndUpdate(
+  const updated = await User.findByIdAndUpdate(
     userId,
     { $set: { preferences: prefs } },
     { new: true, runValidators: true },
   );
+  if (!updated) throw new Error('User not found');
+
+  return updated;
 };
 
 /**
