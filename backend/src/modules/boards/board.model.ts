@@ -122,7 +122,6 @@ const BoardSchema = new Schema<IBoard>(
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,
-      index: true,
     },
     name: { type: String, required: true, trim: true },
     columns: { type: [ColumnSchema], default: [] },
