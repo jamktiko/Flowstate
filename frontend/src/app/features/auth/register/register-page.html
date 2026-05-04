@@ -1,4 +1,5 @@
 <app-auth-layout title="Create an account">
+  <h2>Create an account</h2>
   <form [formGroup]="registerForm" (ngSubmit)="register()">
     <div>
       <label for="firstName">First Name</label>
@@ -6,7 +7,7 @@
     </div>
 
     <div>
-      <label for="surname">Surname</label>
+      <label for="surname">Last Name</label>
       <input id="surname" type="text" formControlName="surname" />
     </div>
 
@@ -18,6 +19,10 @@
     <div>
       <label for="password">Password</label>
       <input id="password" type="password" formControlName="password" />
+      <p class="password-hint">
+        Password must be at least 8 characters long and contain 1 lower and uppercase letter, 1
+        number, and 1 special character.
+      </p>
     </div>
 
     <button class="submit-btn" type="submit" [disabled]="registerForm.invalid">Sign up</button>
