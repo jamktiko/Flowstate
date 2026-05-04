@@ -1,15 +1,20 @@
 import { User, IUserPreferences, INotificationPrefs } from './user.model';
 import { Board } from '../boards/board.model';
 import { CalendarEvent } from '../calendar/calendarEvent.model';
+import { Types } from 'mongoose';
+
 /**
  * Fetches the authenticated user's full profile from the database.
  * @param sub - The Cognito subject ID extracted from the verified JWT by auth.middleware
  * @returns The full user document, or null if not found
  */
-export const getMe = async (sub: string) => {
+export const getUserByCognitoSub = async (sub: string) => {
   return await User.findOne({ cognitoSub: sub });
 };
 
+export const getUserById = async (id: Types.ObjectId) => {
+  return await User.findOne(id);
+};
 /**
  * Updates the authenticated user's UI preferences (default view, theme, default board).
  * Uses findOneAndUpdate with { new: true } to return the updated document, not the old one.

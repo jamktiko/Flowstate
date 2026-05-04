@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import {
-  getMe,
+  getUserByCognitoSub,
   updatePreferences,
   updateNotifications,
   deleteUser,
@@ -16,7 +16,7 @@ export const getMeController = async (req: Request, res: Response) => {
   try {
     const sub = (req as any).user.sub; // cognitoSub from verified JWT
 
-    const user = await getMe(sub);
+    const user = await getUserByCognitoSub(sub);
 
     if (!user) return sendError(res, 'User not found', 404);
 
