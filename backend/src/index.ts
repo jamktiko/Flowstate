@@ -4,6 +4,8 @@ import mongoose from 'mongoose';
 const PORT = process.env.PORT || 8080;
 const MONGO_URI = process.env.MONGO_URI || '';
 
+//Comment to launch backend deployment pipeline!!
+
 // Database connection (commented for testing.)
 /*
 if (MONGO_URI) {
