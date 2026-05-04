@@ -1,7 +1,7 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
-import { NavBarService } from '../../../core/layout/nav-bar/nav-bar.service';
+import { NavBarService } from '../../../core/layout/nav-bar/nav-bar-service';
 
 // Comment to launch frontend deployment pipeline
 
@@ -12,7 +12,7 @@ import { NavBarService } from '../../../core/layout/nav-bar/nav-bar.service';
   styleUrl: './signin-page.css',
 })
 export class SigninPage implements OnInit, OnDestroy {
-  private navBarService = inject(NavBarService);
+  private navBarService: NavBarService = inject(NavBarService);
   private router = inject(Router);
 
   ngOnInit() {

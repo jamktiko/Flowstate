@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthLayout } from '../../../core/layout/auth-layout/auth-layout';
 import { AuthService } from '../../../core/auth/auth-service'; // Check the file path/name
 
@@ -8,7 +8,7 @@ import { AuthService } from '../../../core/auth/auth-service'; // Check the file
   selector: 'app-login-page',
   standalone: true,
   // ADDED RouterLink so you can link to the register page in the HTML
-  imports: [AuthLayout, ReactiveFormsModule, RouterLink],
+  imports: [AuthLayout, ReactiveFormsModule],
   templateUrl: './login-page.html',
   styleUrl: './login-page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
