@@ -4,7 +4,7 @@ import { RegisterPage } from './register/register-page';
 
 export const AUTH_ROUTES: Routes = [
   {
-    path: '',
+    path: 'login',
     component: LoginPage,
   },
   {
