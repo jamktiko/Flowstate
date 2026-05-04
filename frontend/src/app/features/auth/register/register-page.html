@@ -1,4 +1,4 @@
-<app-auth-layout title="Create an Account">
+<app-auth-layout title="Create an account">
   <form [formGroup]="registerForm" (ngSubmit)="register()">
     <div>
       <label for="firstName">First Name</label>
@@ -20,6 +20,19 @@
       <input id="password" type="password" formControlName="password" />
     </div>
 
-    <button type="submit" [disabled]="registerForm.invalid">Register</button>
+    <button class="submit-btn" type="submit" [disabled]="registerForm.invalid">Sign up</button>
   </form>
+
+  <div class="social-section">
+    <p>Or sign up with</p>
+
+    <div class="social-buttons">
+      <button type="button" class="social-btn">
+        <p>M</p>
+      </button>
+      <button type="button" class="social-btn">
+        <p>G</p>
+      </button>
+    </div>
+  </div>
 </app-auth-layout>

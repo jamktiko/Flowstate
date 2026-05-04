@@ -1,0 +1,91 @@
+form {
+  width: 100%;
+}
+
+form div {
+  margin-bottom: 24px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-family: kanit, Arial, sans-serif;
+  font-size: 16px;
+  font-style: italic;
+  font-weight: 500;
+}
+
+input {
+  width: 100%;
+  height: 43px;
+  padding: 0 10px;
+  border: 1px solid #cfddea;
+  border-radius: 8px;
+  background: #eef6ff;
+  font-size: 14px;
+  box-sizing: border-box;
+  outline: none;
+}
+
+button {
+  display: block;
+  width: 220px;
+  height: 40px;
+  margin: 36px auto 0;
+  border: 0;
+  border-radius: 22px;
+  background: #4f8df7;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+}
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+p {
+  text-align: center;
+  margin-top: 40px;
+  font-family: kanit, Arial, sans-serif;
+  font-size: 14px;
+}
+
+.social-section {
+  margin-top: 28px;
+  text-align: center;
+}
+
+.social-section p {
+  margin: 0 0 20px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.social-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+}
+
+.social-btn {
+  width: 64px;
+  height: 64px;
+  margin: 0;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-top: 10px;
+}
+.submit-btn:not(:disabled):hover {
+  background-color: #3c7be0;
+  cursor: pointer;
+}
+p {
+  color: black;
+}
