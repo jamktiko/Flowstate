@@ -20,19 +20,19 @@
       <input id="password" type="password" formControlName="password" />
     </div>
 
-    <button type="submit" [disabled]="registerForm.invalid">Sign up</button>
-    <div class="social-section">
-      <p>Or sign up with</p>
-
-      <div class="social-buttons">
-        <button type="button" class="social-btn">
-          <img src="images/microsoft.svg" alt="Microsoft" />
-        </button>
-
-        <button type="button" class="social-btn">
-          <img src="images/google.svg" alt="Google" />
-        </button>
-      </div>
-    </div>
+    <button class="submit-btn" type="submit" [disabled]="registerForm.invalid">Sign up</button>
   </form>
+
+  <div class="social-section">
+    <p>Or sign up with</p>
+
+    <div class="social-buttons">
+      <button type="button" class="social-btn">
+        <p>M</p>
+      </button>
+      <button type="button" class="social-btn">
+        <p>G</p>
+      </button>
+    </div>
+  </div>
 </app-auth-layout>

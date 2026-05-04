@@ -59,3 +59,7 @@ button {
   margin-top: 12vh;
   transform: translateX(-8px);
 }
+button:hover {
+  background-color: #3c7be0;
+  cursor: pointer;
+}

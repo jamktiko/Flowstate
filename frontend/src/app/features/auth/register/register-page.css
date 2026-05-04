@@ -47,7 +47,7 @@ button:disabled {
 
 p {
   text-align: center;
-  margin-top: 30px;
+  margin-top: 40px;
   font-family: kanit, Arial, sans-serif;
   font-size: 14px;
 }
@@ -60,18 +60,18 @@ p {
 .social-section p {
   margin: 0 0 20px;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .social-buttons {
   display: flex;
   justify-content: center;
-  gap: 18px;
+  gap: 40px;
 }
 
 .social-btn {
-  width: 50px;
-  height: 50px;
+  width: 64px;
+  height: 64px;
   margin: 0;
   border: 1px solid #ddd;
   border-radius: 50%;
@@ -80,9 +80,12 @@ p {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  margin-top: 10px;
 }
-
-.social-btn img {
-  width: 24px;
-  height: 24px;
+.submit-btn:not(:disabled):hover {
+  background-color: #3c7be0;
+  cursor: pointer;
+}
+p {
+  color: black;
 }
