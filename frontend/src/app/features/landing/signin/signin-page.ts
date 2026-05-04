@@ -3,6 +3,8 @@ import { NgOptimizedImage } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { NavBarService } from '../../../core/layout/nav-bar/nav-bar.service';
 
+// Comment to launch frontend deployment pipeline
+
 @Component({
   selector: 'app-signin-page',
   imports: [NgOptimizedImage, RouterLink],
