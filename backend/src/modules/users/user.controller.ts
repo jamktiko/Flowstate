@@ -4,6 +4,7 @@ import {
   updatePreferences,
   updateNotifications,
   deleteUser,
+  createUser, // Added: Required to sync Google users to MongoDB
 } from './user.service';
 import { sendSuccess, sendError } from '../../utils/responseHelpers';
 
@@ -15,9 +16,24 @@ import { sendSuccess, sendError } from '../../utils/responseHelpers';
 export const getMeController = async (req: Request, res: Response) => {
   try {
     const sub = (req as any).user.sub; // cognitoSub from verified JWT
-    const user = await getUserByCognitoSub(sub);
+    let user = await getUserByCognitoSub(sub); // Changed from const to let so we can assign a new user
 
-    if (!user) return sendError(res, 'User not found', 404);
+    // CRITICAL: If a Google user logs in via Cognito, their MongoDB document won't exist yet.
+    // Instead of returning 404, we must create it here.
+    if (!user) {
+      const email = (req as any).user.email;
+      const firstName = (req as any).user.given_name || 'Google';
+      const lastName = (req as any).user.family_name || 'User';
+
+      user = await createUser({
+        cognitoSub: sub,
+        email,
+        firstName,
+        lastName,
+        role: 'user',
+      });
+    }
+
     return sendSuccess(res, user);
   } catch (error) {
     return sendError(res, 'Internal server error', 500);
