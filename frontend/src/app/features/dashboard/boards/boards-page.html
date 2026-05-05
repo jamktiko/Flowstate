@@ -1,11 +1,89 @@
 <div class="content">
-  @for (board of boards(); track board.id) {
-    <div class="card">
-      <h4>{{ board.title }}</h4>
-      <button (click)="deleteBoard(board.id)">Delete</button>
-      <button>Edit</button>
-    </div>
-  }
-</div>
+  <h2 class="page-title">
+    Your boards
 
-<button (click)="addBoard()">More boards</button>
+    <button class="boards-menu-btn" type="button" aria-label="Avaa board-valikko">
+      <svg
+        class="title-arrow"
+        xmlns="http://www.w3.org/2000/svg"
+        width="10"
+        height="6"
+        viewBox="0 0 10 6"
+        fill="none"
+      >
+        <path
+          d="M1 1L5 5L9 1"
+          stroke="#777"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+  </h2>
+
+  <div class="boards">
+    @for (board of boards(); track board.id) {
+      <div class="card">
+        <h4>{{ board.title }}</h4>
+
+        <div class="card-actions">
+          <button class="icon-btn edit-btn" type="button" aria-label="Muokkaa boardia">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58578C2.21071 4.96086 2 5.46956 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13M18.5 2.5C18.8978 2.10217 19.4374 1.87868 20 1.87868C20.5626 1.87868 21.1022 2.10217 21.5 2.5C21.8978 2.89782 22.1213 3.43739 22.1213 4C22.1213 4.56261 21.8978 5.10217 21.5 5.5L12 15L8 16L9 12L18.5 2.5Z"
+                stroke="#1CC309"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+
+          <button
+            class="icon-btn delete-btn"
+            type="button"
+            aria-label="Poista board"
+            (click)="deleteBoard(board.id)"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M3 6H5M5 6H21M5 6V20C5 20.5304 5.21071 21.0391 5.58579 21.4142C5.96086 21.7893 6.46957 22 7 22H17C17.5304 22 18.0391 21.7893 18.4142 21.4142C18.7893 21.0391 19 20.5304 19 20V6M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6M10 11V17M14 11V17"
+                stroke="#FC0B0B"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+
+  <button class="add-board-btn" type="button" (click)="addBoard()">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <path
+        d="M10 4V16M4 10H16"
+        stroke="white"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+
+    <span>New board</span>
+  </button>
+</div>
