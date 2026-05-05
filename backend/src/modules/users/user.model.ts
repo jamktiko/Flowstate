@@ -141,13 +141,6 @@ const UserSchema = new Schema<IUser>(
 );
 
 // ─────────────────────────────────────────────
-// Indexes mirrors schema doc
-// ─────────────────────────────────────────────
-
-UserSchema.index({ email: 1 }, { unique: true });
-UserSchema.index({ cognitoSub: 1 }, { unique: true });
-
-// ─────────────────────────────────────────────
 // Export
 // ─────────────────────────────────────────────
 

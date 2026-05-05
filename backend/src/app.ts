@@ -9,22 +9,11 @@ import userRouter from './modules/users/user.routes';
 
 const app = express();
 
-/* 
-ROUTES WILL BE IMPORTED HERE
-*
-*
-*
-* 
-*/
-
-// Use user routers
-app.use('/users', userRouter);
-
-// Created for testing purposes, can be removed later
+// Middleware — must come before all routes
 app.use(cors());
 app.use(express.json());
 
-// Create a router for API endpoints
+// API router for health/root endpoints
 const router = express.Router();
 
 router.get('/', (req, res) => {
@@ -35,15 +24,11 @@ router.get('/health', (req, res) => {
   res.status(200).send('OK');
 });
 
-/*Route connections
- *
- *
- *
- */
-
-// All routes will be prefixed with /api
+// All routes prefixed with /api
 app.use('/api', router);
 
+// Feature routers — add new routers here as modules are built
+app.use('/api/users', userRouter);
 // This route is for testing the server root, it can be removed later
 app.get('/', (req, res) => {
   res.send(
