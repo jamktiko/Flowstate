@@ -1,0 +1,60 @@
+.list-container {
+  background-color: #f4f5f7;
+  border-radius: 8px;
+  width: 300px;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  margin-right: 16px;
+  flex-shrink: 0;
+}
+
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 8px 12px 8px;
+}
+
+.list-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #172b4d;
+}
+
+.list-options {
+  color: #6b778c;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.list-cards {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 0 4px;
+  min-height: 10px;
+}
+
+.list-footer {
+  padding: 8px 0 0 0;
+}
+
+.add-task-btn {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  padding: 8px;
+  color: #5e6c84;
+  cursor: pointer;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.add-task-btn:hover {
+  background-color: rgba(9, 30, 66, 0.08);
+  color: #172b4d;
+}

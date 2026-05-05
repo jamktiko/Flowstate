@@ -6,4 +6,8 @@ export const DASHBOARD_ROUTES: Routes = [
     path: '',
     loadComponent: () => import('./boards/boards-page').then((m) => m.BoardsPage),
   },
+  {
+    path: 'board',
+    loadComponent: () => import('./board/board-page').then((m) => m.BoardPage),
+  },
 ];
