@@ -1,19 +1,19 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   signUp,
   confirmSignUp,
   signIn,
   signOut,
   fetchAuthSession,
-  type SignUpInput,
-  type ConfirmSignUpInput,
-  type SignInInput,
+  getCurrentUser,
 } from 'aws-amplify/auth';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+  private router = inject(Router);
   async register(email: string, salasana: string, firstName: string, surname: string) {
     try {
       const { nextStep } = await signUp({
@@ -61,9 +61,28 @@ export class AuthService {
     }
   }
 
+  // Check if a user is currently logged in
+  async isAuthenticated(): Promise<boolean> {
+    try {
+      // Calling getCurrentUser() will throw an error if the user is not authenticated
+      const user = await getCurrentUser();
+      return !!user; // Returns true if a user object exists
+    } catch (error) {
+      console.error(error);
+      // If it throws an error, there is no active session
+      return false;
+    }
+  }
+
   // Logout
   async logout() {
-    await signOut();
+    try {
+      await signOut();
+      // After successfully clearing tokens, kick them back to sign-in or home
+      await this.router.navigate(['/']);
+    } catch (error) {
+      console.error('Error signing out: ', error);
+    }
   }
 
   // Get tokens for backend authentication
