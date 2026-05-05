@@ -1,0 +1,58 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* or 100% depending on parent layout */
+  background-color: #0079bf; /* Classic kanban board blue */
+}
+
+.board-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.board-header {
+  padding: 12px 20px;
+  background-color: rgba(0, 0, 0, 0.15);
+  color: white;
+}
+
+.board-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.board-container {
+  display: flex;
+  flex: 1 1 auto;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 16px 20px;
+  align-items: flex-start;
+  /* Hides scrollbar on some browsers but keeps it functional */
+  scrollbar-width: thin;
+}
+
+.add-list-wrapper {
+  min-width: 272px;
+  flex-shrink: 0;
+}
+
+.add-list-btn {
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: none;
+  padding: 12px;
+  text-align: left;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.add-list-btn:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
