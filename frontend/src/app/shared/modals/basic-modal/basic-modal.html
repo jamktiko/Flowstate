@@ -1,0 +1,18 @@
+@if (isOpen()) {
+  <div class="modal-backdrop" tabindex="0" (click)="onClose()" (keydown.enter)="onClose()">
+    <div class="modal-content" tabindex="-1" (click)="$event.stopPropagation()" (keydown.enter)="$event.stopPropagation()">
+      <header class="modal-header">
+        <ng-content select="[modal-header]"></ng-content>
+        <button class="close-button" (click)="onClose()" aria-label="Close modal">&times;</button>
+      </header>
+      
+      <main class="modal-body">
+        <ng-content></ng-content>
+      </main>
+
+      <footer class="modal-footer">
+        <ng-content select="[modal-footer]"></ng-content>
+      </footer>
+    </div>
+  </div>
+}
