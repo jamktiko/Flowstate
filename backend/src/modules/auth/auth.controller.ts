@@ -3,9 +3,10 @@ import {
   CognitoIdentityProviderClient,
   SignUpCommand,
   InitiateAuthCommand,
+  ConfirmSignUpCommand, // LISÄTTY: Tarvitaan vahvistukseen
 } from '@aws-sdk/client-cognito-identity-provider';
-import { createUser } from '../users/user.service'; //
-import { sendSuccess, sendError } from '../../utils/responseHelpers'; //
+import { createUser } from '../users/user.service';
+import { sendSuccess, sendError } from '../../utils/responseHelpers';
 
 const cognitoClient = new CognitoIdentityProviderClient({
   region: process.env.COGNITO_REGION,
@@ -13,13 +14,13 @@ const cognitoClient = new CognitoIdentityProviderClient({
 
 /**
  * POST /api/auth/register
- * Handles Cognito signup and creates the MongoDB user document.
+ * Handles user registration by signing up with AWS Cognito
+ * and creating a user record in our database.
  */
 export const registerController = async (req: Request, res: Response) => {
   const { email, password, firstName, lastName } = req.body;
 
   try {
-    // Step 1: Create user in Cognito
     const cognitoResult = await cognitoClient.send(
       new SignUpCommand({
         ClientId: process.env.COGNITO_CLIENT_ID,
@@ -36,10 +37,10 @@ export const registerController = async (req: Request, res: Response) => {
     const cognitoSub = cognitoResult.UserSub;
 
     if (!cognitoSub) {
-      return sendError(res, 'Registration failed at Cognito', 500); //
+      return sendError(res, 'Registration failed at Cognito', 500);
     }
 
-    // Step 2: Create MongoDB user document. THIS IS CRITICAL
+    // Saves the user in our database with the Cognito sub as a reference
     const user = await createUser({
       cognitoSub,
       email,
@@ -48,22 +49,47 @@ export const registerController = async (req: Request, res: Response) => {
       role: 'user',
     });
 
-    return sendSuccess(res, user, 201); //[cite: 1]
+    return sendSuccess(res, user, 201);
   } catch (error: any) {
     console.error('Registration Error:', error);
-    return sendError(res, error.message || 'Registration failed', 400); //[cite: 1]
+    return sendError(res, error.message || 'Registration failed', 400);
+  }
+};
+
+/**
+ * POST /api/auth/confirm
+ * Handles the confirmation of user registration using the code sent by Cognito.
+ */
+export const confirmRegistrationController = async (
+  req: Request,
+  res: Response,
+) => {
+  const { email, code } = req.body;
+
+  try {
+    await cognitoClient.send(
+      new ConfirmSignUpCommand({
+        ClientId: process.env.COGNITO_CLIENT_ID,
+        Username: email,
+        ConfirmationCode: code,
+      }),
+    );
+
+    return sendSuccess(res, { message: 'Account confirmed successfully' });
+  } catch (error: any) {
+    console.error('Confirmation Error:', error);
+    return sendError(res, error.message || 'Confirmation failed', 400);
   }
 };
 
 /**
  * POST /api/auth/login
- * Authenticates with Cognito and returns JWT tokens.
+ * Handles user login by authenticating with AWS Cognito and returning tokens.
  */
 export const loginController = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   try {
-    // Authenticate with Cognito to get JWT tokens back[cite: 1]
     const result = await cognitoClient.send(
       new InitiateAuthCommand({
         AuthFlow: 'USER_PASSWORD_AUTH',
@@ -75,16 +101,15 @@ export const loginController = async (req: Request, res: Response) => {
       }),
     );
 
-    // Return the AccessToken. Client uses this for all API calls[cite: 1]
     const tokens = {
       accessToken: result.AuthenticationResult?.AccessToken,
       refreshToken: result.AuthenticationResult?.RefreshToken,
       expiresIn: result.AuthenticationResult?.ExpiresIn,
     };
 
-    return sendSuccess(res, tokens); //[cite: 1]
+    return sendSuccess(res, tokens);
   } catch (error: any) {
     console.error('Login Error:', error);
-    return sendError(res, 'Invalid credentials', 401); //[cite: 1]
+    return sendError(res, 'Invalid credentials', 401);
   }
 };
