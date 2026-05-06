@@ -1,4 +1,4 @@
-import { CanMatchFn, Router } from '@angular/router';
+import { CanMatchFn, Router, RedirectCommand } from '@angular/router';
 import { inject } from '@angular/core';
 import { AuthService } from './auth-service';
 
@@ -18,6 +18,7 @@ export const authGuard: CanMatchFn = async (route, segments) => {
   // Reconstruct the requested URL from the segments
   const requestedUrl = '/' + segments.map((s) => s.path).join('/');
 
-  console.log('User tried to access:', requestedUrl);
-  return router.parseUrl(`/auth/login?returnUrl=${encodeURIComponent(requestedUrl)}`);
+  return new RedirectCommand(
+    router.parseUrl(`/auth/login?returnUrl=${encodeURIComponent(requestedUrl)}`),
+  );
 };
