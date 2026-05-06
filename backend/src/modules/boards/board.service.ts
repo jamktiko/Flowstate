@@ -117,34 +117,143 @@ export async function renameBoard(
   return updated;
 }
 
+/**
+ * Deletes a board and removes its reference from the user's board list.
+ * Two-phase operation:
+ *   Phase 1 — verify ownership (sequential, needed before deletion)
+ *   Phase 2 — delete board + remove user ref (parallel, independent operations)
+ * @param boardId - MongoDB ObjectId of the board to delete
+ * @param userId - MongoDB ObjectId of the requesting user
+ * @throws If board not found or belongs to a different user (FR 4.3)
+ * Note: At production scale, wrap in a MongoDB transaction to prevent partial failure.
+ */
 export async function deleteBoard(
-  _boardId: Types.ObjectId,
-  _userId: Types.ObjectId,
+  boardId: Types.ObjectId,
+  userId: Types.ObjectId,
 ): Promise<void> {
-  throw new Error('Not implemented: deleteBoard');
+  // Verify board exists AND belongs to this user before deleting
+  // userId check prevents users from deleting other users' boards (IDOR)
+  const board = await Board.findOne({ _id: boardId, userId });
+  if (!board) throw new Error('Board not found or does not belong to user');
+
+  // Run both deletions in parallel — neither depends on the other's result
+  // $pull removes the matching item from the boards array in the user document
+  await Promise.all([
+    Board.deleteOne({ _id: boardId }),
+    User.updateOne({ _id: userId }, { $pull: { boards: { boardId } } }),
+  ]);
 }
 
+/**
+ * Adds a new column to a board.
+ * Uses $push to append the column to the columns array.
+ * @param boardId - MongoDB ObjectId of the board
+ * @param userId - MongoDB ObjectId of the requesting user
+ * @param colData - Column data: id (client-generated), name, order
+ * @returns The updated board document with the new column
+ * @throws If column name is empty (FR 3.1.2)
+ * @throws If board not found or belongs to a different user (FR 4.3)
+ */
 export async function addColumn(
-  _boardId: Types.ObjectId,
-  _userId: Types.ObjectId,
-  _colData: { id: string; name: string; order: number },
+  boardId: Types.ObjectId,
+  userId: Types.ObjectId,
+  colData: { id: string; name: string; order: number },
 ): Promise<IBoard> {
-  throw new Error('Not implemented: addColumn');
+  // Guard: reject empty column names before hitting the database
+  if (!colData.name || colData.name.trim() === '') {
+    throw new Error('Column name cannot be empty');
+  }
+
+  // $push appends the new column to the columns array
+  // userId in query prevents accessing other users' boards (IDOR)
+  const updated = await Board.findOneAndUpdate(
+    { _id: boardId, userId },
+    { $push: { columns: { ...colData, cards: [] } } },
+    { new: true, runValidators: true },
+  );
+
+  if (!updated) throw new Error('Board not found or does not belong to user');
+
+  return updated;
 }
 
+/**
+ * Deletes a column from a board — only allowed when the column is empty.
+ * SRS FR 3.4.2: users can only delete empty columns.
+ * Card count is derived in code — not stored on the column document.
+ * @param boardId - MongoDB ObjectId of the board
+ * @param userId - MongoDB ObjectId of the requesting user
+ * @param colId - Client-generated column ID e.g. 'col_1'
+ * @returns The updated board document with the column removed
+ * @throws If column still contains cards (FR 3.4.2)
+ * @throws If board not found or belongs to a different user (FR 4.3)
+ */
 export async function deleteColumn(
-  _boardId: Types.ObjectId,
-  _userId: Types.ObjectId,
-  _colId: string,
+  boardId: Types.ObjectId,
+  userId: Types.ObjectId,
+  colId: string,
 ): Promise<IBoard> {
-  throw new Error('Not implemented: deleteColumn');
+  // Fetch the board first — need to inspect column contents before deleting
+  const board = await Board.findOne({ _id: boardId, userId });
+  if (!board) throw new Error('Board not found or does not belong to user');
+
+  // Find the column inside the embedded columns array
+  const column = board.columns.find((c) => c.id === colId);
+  if (!column) throw new Error('Column not found');
+
+  // Guard: SRS requires columns to be empty before deletion (FR 3.4.2)
+  // Card count derived from embedded array length — no separate DB query needed
+  if (column.cards.length > 0) {
+    throw new Error('Column must be empty before it can be deleted');
+  }
+
+  // $pull removes the column matching the given id from the columns array
+  const updated = await Board.findOneAndUpdate(
+    { _id: boardId, userId },
+    { $pull: { columns: { id: colId } } },
+    { new: true },
+  );
+
+  if (!updated) throw new Error('Board not found or does not belong to user');
+
+  return updated;
 }
 
+/**
+ * Renames a column inside a board.
+ * Uses arrayFilters to target the specific column by its id
+ * without rewriting the entire columns array.
+ * @param boardId - MongoDB ObjectId of the board
+ * @param userId - MongoDB ObjectId of the requesting user
+ * @param colId - Client-generated column ID e.g. 'col_1'
+ * @param name - New column name — must be non-empty after trimming
+ * @returns The updated board document
+ * @throws If name is empty (FR 3.2.1)
+ * @throws If board not found or belongs to a different user (FR 4.3)
+ */
 export async function renameColumn(
-  _boardId: Types.ObjectId,
-  _userId: Types.ObjectId,
-  _colId: string,
-  _name: string,
+  boardId: Types.ObjectId,
+  userId: Types.ObjectId,
+  colId: string,
+  name: string,
 ): Promise<IBoard> {
-  throw new Error('Not implemented: renameColumn');
+  // Guard: reject empty or whitespace-only names
+  if (!name || name.trim() === '') {
+    throw new Error('Column name cannot be empty');
+  }
+
+  // arrayFilters lets MongoDB target a specific column inside the embedded array
+  // 'col.id': colId matches only the column with the given id
+  const updated = await Board.findOneAndUpdate(
+    { _id: boardId, userId },
+    { $set: { 'columns.$[col].name': name.trim() } },
+    {
+      new: true,
+      arrayFilters: [{ 'col.id': colId }], // target only the matching column
+    },
+  );
+
+  if (!updated) throw new Error('Board not found or does not belong to user');
+
+  return updated;
 }
