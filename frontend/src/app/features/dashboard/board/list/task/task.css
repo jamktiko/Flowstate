@@ -2,8 +2,13 @@
   background-color: #ffffff;
   border: 1px solid #e0e0e0;
   border-radius: 6px;
-  padding: 12px;
+
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 10px;
   margin-bottom: 8px;
+
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   cursor: grab;
 }
@@ -12,22 +17,37 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  gap: 8px;
+  margin-bottom: 6px;
 }
 
 .task-title {
   margin: 0;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 18px;
+  font-weight: 500;
+  font-family: kanit, sans-serif;
 }
 
 .task-actions {
   color: #888;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 .task-description {
   margin: 0;
-  font-size: 12px;
+  font-size: 15px;
   color: #666;
+  font-family: sans-serif;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@media (max-width: 768px) {
+  .task-card {
+    min-height: 60px;
+    padding: 13px 10px;
+    margin-bottom: 11px;
+  }
 }
