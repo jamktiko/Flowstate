@@ -6,6 +6,9 @@ import express from 'express';
 import cors from 'cors';
 import { checkAuth } from './modules/auth/auth.middleware';
 import userRouter from './modules/users/user.routes';
+
+import boardRouter from './modules/boards/board.routes';
+
 import authRouter from './modules/auth/auth.routes';
 
 const app = express();
@@ -32,6 +35,8 @@ app.use('/api', router);
 app.use('/api/auth', authRouter);
 // Feature routers — add new routers here as modules are built
 app.use('/api/users', userRouter);
+
+app.use('/api/boards', boardRouter);
 // This route is for testing the server root, it can be removed later
 app.get('/', (req, res) => {
   res.send(
