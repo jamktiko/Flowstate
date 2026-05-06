@@ -10,8 +10,8 @@ interface Board {
 @Component({
   selector: 'app-boards-page',
   imports: [],
-  templateUrl: './boards-page.html',
-  styleUrl: './boards-page.css',
+  templateUrl: './listBoards-page.html',
+  styleUrl: './listBoards-page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BoardsPage {
