@@ -8,6 +8,8 @@ import {
 import { Board } from '../boards/board.model';
 import { CalendarEvent } from '../calendar/calendarEvent.model';
 
+//Comment to launch deploy workflow on push to main branch
+
 /**
  * Creates a new user document in the database.
  * Called after successful Cognito registration to store profile data.
