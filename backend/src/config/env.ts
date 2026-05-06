@@ -9,6 +9,7 @@ export const validateEnv = (): void => {
     'COGNITO_CLIENT_ID',
     'COGNITO_REGION',
     'TOKEN_ENCRYPTION_KEY',
+    'FRONTEND_URL',
   ];
 
   const missing = required.filter((key) => !process.env[key]);
