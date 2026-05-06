@@ -6,7 +6,10 @@ import express from 'express';
 import cors from 'cors';
 import { checkAuth } from './modules/auth/auth.middleware';
 import userRouter from './modules/users/user.routes';
+
 import boardRouter from './modules/boards/board.routes';
+
+import authRouter from './modules/auth/auth.routes';
 
 const app = express();
 
@@ -28,6 +31,8 @@ router.get('/health', (req, res) => {
 // All routes prefixed with /api
 app.use('/api', router);
 
+// Auth routes — must be registered before feature routes to ensure middleware is applied
+app.use('/api/auth', authRouter);
 // Feature routers — add new routers here as modules are built
 app.use('/api/users', userRouter);
 

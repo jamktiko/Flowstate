@@ -21,3 +21,8 @@ nav {
   stroke: white;
   fill: none;
 }
+
+.right-section {
+  margin-left: auto;
+  padding-right: 16px;
+}

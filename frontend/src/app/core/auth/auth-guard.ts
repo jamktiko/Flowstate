@@ -1,5 +1,23 @@
-import { CanActivateFn } from '@angular/router';
+import { CanMatchFn, Router } from '@angular/router';
+import { inject } from '@angular/core';
+import { AuthService } from './auth-service';
 
-export const authGuard: CanActivateFn = (route, state) => {
-  return true;
+export const authGuard: CanMatchFn = async (route, segments) => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
+
+  try {
+    const isAuthenticated = await authService.isAuthenticated();
+    if (isAuthenticated) {
+      return true;
+    }
+  } catch (err) {
+    console.error(err);
+  }
+
+  // Reconstruct the requested URL from the segments
+  const requestedUrl = '/' + segments.map((s) => s.path).join('/');
+
+  console.log('User tried to access:', requestedUrl);
+  return router.parseUrl(`/auth/login?returnUrl=${encodeURIComponent(requestedUrl)}`);
 };
