@@ -6,7 +6,7 @@
 import { Types } from 'mongoose';
 import { Board, IBoard } from './board.model';
 import { User } from '../users/user.model';
-import { getUserByCognitoSub } from '../users/user.service';
+import { getUserByCognitoSub, syncBoardName } from '../users/user.service';
 
 /**
  * Creates a new board and registers it in the user's board list.
@@ -54,19 +54,67 @@ export async function getBoardsByUser(
   return await Board.find({ userId });
 }
 
+/**
+ * Returns a single board by ID, enforcing ownership check.
+ * Includes userId in the query — prevents users from accessing other users' boards (IDOR).
+ * @param boardId - MongoDB ObjectId of the board
+ * @param userId - MongoDB ObjectId of the requesting user
+ * @returns The full board document including columns and embedded cards
+ * @throws If board not found OR board belongs to a different user (FR 4.3)
+ */
 export async function getBoardById(
-  _boardId: Types.ObjectId,
-  _userId: Types.ObjectId,
+  boardId: Types.ObjectId,
+  userId: Types.ObjectId,
 ): Promise<IBoard> {
-  throw new Error('Not implemented: getBoardById');
+  // userId in query acts as authorization — returns null if board belongs to someone else
+
+  const board = await Board.findOne({ _id: boardId, userId });
+
+  // Single throw covers both "not found" and "wrong user" — never expose which one to client
+  if (!board) {
+    throw new Error('Board not found or does not belong to user');
+  }
+  return board;
 }
 
+/**
+ * Renames a board and keeps the user's board list in sync.
+ * Two sequential operations — sync requires updated._id and updated.name
+ * from the board update result so they cannot run in parallel.
+ * @param boardId - MongoDB ObjectId of the board to rename
+ * @param userId - MongoDB ObjectId of the requesting user
+ * @param name - New board name — must be non-empty after trimming whitespace
+ * @returns The updated board document
+ * @throws If name is empty (FR 2.2.1)
+ * @throws If board not found or belongs to a different user (FR 4.3)
+ * @throws If syncBoardName fails — rename is aborted to prevent data inconsistency
+ */
+
 export async function renameBoard(
-  _boardId: Types.ObjectId,
-  _userId: Types.ObjectId,
-  _name: string,
+  boardId: Types.ObjectId,
+  userId: Types.ObjectId,
+  name: string,
 ): Promise<IBoard> {
-  throw new Error('Not implemented: renameBoard');
+  // Guard: reject empty or whitespace-only names before hitting the database
+  if (!name || name.trim() === '') {
+    throw new Error('Board name cannot be empty');
+  }
+
+  // Update board name — userId in query prevents accessing other users' boards (IDOR)
+  const updated = await Board.findOneAndUpdate(
+    { _id: boardId, userId },
+    { $set: { name: name.trim() } },
+    { new: true }, // return updated document, not original
+  );
+
+  // Single throw covers both "not found" and "wrong user"
+  if (!updated) throw new Error('Board not found or does not belong to user');
+
+  // Sync name to users.boards[].name — board name is duplicated there for fast list rendering
+  // If this fails, the whole operation fails — partial state would cause board list to show wrong name
+  await syncBoardName(userId, updated._id, updated.name);
+
+  return updated;
 }
 
 export async function deleteBoard(
