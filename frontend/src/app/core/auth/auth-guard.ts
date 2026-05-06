@@ -1,8 +1,8 @@
-import { CanActivateFn, Router } from '@angular/router';
+import { CanMatchFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
 import { AuthService } from './auth-service';
 
-export const authGuard: CanActivateFn = async (route, state) => {
+export const authGuard: CanMatchFn = async (route, segments) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
@@ -15,6 +15,9 @@ export const authGuard: CanActivateFn = async (route, state) => {
     console.error(err);
   }
 
-  console.log('User tried to access:', state.url);
-  return router.parseUrl(`/auth/login?returnUrl=${encodeURIComponent(state.url)}`);
+  // Reconstruct the requested URL from the segments
+  const requestedUrl = '/' + segments.map((s) => s.path).join('/');
+
+  console.log('User tried to access:', requestedUrl);
+  return router.parseUrl(`/auth/login?returnUrl=${encodeURIComponent(requestedUrl)}`);
 };
