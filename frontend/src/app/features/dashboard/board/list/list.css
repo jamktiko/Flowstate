@@ -1,13 +1,39 @@
+:host {
+  display: block;
+  width: 250px;
+  min-width: 250px;
+  max-width: 250px;
+  flex-shrink: 0;
+}
+
 .list-container {
-  background-color: #f4f5f7;
+  background-color: #f0f8ff;
   border-radius: 8px;
-  width: 300px;
-  max-height: 100%;
+  border: 1px solid #d9d9d9;
+
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+
+  /* Trello-tyylinen maksimikorkeus */
+  max-height: calc(100vh - 200px);
+
   display: flex;
   flex-direction: column;
   padding: 10px;
-  margin-right: 16px;
+  margin-right: 0;
   flex-shrink: 0;
+}
+
+.list-cards {
+  flex: 1 1 auto;
+
+  /* taskit scrollaavat tämän sisällä */
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  padding: 0 4px;
+  min-height: 10px;
 }
 
 .list-header {
@@ -15,19 +41,21 @@
   justify-content: space-between;
   align-items: center;
   padding: 8px 8px 12px 8px;
+  font-family: kanit, sans-serif;
 }
 
 .list-title {
   margin: 0;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
-  color: #172b4d;
+  color: #000000;
 }
 
 .list-options {
   color: #6b778c;
   cursor: pointer;
   padding: 4px;
+  font-size: 24px;
 }
 
 .list-cards {
@@ -40,21 +68,25 @@
 .list-footer {
   padding: 8px 0 0 0;
 }
-
-.add-task-btn {
-  width: 100%;
-  text-align: left;
-  background: transparent;
-  border: none;
-  padding: 8px;
-  color: #5e6c84;
-  cursor: pointer;
-  border-radius: 4px;
-  font-family: inherit;
-  font-size: 14px;
+@media (max-width: 768px) {
+  :host {
+    width: 300px;
+    min-width: 300px;
+    max-width: 300px;
+  }
 }
+@media (max-width: 768px) {
+  .list-container {
+    min-height: 300px;
+  }
+}
+@media (max-width: 768px) {
+  .list-container {
+    max-height: 450px;
+  }
 
-.add-task-btn:hover {
-  background-color: rgba(9, 30, 66, 0.08);
-  color: #172b4d;
+  .list-cards {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
 }

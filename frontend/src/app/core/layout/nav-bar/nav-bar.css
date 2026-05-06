@@ -6,6 +6,15 @@ nav {
   display: flex;
   align-items: center;
   padding-left: 16px;
+  nav {
+    width: 100%;
+    height: 3.875rem;
+    background-color: #4c90ff;
+
+    display: flex;
+    align-items: center;
+    padding-left: 16px;
+  }
 }
 
 .back-btn {
