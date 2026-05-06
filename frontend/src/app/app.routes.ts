@@ -26,10 +26,14 @@ export const routes: Routes = [
       },
       {
         path: 'dashboard',
-        canActivate: [authGuard], // <-- PROTECT THE ROUTE HERE
+        canMatch: [authGuard], // <-- PROTECT THE ROUTE HERE
         loadChildren: () =>
           import('./features/dashboard/dashboard.routes').then((m) => m.DASHBOARD_ROUTES),
       },
     ],
+  },
+  {
+    path: '**',
+    redirectTo: '',
   },
 ];
