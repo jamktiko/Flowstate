@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { WelcomePage } from './features/landing/welcome/welcome-page';
 import { PageLayout } from './core/layout/page-layout/page-layout';
+import { authGuard } from './core/auth/auth-guard';
 
 export const routes: Routes = [
   // 1. Pages WITH NO Layout (No Navbar)
@@ -25,7 +26,7 @@ export const routes: Routes = [
       },
       {
         path: 'dashboard',
-        // canActivate: [authGuard], // <-- PROTECT THE ROUTE HERE
+        canActivate: [authGuard], // <-- PROTECT THE ROUTE HERE
         loadChildren: () =>
           import('./features/dashboard/dashboard.routes').then((m) => m.DASHBOARD_ROUTES),
       },

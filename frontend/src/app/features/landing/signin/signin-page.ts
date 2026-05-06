@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { NavBarService } from '../../../core/layout/nav-bar/nav-bar-service';
@@ -11,20 +11,20 @@ import { NavBarService } from '../../../core/layout/nav-bar/nav-bar-service';
   templateUrl: './signin-page.html',
   styleUrl: './signin-page.css',
 })
-export class SigninPage implements OnInit, OnDestroy {
+export class SigninPage {
   private navBarService: NavBarService = inject(NavBarService);
   private router = inject(Router);
 
-  ngOnInit() {
-    // Optionally change NavBar behavior for this specific page
+  constructor() {
+    // 1. Initialize navbar components when accessing this
     this.navBarService.showBackButton.set(true);
     this.navBarService.customBackAction.set(() => {
       this.router.navigate(['/']);
     });
-  }
 
-  ngOnDestroy() {
-    // Reset to defaults when leaving the page
-    this.navBarService.reset();
+    // 2. Reset navbar when you leave the page
+    inject(DestroyRef).onDestroy(() => {
+      this.navBarService.reset();
+    });
   }
 }
