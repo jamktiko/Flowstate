@@ -11,6 +11,11 @@ interface AuthResponse {
   };
   message?: string;
 }
+export interface RegisterResult {
+  nextStep: {
+    signUpStep: string;
+  };
+}
 
 @Injectable({
   providedIn: 'root',
@@ -37,6 +42,15 @@ export class AuthService {
       return { nextStep: { signUpStep: 'CONFIRM_SIGN_UP' } };
     } catch (error) {
       console.error('Error in AuthService.register:', error);
+      throw error;
+    }
+  }
+
+  async confirmRegistration(email: string, koodi: string) {
+    try {
+      return await firstValueFrom(this.http.post(`${this.apiUrl}/confirm`, { email, code: koodi }));
+    } catch (error) {
+      console.error('Virhe vahvistuksessa:', error);
       throw error;
     }
   }
