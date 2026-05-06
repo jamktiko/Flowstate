@@ -1,6 +1,10 @@
 import { Router } from 'express';
 import { checkAuth } from './auth.middleware'; // Preserving existing middleware
-import { registerController, loginController } from './auth.controller';
+import {
+  registerController,
+  loginController,
+  confirmRegistrationController,
+} from './auth.controller';
 // import { googleConnect, calendarCallback } from './calendar.controller';
 
 const authRouter = Router();
@@ -15,6 +19,9 @@ authRouter.post('/register', registerController);
 
 // POST /api/auth/login - Cognito login, returns AccessToken
 authRouter.post('/login', loginController);
+
+// POST /api/auth/confirm - Cognito signup confirmation
+authRouter.post('/confirm', confirmRegistrationController);
 
 /**
  * Google Calendar Integration Routes (Disabled for now)
