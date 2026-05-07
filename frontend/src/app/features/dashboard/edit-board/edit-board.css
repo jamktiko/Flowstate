@@ -15,10 +15,6 @@ form {
   margin-bottom: 3.125rem;
 }
 
-.form-group label {
-  display: none;
-}
-
 .form-group input,
 .form-group textarea {
   width: 100%;
@@ -42,6 +38,15 @@ form {
   resize: none;
 }
 
+.form-group label {
+  display: block;
+  margin-bottom: 0.125rem;
+  transform: translateY(-0.25rem);
+  font-family: kanit, sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #111;
+}
 .form-group input::placeholder,
 .form-group textarea::placeholder {
   color: #b8b8b8;
