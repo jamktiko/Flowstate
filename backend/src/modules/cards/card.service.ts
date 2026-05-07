@@ -4,13 +4,26 @@
  * and will go green as each function is implemented correctly.
  */
 import { Types } from 'mongoose';
-import { IBoard, ICard } from '../boards/board.model';
+import { Board, IBoard, ICard } from '../boards/board.model';
+
+// ─────────────────────────────────────────────
+// Helper — find board and verify ownership
+// Reused by every card operation
+// ─────────────────────────────────────────────
+const findBoardForUser = async (
+  boardId: Types.ObjectId,
+  userId: Types.ObjectId,
+): Promise<IBoard> => {
+  const board = await Board.findOne({ _id: boardId, userId });
+  if (!board) throw new Error('Board not found or does not belong to user');
+  return board;
+};
 
 export async function createCard(
-  _boardId: Types.ObjectId,
-  _userId: Types.ObjectId,
-  _columnId: string,
-  _cardData: Partial<ICard>,
+  boardId: Types.ObjectId,
+  userId: Types.ObjectId,
+  columnId: string,
+  cardData: Partial<ICard>,
 ): Promise<IBoard> {
   throw new Error('Not implemented: createCard');
 }
