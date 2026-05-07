@@ -35,3 +35,27 @@ nav {
   margin-left: auto;
   padding-right: 16px;
 }
+.logout-btn {
+  width: 3rem;
+  height: 3rem;
+  background-color: #4c90ff;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.logout-btn svg {
+  width: 3rem;
+  height: 2.4rem;
+  display: block;
+  stroke: white;
+  fill: none;
+}
