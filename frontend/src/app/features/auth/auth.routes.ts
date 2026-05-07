@@ -15,4 +15,3 @@ export const AUTH_ROUTES: Routes = [
   { path: 'confirm', component: ConfirmPage },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
 ];
-// comment to launch deploy workflow!!
