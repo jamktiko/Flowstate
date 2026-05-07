@@ -6,4 +6,5 @@ export const environment = {
     userPoolClientId: '4obh8krimbm973e83gte5sfgh1',
   },
   apiUrl: '/api/auth',
+  redirectUri: 'https://dn2cjed8iqpd7.cloudfront.net/auth/callback',
 };

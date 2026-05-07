@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthLayout } from '@core/layout/auth-layout/auth-layout';
-import { AuthService } from '@core/auth/auth-service'; // Check the file path/name
+import { AuthService } from '@core/auth/auth-service';
+import { environment } from '../../../../environments/environment.development';
 
 @Component({
   selector: 'app-login-page',
@@ -70,7 +71,7 @@ export class LoginPage {
   signInWithGoogle() {
     const domain = 'https://eu-north-1sfwo3ekis.auth.eu-north-1.amazoncognito.com';
     const clientId = '4obh8krimbm973e83gte5sfgh1';
-    const redirectUri = 'https://dn2cjed8iqpd7.cloudfront.net/auth/callback';
+    const redirectUri = environment.redirectUri;
     const scope = encodeURIComponent('email openid profile');
 
     // build the URL for the Cognito hosted UI with Google as the identity provider
