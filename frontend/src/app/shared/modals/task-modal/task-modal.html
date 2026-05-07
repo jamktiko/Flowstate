@@ -1,0 +1,57 @@
+<app-basic-modal [isOpen]="isOpen()" (closeModal)="onClose()">
+  <h2 modal-header>Create New Task</h2>
+
+  <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="task-title">Title</label>
+      <input id="task-title" type="text" formControlName="title" placeholder="Task Title" />
+    </div>
+
+    <fieldset class="form-group">
+      <legend>Priority</legend>
+      <div class="priority-options">
+        <label class="priority-label low">
+          <input type="radio" formControlName="priority" value="low" /> Low
+        </label>
+        <label class="priority-label medium">
+          <input type="radio" formControlName="priority" value="medium" /> Medium
+        </label>
+        <label class="priority-label high">
+          <input type="radio" formControlName="priority" value="high" /> High
+        </label>
+      </div>
+    </fieldset>
+
+    <div class="form-group">
+      <label for="task-due-date">Due Date</label>
+      <input id="task-due-date" type="date" formControlName="dueDate" />
+    </div>
+
+    <div class="form-group">
+      <label for="task-description">Description</label>
+      <textarea
+        id="task-description"
+        formControlName="description"
+        placeholder="Task Description"
+      ></textarea>
+    </div>
+
+    <fieldset class="form-group" formGroupName="tags">
+      <legend>Tags</legend>
+      <div class="tag-options">
+        <label class="tag-label"> <input type="checkbox" formControlName="bug" /> Bug </label>
+        <label class="tag-label">
+          <input type="checkbox" formControlName="feature" /> Feature
+        </label>
+        <label class="tag-label">
+          <input type="checkbox" formControlName="enhancement" /> Enhancement
+        </label>
+      </div>
+    </fieldset>
+
+    <div modal-footer class="actions">
+      <button type="button" class="btn-cancel" (click)="onClose()">Cancel</button>
+      <button type="submit" class="btn-add" [disabled]="taskForm.invalid">Add Task</button>
+    </div>
+  </form>
+</app-basic-modal>

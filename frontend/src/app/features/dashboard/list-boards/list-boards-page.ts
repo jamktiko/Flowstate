@@ -6,7 +6,7 @@ import {
   signal,
   computed,
 } from '@angular/core';
-import { NavBarService } from '../../../core/layout/nav-bar/nav-bar-service';
+import { NavBarService } from '@core/layout/nav-bar/nav-bar-service';
 import { Router } from '@angular/router';
 import { EditBoardModal } from '../edit-board/edit-board';
 

@@ -7,7 +7,15 @@
     <app-list></app-list>
 
     <div class="add-task-wrapper">
-      <button class="add-task-btn">+</button>
+      <button class="add-task-btn" (click)="openCreateTaskModal()">+</button>
+
     </div>
   </div>
+
+  <app-task-modal
+    [isOpen]="isCreateTaskModalOpen()"
+    (closeModal)="closeCreateTaskModal()"
+    (saveTask)="handleSaveTask($event)"
+  >
+  </app-task-modal>
 </div>

@@ -1,0 +1,87 @@
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.priority-options,
+.tag-options {
+  display: flex;
+  gap: 1rem;
+}
+
+.priority-label,
+.tag-label {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  font-weight: normal;
+}
+
+.priority-label input[type='radio'],
+.tag-label input[type='checkbox'] {
+  margin: 0;
+}
+
+.priority-label.low {
+  background-color: #e6ffed;
+  border-color: #b7ebc5;
+  color: #1a7f37;
+}
+
+.priority-label.medium {
+  background-color: #fff8c5;
+  border-color: #f7e099;
+  color: #9a6700;
+}
+
+.priority-label.high {
+  background-color: #ffebe9;
+  border-color: #ffb1af;
+  color: #cf222e;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.btn-cancel,
+.btn-add {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-cancel {
+  background-color: #f0f0f0;
+}
+
+.btn-add {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-add:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+input[type='text'],
+input[type='date'],
+textarea {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}

@@ -10,6 +10,11 @@ export const routes: Routes = [
     pathMatch: 'full',
     component: WelcomePage,
   },
+  {
+    path: 'auth/callback',
+    loadComponent: () =>
+      import('./features/auth/callback/callback').then((m) => m.AuthCallbackComponent),
+  },
   // 2. Pages WITH Layout (Navbar + children)
   {
     path: '',
@@ -29,10 +34,6 @@ export const routes: Routes = [
         canMatch: [authGuard], // <-- PROTECT THE ROUTE HERE
         loadChildren: () =>
           import('./features/dashboard/dashboard.routes').then((m) => m.DASHBOARD_ROUTES),
-      },
-      {
-        path: 'auth',
-        loadChildren: () => import('./features/auth/auth.routes').then((m) => m.AUTH_ROUTES),
       },
     ],
   },
