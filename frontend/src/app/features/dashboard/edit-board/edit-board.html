@@ -4,7 +4,7 @@
   <form [formGroup]="boardForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
       <label for="board-title">Title</label>
-      <input id="board-title" type="text" formControlName="title" placeholder="Board Title" />
+      <input id="board-title" type="text" formControlName="title" placeholder="Add title" />
     </div>
 
     <div class="form-group">
@@ -12,12 +12,13 @@
       <textarea
         id="board-description"
         formControlName="description"
-        placeholder="Board Description"
+        placeholder="Add Description"
       ></textarea>
     </div>
 
     <div modal-footer class="actions">
       <button type="button" class="btn-cancel" (click)="onClose()">Cancel</button>
+
       <button type="submit" class="btn-add" [disabled]="boardForm.invalid">
         {{ initialData() ? 'Save' : 'Add' }}
       </button>
