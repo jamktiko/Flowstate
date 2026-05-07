@@ -1,6 +1,6 @@
 <nav>
   @if (navBarService.showBackButton()) {
-    <button class="back-btn" (click)="handleBack()">
+    <button class="back-btn" (click)="handleBack()" aria-label="Back">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="50"
@@ -21,7 +21,23 @@
 
   <div class="right-section">
     @if (navBarService.showLogoutButton()) {
-      <button class="logout-btn" (click)="handleLogout()">Logout</button>
+      <button class="logout-btn" (click)="handleLogout()" aria-label="Logout">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="33"
+          height="33"
+          viewBox="0 0 33 33"
+          fill="none"
+        >
+          <path
+            d="M20.625 4.125H26.125C26.8543 4.125 27.5538 4.41473 28.0695 4.93046C28.5853 5.44618 28.875 6.14565 28.875 6.875V26.125C28.875 26.8543 28.5853 27.5538 28.0695 28.0695C27.5538 28.5853 26.8543 28.875 26.125 28.875H20.625M13.75 9.625L20.625 16.5L13.75 23.375M20.625 16.5H4.125"
+            stroke="white"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
     }
   </div>
 </nav>
