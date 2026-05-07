@@ -72,7 +72,7 @@ export class LoginPage {
   signInWithGoogle() {
     const domain = 'https://eu-north-1sfwo3ekis.auth.eu-north-1.amazoncognito.com';
     const clientId = '4obh8krimbm973e83gte5sfgh1';
-    const redirectUri = window.location.origin + '/auth/callback';
+    const redirectUri = 'https://dn2cjed8iqpd7.cloudfront.net/auth/callback';
     const scope = encodeURIComponent('email openid profile');
 
     // build the URL for the Cognito hosted UI with Google as the identity provider
