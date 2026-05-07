@@ -67,4 +67,17 @@ export class LoginPage {
       this.loginForm.markAllAsTouched();
     }
   }
+
+  // This method initiates the Google Sign-In flow using AWS Cognito's hosted UI
+  signInWithGoogle() {
+    const domain = 'https://eu-north-1sfwo3ekis.auth.eu-north-1.amazoncognito.com';
+    const clientId = '4obh8krimbm973e83gte5sfgh1';
+    const redirectUri = window.location.origin + '/auth/callback';
+    const scope = 'email+openid+profile';
+
+    // build the URL for the Cognito hosted UI with Google as the identity provider
+    const googleUrl = `${domain}/oauth2/authorize?identity_provider=Google&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&client_id=${clientId}&scope=${scope}`;
+
+    window.location.href = googleUrl;
+  }
 }

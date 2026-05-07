@@ -13,7 +13,7 @@
       <input id="password" type="password" formControlName="password" placeholder="••••••••" />
     </div>
 
-        <!-- Submit Button -->
+    <!-- Submit Button -->
     <button class="submit-btn" type="submit" [disabled]="loginForm.invalid">Sign in</button>
   </form>
 
@@ -25,7 +25,7 @@
         <p>M</p>
       </button>
 
-      <button type="button" class="social-btn">
+      <button type="button" class="social-btn" (click)="signInWithGoogle()">
         <p>G</p>
       </button>
     </div>

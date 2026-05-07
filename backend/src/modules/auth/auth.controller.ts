@@ -3,9 +3,11 @@ import {
   CognitoIdentityProviderClient,
   SignUpCommand,
   InitiateAuthCommand,
-  ConfirmSignUpCommand, // LISÄTTY: Tarvitaan vahvistukseen
+  ConfirmSignUpCommand,
 } from '@aws-sdk/client-cognito-identity-provider';
-import { createUser } from '../users/user.service';
+import axios from 'axios';
+import jwt from 'jsonwebtoken';
+import { createUser, getUserByCognitoSub } from '../users/user.service';
 import { sendSuccess, sendError } from '../../utils/responseHelpers';
 
 const cognitoClient = new CognitoIdentityProviderClient({
@@ -14,8 +16,6 @@ const cognitoClient = new CognitoIdentityProviderClient({
 
 /**
  * POST /api/auth/register
- * Handles user registration by signing up with AWS Cognito
- * and creating a user record in our database.
  */
 export const registerController = async (req: Request, res: Response) => {
   const { email, password, firstName, lastName } = req.body;
@@ -40,7 +40,6 @@ export const registerController = async (req: Request, res: Response) => {
       return sendError(res, 'Registration failed at Cognito', 500);
     }
 
-    // Saves the user in our database with the Cognito sub as a reference
     const user = await createUser({
       cognitoSub,
       email,
@@ -58,14 +57,12 @@ export const registerController = async (req: Request, res: Response) => {
 
 /**
  * POST /api/auth/confirm
- * Handles the confirmation of user registration using the code sent by Cognito.
  */
 export const confirmRegistrationController = async (
   req: Request,
   res: Response,
 ) => {
   const { email, code } = req.body;
-
   try {
     await cognitoClient.send(
       new ConfirmSignUpCommand({
@@ -74,7 +71,6 @@ export const confirmRegistrationController = async (
         ConfirmationCode: code,
       }),
     );
-
     return sendSuccess(res, { message: 'Account confirmed successfully' });
   } catch (error: any) {
     console.error('Confirmation Error:', error);
@@ -84,11 +80,9 @@ export const confirmRegistrationController = async (
 
 /**
  * POST /api/auth/login
- * Handles user login by authenticating with AWS Cognito and returning tokens.
  */
 export const loginController = async (req: Request, res: Response) => {
   const { email, password } = req.body;
-
   try {
     const result = await cognitoClient.send(
       new InitiateAuthCommand({
@@ -111,5 +105,67 @@ export const loginController = async (req: Request, res: Response) => {
   } catch (error: any) {
     console.error('Login Error:', error);
     return sendError(res, 'Invalid credentials', 401);
+  }
+};
+
+/**
+ * POST /api/auth/google-callback
+ * Handles the callback from Google OAuth, exchanges code for tokens, and syncs user to MongoDB
+ */
+export const googleCallbackController = async (req: Request, res: Response) => {
+  const { code } = req.body;
+
+  if (!code) {
+    return sendError(res, 'Authorization code is missing', 400);
+  }
+
+  try {
+    const domain = process.env.COGNITO_DOMAIN;
+    const clientId = process.env.COGNITO_CLIENT_ID;
+    const clientSecret = process.env.COGNITO_CLIENT_SECRET;
+    const redirectUri = process.env.GOOGLE_REDIRECT_URI;
+
+    // Authorization code changes into tokens (id_token, access_token, refresh_token)
+    const tokenResponse = await axios.post(
+      `https://${domain}/oauth2/token`,
+      new URLSearchParams({
+        grant_type: 'authorization_code',
+        client_id: clientId!,
+        code: code,
+        redirect_uri: redirectUri!,
+      }).toString(),
+      { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
+    );
+
+    const { id_token, access_token, refresh_token, expires_in } =
+      tokenResponse.data;
+
+    // Extract user info from id_token
+    const decodedToken: any = jwt.decode(id_token);
+    const { sub, email, given_name, family_name } = decodedToken;
+
+    // MongoDB: Check if user with this Cognito sub exists, if not create a new user
+    let user = await getUserByCognitoSub(sub);
+
+    if (!user) {
+      user = await createUser({
+        cognitoSub: sub,
+        email: email,
+        firstName: given_name || 'GoogleUser',
+        lastName: family_name || '',
+        role: 'user',
+      });
+      console.log('New Google user synced to MongoDB:', email);
+    }
+
+    return sendSuccess(res, {
+      accessToken: access_token,
+      refreshToken: refresh_token,
+      expiresIn: expires_in,
+      user,
+    });
+  } catch (error: any) {
+    console.error('Google Auth Error:', error.response?.data || error.message);
+    return sendError(res, 'Google authentication failed', 400);
   }
 };
