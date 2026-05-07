@@ -1,12 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthLayout } from '../../../core/layout/auth-layout/auth-layout';
-import { AuthService, RegisterResult } from '../../../core/auth/auth-service';
+import { AuthLayout } from '@core/layout/auth-layout/auth-layout';
+import { AuthService, RegisterResult } from '@core/auth/auth-service';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register-page',
-  standalone: true,
   imports: [AuthLayout, ReactiveFormsModule],
   templateUrl: './register-page.html',
   styleUrl: './register-page.css',
