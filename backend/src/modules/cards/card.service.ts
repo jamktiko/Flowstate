@@ -193,12 +193,65 @@ export async function deleteCard(
 }
 
 export async function moveCard(
-  _boardId: Types.ObjectId,
-  _userId: Types.ObjectId,
-  _sourceColId: string,
-  _targetColId: string,
-  _cardId: Types.ObjectId,
-  _newOrder: number,
+  boardId: Types.ObjectId,
+  userId: Types.ObjectId,
+  sourceColId: string,
+  targetColId: string,
+  cardId: Types.ObjectId,
+  newOrder: number,
 ): Promise<IBoard> {
-  throw new Error('Not implemented: moveCard');
+  const board = await findBoardForUser(boardId, userId);
+
+  const sourceCol = board.columns.find((col) => col.id === sourceColId);
+  if (!sourceCol) throw new Error('Source column not found');
+
+  const card = sourceCol.cards.find(
+    (c) => c._id.toString() === cardId.toString(),
+  );
+  if (!card) throw new Error('Card not found');
+
+  if (sourceColId === targetColId) {
+    const oldOrder = card.order;
+
+    // bump cards between old and new position
+    sourceCol.cards.forEach((c) => {
+      if (c._id.toString() !== cardId.toString()) {
+        // moving DOWN the list
+        if (oldOrder < newOrder && c.order > oldOrder && c.order <= newOrder) {
+          c.order -= 1;
+        }
+        // moving UP the list
+        if (oldOrder > newOrder && c.order >= newOrder && c.order < oldOrder) {
+          c.order += 1;
+        }
+      }
+      // set new order AFTER adjusting others
+      card.order = newOrder;
+    });
+  } else {
+    // remove card from source column
+    sourceCol.cards = sourceCol.cards.filter(
+      (c) => c._id.toString() !== cardId.toString(),
+    );
+
+    // compact source column orders after removal
+    sourceCol.cards.forEach((c) => {
+      if (c.order > card.order) c.order -= 1;
+    });
+
+    // find target column
+    const targetCol = board.columns.find((col) => col.id === targetColId);
+    if (!targetCol) throw new Error('Target column not found');
+
+    // make room in target column at the drop position
+    targetCol.cards.forEach((c) => {
+      if (c.order >= newOrder) c.order += 1;
+    });
+
+    // add card to target column at new position
+    card.order = newOrder;
+    targetCol.cards.push(card);
+  }
+  // persist all changes to database and return updated board
+  return await board.save();
 }
