@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment'; // Tarkista polku
+import { environment } from '../../../environments/environment';
 import { firstValueFrom } from 'rxjs';
 interface AuthResponse {
   data?: {
@@ -27,8 +27,6 @@ export class AuthService {
 
   async register(email: string, salasana: string, firstName: string, surname: string) {
     try {
-      // Poistettu 'const response =', koska sitä ei käytetä.
-      // Vaihdettu <any> -> <AuthResponse>
       await firstValueFrom(
         this.http.post<AuthResponse>(`${this.apiUrl}/register`, {
           email,
@@ -38,7 +36,6 @@ export class AuthService {
         }),
       );
 
-      // Palautetaan rakenne, jota register-page.ts odottaa
       return { nextStep: { signUpStep: 'CONFIRM_SIGN_UP' } };
     } catch (error) {
       console.error('Error in AuthService.register:', error);
@@ -55,7 +52,6 @@ export class AuthService {
     }
   }
 
-  // Muista vaihtaa myös login-metodiin <AuthResponse> anyn tilalle
   async login(email: string, salasana: string) {
     try {
       const res = await firstValueFrom(
@@ -75,7 +71,6 @@ export class AuthService {
 
   // Check if a user is currently logged in
   async isAuthenticated(): Promise<boolean> {
-    // Koska emme käytä Amplifya, tarkistamme tokenin olemassaolon
     return !!localStorage.getItem('accessToken');
   }
 
@@ -96,5 +91,15 @@ export class AuthService {
       accessToken: localStorage.getItem('accessToken'),
       idToken: localStorage.getItem('idToken'),
     };
+  }
+
+  async handleGoogleLogin(code: string): Promise<void> {
+    const res = await firstValueFrom(
+      this.http.post<AuthResponse>(`${this.apiUrl}/google-callback`, { code }),
+    );
+
+    if (res.data?.accessToken) {
+      localStorage.setItem('accessToken', res.data.accessToken);
+    }
   }
 }
