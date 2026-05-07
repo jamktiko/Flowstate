@@ -28,7 +28,12 @@
         <h4>{{ board.title }}</h4>
 
         <div class="card-actions">
-          <button class="icon-btn edit-btn" type="button" aria-label="Muokkaa boardia">
+          <button
+            class="icon-btn edit-btn"
+            type="button"
+            aria-label="Muokkaa boardia"
+            (click)="openEditModal(board)"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -73,7 +78,7 @@
     }
   </div>
 
-  <button class="add-board-btn" type="button" (click)="addBoard()">
+  <button class="add-board-btn" type="button" (click)="openCreateModal()">
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
       <path
         d="M10 4V16M4 10H16"
@@ -86,4 +91,12 @@
 
     <span>New board</span>
   </button>
+
+  <app-edit-board
+    [isOpen]="isEditModalOpen()"
+    [initialData]="editingBoard()"
+    (closeModal)="closeEditModal()"
+    (saveBoard)="handleSaveBoard($event)"
+  >
+  </app-edit-board>
 </div>
