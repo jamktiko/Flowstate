@@ -192,6 +192,22 @@ export async function deleteCard(
   return await board.save();
 }
 
+/**
+ * Moves a card to a new position — either within the same column or to a different column.
+ * Handles two cases:
+ *   Same column: reorders cards between old and new position
+ *   Different column: removes from source, compacts source orders, inserts into target
+ * @param boardId - MongoDB ObjectId of the board
+ * @param userId - MongoDB ObjectId of the requesting user
+ * @param sourceColId - Column the card is currently in
+ * @param targetColId - Column the card is being moved to (same as sourceColId if reordering)
+ * @param cardId - MongoDB ObjectId of the card to move
+ * @param newOrder - Position where the card was dropped
+ * @returns The updated board document
+ * @throws If board not found or belongs to a different user (FR 4.3)
+ * @throws If source or target column not found
+ * @throws If card not found
+ */
 export async function moveCard(
   boardId: Types.ObjectId,
   userId: Types.ObjectId,
@@ -200,41 +216,48 @@ export async function moveCard(
   cardId: Types.ObjectId,
   newOrder: number,
 ): Promise<IBoard> {
+  // fetch board and verify ownership in one query
   const board = await findBoardForUser(boardId, userId);
 
+  // find the column the card currently lives in
   const sourceCol = board.columns.find((col) => col.id === sourceColId);
   if (!sourceCol) throw new Error('Source column not found');
 
+  // find the card inside the source column
   const card = sourceCol.cards.find(
     (c) => c._id.toString() === cardId.toString(),
   );
   if (!card) throw new Error('Card not found');
 
   if (sourceColId === targetColId) {
-    const oldOrder = card.order;
+    // ── Same column reorder ──
+    const oldOrder = card.order; // save original position before changing it
 
-    // bump cards between old and new position
+    // shift cards between old and new position to fill the gap
     sourceCol.cards.forEach((c) => {
       if (c._id.toString() !== cardId.toString()) {
-        // moving DOWN the list
+        // card moving DOWN — shift cards in between UP by 1
         if (oldOrder < newOrder && c.order > oldOrder && c.order <= newOrder) {
           c.order -= 1;
         }
-        // moving UP the list
+        // card moving UP — shift cards in between DOWN by 1
         if (oldOrder > newOrder && c.order >= newOrder && c.order < oldOrder) {
           c.order += 1;
         }
       }
-      // set new order AFTER adjusting others
-      card.order = newOrder;
     });
+
+    // set new order AFTER adjusting others — avoids order conflicts
+    card.order = newOrder;
   } else {
+    // ── Different column move ──
+
     // remove card from source column
     sourceCol.cards = sourceCol.cards.filter(
       (c) => c._id.toString() !== cardId.toString(),
     );
 
-    // compact source column orders after removal
+    // compact source column — fill gap left by removed card
     sourceCol.cards.forEach((c) => {
       if (c.order > card.order) c.order -= 1;
     });
@@ -248,10 +271,11 @@ export async function moveCard(
       if (c.order >= newOrder) c.order += 1;
     });
 
-    // add card to target column at new position
+    // insert card at new position in target column
     card.order = newOrder;
     targetCol.cards.push(card);
   }
-  // persist all changes to database and return updated board
+
+  // persist all in-memory changes to database
   return await board.save();
 }
