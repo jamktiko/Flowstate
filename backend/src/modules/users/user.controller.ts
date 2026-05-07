@@ -81,7 +81,7 @@ export const updateNotificationsController = async (
     return sendError(res, 'Internal server error', 500);
   }
 };
-
+// deploy test comment
 /**
  * DELETE /users/me
  * Deletes the user account and all associated data (boards, calendar events).
