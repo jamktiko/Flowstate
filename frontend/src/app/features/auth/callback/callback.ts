@@ -1,10 +1,9 @@
 // Callback component for handling social login redirects
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from '../../../core/auth/auth-service';
+import { AuthService } from '@core/auth/auth-service';
 
 @Component({
-  standalone: true,
   template: '<div class="loading-spinner">Finalizing login...</div>',
 })
 export class AuthCallbackComponent implements OnInit {

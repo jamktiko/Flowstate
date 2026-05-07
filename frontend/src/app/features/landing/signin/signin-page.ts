@@ -1,7 +1,7 @@
 import { Component, DestroyRef, inject } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
-import { NavBarService } from '../../../core/layout/nav-bar/nav-bar-service';
+import { NavBarService } from '@core/layout/nav-bar/nav-bar-service';
 
 // Comment to launch frontend deployment pipeline
 
