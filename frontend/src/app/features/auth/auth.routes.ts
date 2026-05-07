@@ -17,3 +17,4 @@ export const AUTH_ROUTES: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'auth/callback', component: AuthCallbackComponent },
 ];
+// comment to launch deploy workflow
