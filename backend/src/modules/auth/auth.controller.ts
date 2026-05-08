@@ -140,6 +140,10 @@ export const googleCallbackController = async (req: Request, res: Response) => {
 
     // Extract user info from the ID token
     const decodedToken: any = jwt.decode(id_token);
+    console.log(
+      'TÄSSÄ TOKENIN SISÄLTÖ:',
+      JSON.stringify(decodedToken, null, 2),
+    );
 
     // Pick up data from the token.
     // 'given_name' is users email address
