@@ -145,25 +145,41 @@ export const googleCallbackController = async (req: Request, res: Response) => {
       JSON.stringify(decodedToken, null, 2),
     );
 
-    // Pick up data from the token.
-    // 'given_name' is users email address
-    // Users name is in 'nickname' and 'middle_name' fields, but they are not always present.
+    // Pickup relevant user info from the token
     const { sub, email, nickname, middle_name } = decodedToken;
 
     let user = await getUserByCognitoSub(sub);
 
     if (!user) {
-      // Save new user to MongoDB if they don't exist
+      // Handle the case where middle_name might contain the full name
+      let finalFirstName = nickname || email.split('@')[0];
+      let finalLastName = 'GoogleUser';
+
+      if (middle_name) {
+        // If middle_name contains the full name, we can attempt to split it into first and last name.
+        const nameParts = middle_name.trim().split(/\s+/);
+
+        if (nameParts.length > 1) {
+          finalLastName = nameParts.pop();
+        } else {
+          finalLastName = middle_name;
+        }
+      }
+
       user = await createUser({
         cognitoSub: sub,
         email: email,
-        firstName: nickname || email.split('@')[0], // nickname or email prefix as fallback
-        lastName: middle_name || 'GoogleUser', // middle_name or default last name
+        firstName: finalFirstName,
+        lastName: finalLastName,
         role: 'user',
       });
+
       console.log(
-        'New Google user synced to MongoDB with correct names:',
+        'New Google user synced to MongoDB:',
         email,
+        'Names:',
+        finalFirstName,
+        finalLastName,
       );
     }
 
