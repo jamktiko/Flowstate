@@ -1,57 +1,71 @@
 <app-basic-modal [isOpen]="isOpen()" (closeModal)="onClose()">
-  <h2 modal-header>Create New Task</h2>
+  <form class="task-modal" [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+    <h2 class="modal-title">Create New Task</h2>
 
-  <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
-    <div class="form-group">
-      <label for="task-title">Title</label>
-      <input id="task-title" type="text" formControlName="title" placeholder="Task Title" />
-    </div>
+    <fieldset class="form-group priority-group">
+      <legend class="section-label">Priority</legend>
 
-    <fieldset class="form-group">
-      <legend>Priority</legend>
       <div class="priority-options">
-        <label class="priority-label low">
-          <input type="radio" formControlName="priority" value="low" /> Low
-        </label>
-        <label class="priority-label medium">
-          <input type="radio" formControlName="priority" value="medium" /> Medium
-        </label>
         <label class="priority-label high">
-          <input type="radio" formControlName="priority" value="high" /> High
+          <input type="radio" formControlName="priority" value="high" />
+          <span>High</span>
+        </label>
+
+        <label class="priority-label medium">
+          <input type="radio" formControlName="priority" value="medium" />
+          <span>Medium</span>
+        </label>
+
+        <label class="priority-label low">
+          <input type="radio" formControlName="priority" value="low" />
+          <span>Low</span>
         </label>
       </div>
     </fieldset>
 
     <div class="form-group">
-      <label for="task-due-date">Due Date</label>
-      <input id="task-due-date" type="date" formControlName="dueDate" />
+      <label for="task-title" class="sr-only">Title</label>
+      <input id="task-title" type="text" formControlName="title" placeholder="Add title" />
     </div>
 
     <div class="form-group">
-      <label for="task-description">Description</label>
+      <label for="task-description" class="sr-only">Description</label>
       <textarea
         id="task-description"
         formControlName="description"
-        placeholder="Task Description"
+        placeholder="Description"
       ></textarea>
     </div>
 
-    <fieldset class="form-group" formGroupName="tags">
-      <legend>Tags</legend>
+    <div class="form-group">
+      <label for="task-due-date" class="sr-only">Due date</label>
+      <input id="task-due-date" type="date" formControlName="dueDate" />
+    </div>
+
+    <fieldset class="form-group tag-group" formGroupName="tags">
+      <legend class="section-label">Tags</legend>
+
       <div class="tag-options">
-        <label class="tag-label"> <input type="checkbox" formControlName="bug" /> Bug </label>
         <label class="tag-label">
-          <input type="checkbox" formControlName="feature" /> Feature
+          <input type="checkbox" formControlName="bug" />
+          <span>Work</span>
         </label>
+
         <label class="tag-label">
-          <input type="checkbox" formControlName="enhancement" /> Enhancement
+          <input type="checkbox" formControlName="feature" />
+          <span>School</span>
+        </label>
+
+        <label class="tag-label">
+          <input type="checkbox" formControlName="enhancement" />
+          <span>Sports</span>
         </label>
       </div>
     </fieldset>
 
     <div modal-footer class="actions">
       <button type="button" class="btn-cancel" (click)="onClose()">Cancel</button>
-      <button type="submit" class="btn-add" [disabled]="taskForm.invalid">Add Task</button>
+      <button type="submit" class="btn-add" [disabled]="taskForm.invalid">Add</button>
     </div>
   </form>
 </app-basic-modal>
