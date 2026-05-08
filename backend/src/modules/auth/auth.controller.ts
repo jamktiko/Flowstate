@@ -122,10 +122,8 @@ export const googleCallbackController = async (req: Request, res: Response) => {
   try {
     const domain = process.env.COGNITO_DOMAIN;
     const clientId = process.env.COGNITO_CLIENT_ID;
-    const clientSecret = process.env.COGNITO_CLIENT_SECRET;
     const redirectUri = process.env.GOOGLE_REDIRECT_URI;
 
-    // Authorization code changes into tokens (id_token, access_token, refresh_token)
     const tokenResponse = await axios.post(
       `https://${domain}/oauth2/token`,
       new URLSearchParams({
@@ -140,28 +138,35 @@ export const googleCallbackController = async (req: Request, res: Response) => {
     const { id_token, access_token, refresh_token, expires_in } =
       tokenResponse.data;
 
-    // Extract user info from id_token
+    // Extract user info from the ID token
     const decodedToken: any = jwt.decode(id_token);
-    const { sub, email, given_name, family_name } = decodedToken;
 
-    // MongoDB: Check if user with this Cognito sub exists, if not create a new user
+    // Pick up data from the token.
+    // 'given_name' is users email address
+    // Users name is in 'nickname' and 'middle_name' fields, but they are not always present.
+    const { sub, email, nickname, middle_name } = decodedToken;
+
     let user = await getUserByCognitoSub(sub);
 
     if (!user) {
+      // Save new user to MongoDB if they don't exist
       user = await createUser({
         cognitoSub: sub,
         email: email,
-        firstName: given_name || 'GoogleUser',
-        lastName: family_name || '',
+        firstName: nickname || email.split('@')[0], // nickname or email prefix as fallback
+        lastName: middle_name || 'GoogleUser', // middle_name or default last name
         role: 'user',
       });
-      console.log('New Google user synced to MongoDB:', email);
+      console.log(
+        'New Google user synced to MongoDB with correct names:',
+        email,
+      );
     }
 
     return sendSuccess(res, {
       accessToken: access_token,
       refreshToken: refresh_token,
-      expiresIn: expires_in,
+      expires_in,
       user,
     });
   } catch (error: any) {
