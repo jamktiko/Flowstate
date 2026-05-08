@@ -7,7 +7,7 @@
  *
  * COMMIT CHECKPOINT: "test(calendar-model): schema validation tests"
  */
-
+/// <reference types="vitest/globals" />
 import mongoose, { Types } from 'mongoose';
 import { CalendarEvent } from './calendarEvent.model';
 import { connectTestDB, clearTestDB, disconnectTestDB } from '../../test/db';
@@ -195,7 +195,9 @@ describe('CalendarEvent model — unique index', () => {
   it('allows the same externalEventId from different providers', async () => {
     const externalEventId = 'shared-id-001';
 
-    await CalendarEvent.create(makeCalendarEvent(fakeUserId, { externalEventId, provider: 'google' }));
+    await CalendarEvent.create(
+      makeCalendarEvent(fakeUserId, { externalEventId, provider: 'google' }),
+    );
     // Different provider — should succeed
     const event2 = await CalendarEvent.create(
       makeCalendarEvent(fakeUserId, { externalEventId, provider: 'microsoft' }),
