@@ -7,7 +7,7 @@
  *
  * COMMIT CHECKPOINT: "test(board-model): schema validation tests"
  */
-
+/// <reference types="vitest/globals" />
 import mongoose, { Types } from 'mongoose';
 import { Board } from './board.model';
 import { connectTestDB, clearTestDB, disconnectTestDB } from '../../test/db';
@@ -42,7 +42,9 @@ describe('Board model — valid documents', () => {
   it('saves a board with columns and cards fully embedded', async () => {
     const card = makeCard({ title: 'Implement auth', priority: 'high' });
     const col = makeColumn({ cards: [card] as any });
-    const board = await Board.create(makeBoard(fakeUserId, { columns: [col] as any }));
+    const board = await Board.create(
+      makeBoard(fakeUserId, { columns: [col] as any }),
+    );
 
     expect(board.columns).toHaveLength(1);
     expect(board.columns[0].cards).toHaveLength(1);
@@ -66,9 +68,9 @@ describe('Board model — required field validation', () => {
   });
 
   it('rejects a board missing userId', async () => {
-    await expect(
-      Board.create({ name: 'No Owner' }),
-    ).rejects.toThrow(mongoose.Error.ValidationError);
+    await expect(Board.create({ name: 'No Owner' })).rejects.toThrow(
+      mongoose.Error.ValidationError,
+    );
   });
 });
 
@@ -99,7 +101,9 @@ describe('Board model — column validation', () => {
 
   it('defaults cards to an empty array when not provided', async () => {
     const col = makeColumn(); // cards defaults to []
-    const board = await Board.create(makeBoard(fakeUserId, { columns: [col] as any }));
+    const board = await Board.create(
+      makeBoard(fakeUserId, { columns: [col] as any }),
+    );
 
     expect(board.columns[0].cards).toHaveLength(0);
   });
@@ -147,7 +151,9 @@ describe('Board model — card validation', () => {
     for (const priority of priorities) {
       const card = makeCard({ priority });
       const col = makeColumn({ id: `col_${priority}`, cards: [card] as any });
-      const board = await Board.create(makeBoard(fakeUserId, { columns: [col] as any }));
+      const board = await Board.create(
+        makeBoard(fakeUserId, { columns: [col] as any }),
+      );
 
       expect(board.columns[0].cards[0].priority).toBe(priority);
       await Board.deleteMany({});
@@ -157,7 +163,9 @@ describe('Board model — card validation', () => {
   it('auto-generates _id for each embedded card', async () => {
     const card = makeCard();
     const col = makeColumn({ cards: [card] as any });
-    const board = await Board.create(makeBoard(fakeUserId, { columns: [col] as any }));
+    const board = await Board.create(
+      makeBoard(fakeUserId, { columns: [col] as any }),
+    );
 
     // Cards must have ObjectId _ids so calendarEvents can reference them
     expect(board.columns[0].cards[0]._id).toBeDefined();
@@ -167,7 +175,9 @@ describe('Board model — card validation', () => {
   it('sets card timestamps automatically', async () => {
     const card = makeCard();
     const col = makeColumn({ cards: [card] as any });
-    const board = await Board.create(makeBoard(fakeUserId, { columns: [col] as any }));
+    const board = await Board.create(
+      makeBoard(fakeUserId, { columns: [col] as any }),
+    );
 
     expect(board.columns[0].cards[0].createdAt).toBeInstanceOf(Date);
     expect(board.columns[0].cards[0].updatedAt).toBeInstanceOf(Date);
@@ -176,7 +186,9 @@ describe('Board model — card validation', () => {
   it('defaults dueDate to null', async () => {
     const card = makeCard(); // no dueDate
     const col = makeColumn({ cards: [card] as any });
-    const board = await Board.create(makeBoard(fakeUserId, { columns: [col] as any }));
+    const board = await Board.create(
+      makeBoard(fakeUserId, { columns: [col] as any }),
+    );
 
     expect(board.columns[0].cards[0].dueDate).toBeNull();
   });

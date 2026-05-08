@@ -16,10 +16,15 @@
  *
  * COMMIT CHECKPOINT: "test(board-service): TDD specs — red until service implemented"
  */
-
+/// <reference types="vitest/globals" />
 import { Types } from 'mongoose';
 import { connectTestDB, clearTestDB, disconnectTestDB } from '../../test/db';
-import { makeUser, makeBoard, makeColumn, makeCard } from '../../test/factories';
+import {
+  makeUser,
+  makeBoard,
+  makeColumn,
+  makeCard,
+} from '../../test/factories';
 import { User } from '../users/user.model';
 import { Board } from './board.model';
 
@@ -133,7 +138,9 @@ describe('BoardService.getBoardById', () => {
   it('throws when board does not exist', async () => {
     const user = await User.create(makeUser());
 
-    await expect(getBoardById(new Types.ObjectId(), user._id)).rejects.toThrow();
+    await expect(
+      getBoardById(new Types.ObjectId(), user._id),
+    ).rejects.toThrow();
   });
 });
 
@@ -225,7 +232,11 @@ describe('BoardService.addColumn', () => {
     const user = await User.create(makeUser());
     const board = await Board.create(makeBoard(user._id));
 
-    const updated = await addColumn(board._id, user._id, { id: 'col_1', name: 'To Do', order: 0 });
+    const updated = await addColumn(board._id, user._id, {
+      id: 'col_1',
+      name: 'To Do',
+      order: 0,
+    });
 
     expect(updated.columns).toHaveLength(1);
     expect(updated.columns[0].name).toBe('To Do');
@@ -249,7 +260,9 @@ describe('BoardService.deleteColumn', () => {
   it('deletes an empty column (FR 3.4)', async () => {
     const user = await User.create(makeUser());
     const col = makeColumn({ id: 'col_1' });
-    const board = await Board.create(makeBoard(user._id, { columns: [col] as any }));
+    const board = await Board.create(
+      makeBoard(user._id, { columns: [col] as any }),
+    );
 
     const updated = await deleteColumn(board._id, user._id, 'col_1');
 
@@ -260,7 +273,9 @@ describe('BoardService.deleteColumn', () => {
     const user = await User.create(makeUser());
     const card = makeCard();
     const col = makeColumn({ id: 'col_1', cards: [card] as any });
-    const board = await Board.create(makeBoard(user._id, { columns: [col] as any }));
+    const board = await Board.create(
+      makeBoard(user._id, { columns: [col] as any }),
+    );
 
     await expect(deleteColumn(board._id, user._id, 'col_1')).rejects.toThrow();
   });
@@ -274,9 +289,16 @@ describe('BoardService.renameColumn', () => {
   it('renames the column and returns updated board (FR 3.2)', async () => {
     const user = await User.create(makeUser());
     const col = makeColumn({ id: 'col_1', name: 'Old' });
-    const board = await Board.create(makeBoard(user._id, { columns: [col] as any }));
+    const board = await Board.create(
+      makeBoard(user._id, { columns: [col] as any }),
+    );
 
-    const updated = await renameColumn(board._id, user._id, 'col_1', 'In Progress');
+    const updated = await renameColumn(
+      board._id,
+      user._id,
+      'col_1',
+      'In Progress',
+    );
 
     expect(updated.columns[0].name).toBe('In Progress');
   });
@@ -284,7 +306,9 @@ describe('BoardService.renameColumn', () => {
   it('throws when new name is empty (FR 3.2.1)', async () => {
     const user = await User.create(makeUser());
     const col = makeColumn({ id: 'col_1' });
-    const board = await Board.create(makeBoard(user._id, { columns: [col] as any }));
+    const board = await Board.create(
+      makeBoard(user._id, { columns: [col] as any }),
+    );
 
     await expect(
       renameColumn(board._id, user._id, 'col_1', ''),

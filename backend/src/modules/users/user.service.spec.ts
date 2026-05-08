@@ -15,7 +15,7 @@
  *
  * COMMIT CHECKPOINT: "test(user-service): TDD specs — red until service implemented"
  */
-
+/// <reference types="vitest/globals" />
 import { Types } from 'mongoose';
 import { connectTestDB, clearTestDB, disconnectTestDB } from '../../test/db';
 import { makeUser, makeBoard } from '../../test/factories';
@@ -124,7 +124,9 @@ describe('UserService.updatePreferences', () => {
   it('updates defaultView preference', async () => {
     const user = await User.create(makeUser());
 
-    const updated = await updatePreferences(user._id, { defaultView: 'calendar' });
+    const updated = await updatePreferences(user._id, {
+      defaultView: 'calendar',
+    });
     expect(updated.preferences.defaultView).toBe('calendar');
   });
 
@@ -132,8 +134,12 @@ describe('UserService.updatePreferences', () => {
     const user = await User.create(makeUser());
     const boardId = new Types.ObjectId();
 
-    const updated = await updatePreferences(user._id, { defaultBoardId: boardId });
-    expect(updated.preferences.defaultBoardId?.toString()).toBe(boardId.toString());
+    const updated = await updatePreferences(user._id, {
+      defaultBoardId: boardId,
+    });
+    expect(updated.preferences.defaultBoardId?.toString()).toBe(
+      boardId.toString(),
+    );
   });
 
   it('updates theme preference', async () => {
