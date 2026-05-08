@@ -15,10 +15,16 @@
  *
  * COMMIT CHECKPOINT: "test(calendar-service): TDD specs — red until service implemented"
  */
-
+/// <reference types="vitest/globals" />
 import { Types } from 'mongoose';
 import { connectTestDB, clearTestDB, disconnectTestDB } from '../../test/db';
-import { makeUser, makeBoard, makeColumn, makeCard, makeCalendarEvent } from '../../test/factories';
+import {
+  makeUser,
+  makeBoard,
+  makeColumn,
+  makeCard,
+  makeCalendarEvent,
+} from '../../test/factories';
 import { User } from '../users/user.model';
 import { Board } from '../boards/board.model';
 import { CalendarEvent } from './calendarEvent.model';
@@ -130,7 +136,9 @@ describe('CalendarEventService.updateEvent', () => {
     const user = await User.create(makeUser());
     const event = await CalendarEvent.create(makeCalendarEvent(user._id));
 
-    const updated = await updateEvent(event._id, user._id, { title: 'New Title' });
+    const updated = await updateEvent(event._id, user._id, {
+      title: 'New Title',
+    });
 
     expect(updated.title).toBe('New Title');
   });
@@ -184,7 +192,9 @@ describe('CalendarEventService.deleteEvent', () => {
     const user = await User.create(makeUser());
     const card = makeCard();
     const col = makeColumn({ id: 'col_1', cards: [card] as any });
-    const board = await Board.create(makeBoard(user._id, { columns: [col] as any }));
+    const board = await Board.create(
+      makeBoard(user._id, { columns: [col] as any }),
+    );
     const cardId = board.columns[0].cards[0]._id;
 
     const event = await CalendarEvent.create(
@@ -217,7 +227,9 @@ describe('CalendarEventService.linkEventToCard', () => {
     const user = await User.create(makeUser());
     const card = makeCard();
     const col = makeColumn({ id: 'col_1', cards: [card] as any });
-    const board = await Board.create(makeBoard(user._id, { columns: [col] as any }));
+    const board = await Board.create(
+      makeBoard(user._id, { columns: [col] as any }),
+    );
     const cardId = board.columns[0].cards[0]._id;
     const event = await CalendarEvent.create(makeCalendarEvent(user._id));
 
@@ -236,7 +248,9 @@ describe('CalendarEventService.linkEventToCard', () => {
     const user = await User.create(makeUser());
     const card = makeCard();
     const col = makeColumn({ id: 'col_1', cards: [card] as any });
-    const board = await Board.create(makeBoard(user._id, { columns: [col] as any }));
+    const board = await Board.create(
+      makeBoard(user._id, { columns: [col] as any }),
+    );
     const cardId = board.columns[0].cards[0]._id;
     const event = await CalendarEvent.create(makeCalendarEvent(user._id));
 
@@ -261,7 +275,9 @@ describe('CalendarEventService.unlinkEventFromCard', () => {
     const user = await User.create(makeUser());
     const card = makeCard();
     const col = makeColumn({ id: 'col_1', cards: [card] as any });
-    const board = await Board.create(makeBoard(user._id, { columns: [col] as any }));
+    const board = await Board.create(
+      makeBoard(user._id, { columns: [col] as any }),
+    );
     const cardId = board.columns[0].cards[0]._id;
     const event = await CalendarEvent.create(
       makeCalendarEvent(user._id, {
@@ -270,7 +286,10 @@ describe('CalendarEventService.unlinkEventFromCard', () => {
       }),
     );
 
-    const { event: updatedEvent } = await unlinkEventFromCard(event._id, user._id);
+    const { event: updatedEvent } = await unlinkEventFromCard(
+      event._id,
+      user._id,
+    );
 
     expect(updatedEvent.linkedCardId).toBeNull();
     expect(updatedEvent.linkedBoardId).toBeNull();

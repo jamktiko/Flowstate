@@ -8,7 +8,7 @@
  *
  * COMMIT CHECKPOINT: "test(user-model): schema validation tests"
  */
-
+/// <reference types="vitest/globals" />
 import mongoose from 'mongoose';
 import { User } from './user.model';
 import { connectTestDB, clearTestDB, disconnectTestDB } from '../../test/db';
@@ -62,7 +62,9 @@ describe('User model — valid documents', () => {
   });
 
   it('lowercases the email before saving', async () => {
-    const user = await User.create(makeUser({ email: 'UPPERCASE@FLOWSTATE.FI' }));
+    const user = await User.create(
+      makeUser({ email: 'UPPERCASE@FLOWSTATE.FI' }),
+    );
     expect(user.email).toBe('uppercase@flowstate.fi');
   });
 

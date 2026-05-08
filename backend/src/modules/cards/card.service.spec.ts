@@ -13,19 +13,19 @@
  *
  * COMMIT CHECKPOINT: "test(card-service): TDD specs — red until service implemented"
  */
-
+/// <reference types="vitest/globals" />
 import { Types } from 'mongoose';
 import { connectTestDB, clearTestDB, disconnectTestDB } from '../../test/db';
-import { makeUser, makeBoard, makeColumn, makeCard } from '../../test/factories';
+import {
+  makeUser,
+  makeBoard,
+  makeColumn,
+  makeCard,
+} from '../../test/factories';
 import { User } from '../users/user.model';
 import { Board } from '../boards/board.model';
 
-import {
-  createCard,
-  updateCard,
-  deleteCard,
-  moveCard,
-} from './card.service';
+import { createCard, updateCard, deleteCard, moveCard } from './card.service';
 
 beforeAll(connectTestDB);
 afterEach(clearTestDB);
@@ -39,7 +39,9 @@ describe('CardService.createCard', () => {
   it('adds a card to the correct column and returns the updated board (FR 4.1)', async () => {
     const user = await User.create(makeUser());
     const col = makeColumn({ id: 'col_1' });
-    const board = await Board.create(makeBoard(user._id, { columns: [col] as any }));
+    const board = await Board.create(
+      makeBoard(user._id, { columns: [col] as any }),
+    );
 
     const updated = await createCard(board._id, user._id, 'col_1', {
       title: 'Write tests',
@@ -53,7 +55,9 @@ describe('CardService.createCard', () => {
   it('throws when card title is empty (FR 4.1.2)', async () => {
     const user = await User.create(makeUser());
     const col = makeColumn({ id: 'col_1' });
-    const board = await Board.create(makeBoard(user._id, { columns: [col] as any }));
+    const board = await Board.create(
+      makeBoard(user._id, { columns: [col] as any }),
+    );
 
     await expect(
       createCard(board._id, user._id, 'col_1', { title: '', order: 0 }),
@@ -64,7 +68,9 @@ describe('CardService.createCard', () => {
     const owner = await User.create(makeUser());
     const attacker = await User.create(makeUser());
     const col = makeColumn({ id: 'col_1' });
-    const board = await Board.create(makeBoard(owner._id, { columns: [col] as any }));
+    const board = await Board.create(
+      makeBoard(owner._id, { columns: [col] as any }),
+    );
 
     await expect(
       createCard(board._id, attacker._id, 'col_1', { title: 'Hack', order: 0 }),
@@ -74,7 +80,9 @@ describe('CardService.createCard', () => {
   it('assigns priority when provided', async () => {
     const user = await User.create(makeUser());
     const col = makeColumn({ id: 'col_1' });
-    const board = await Board.create(makeBoard(user._id, { columns: [col] as any }));
+    const board = await Board.create(
+      makeBoard(user._id, { columns: [col] as any }),
+    );
 
     const updated = await createCard(board._id, user._id, 'col_1', {
       title: 'Urgent task',
@@ -88,7 +96,9 @@ describe('CardService.createCard', () => {
   it('assigns dueDate when provided', async () => {
     const user = await User.create(makeUser());
     const col = makeColumn({ id: 'col_1' });
-    const board = await Board.create(makeBoard(user._id, { columns: [col] as any }));
+    const board = await Board.create(
+      makeBoard(user._id, { columns: [col] as any }),
+    );
     const due = new Date('2026-06-01T00:00:00Z');
 
     const updated = await createCard(board._id, user._id, 'col_1', {
@@ -110,7 +120,9 @@ describe('CardService.updateCard', () => {
     const user = await User.create(makeUser());
     const card = makeCard({ title: 'Original' });
     const col = makeColumn({ id: 'col_1', cards: [card] as any });
-    const board = await Board.create(makeBoard(user._id, { columns: [col] as any }));
+    const board = await Board.create(
+      makeBoard(user._id, { columns: [col] as any }),
+    );
     const cardId = board.columns[0].cards[0]._id;
 
     const updated = await updateCard(board._id, user._id, 'col_1', cardId, {
@@ -124,7 +136,9 @@ describe('CardService.updateCard', () => {
     const user = await User.create(makeUser());
     const card = makeCard();
     const col = makeColumn({ id: 'col_1', cards: [card] as any });
-    const board = await Board.create(makeBoard(user._id, { columns: [col] as any }));
+    const board = await Board.create(
+      makeBoard(user._id, { columns: [col] as any }),
+    );
     const cardId = board.columns[0].cards[0]._id;
 
     await expect(
@@ -136,7 +150,9 @@ describe('CardService.updateCard', () => {
     const user = await User.create(makeUser());
     const card = makeCard();
     const col = makeColumn({ id: 'col_1', cards: [card] as any });
-    const board = await Board.create(makeBoard(user._id, { columns: [col] as any }));
+    const board = await Board.create(
+      makeBoard(user._id, { columns: [col] as any }),
+    );
     const cardId = board.columns[0].cards[0]._id;
     const newDue = new Date('2026-07-15T00:00:00Z');
 
@@ -157,7 +173,9 @@ describe('CardService.deleteCard', () => {
     const user = await User.create(makeUser());
     const card = makeCard();
     const col = makeColumn({ id: 'col_1', cards: [card] as any });
-    const board = await Board.create(makeBoard(user._id, { columns: [col] as any }));
+    const board = await Board.create(
+      makeBoard(user._id, { columns: [col] as any }),
+    );
     const cardId = board.columns[0].cards[0]._id;
 
     const updated = await deleteCard(board._id, user._id, 'col_1', cardId);
@@ -173,11 +191,21 @@ describe('CardService.deleteCard', () => {
     const card0 = makeCard({ title: 'Card 0', order: 0 });
     const card1 = makeCard({ title: 'Card 1', order: 1 });
     const card2 = makeCard({ title: 'Card 2', order: 2 });
-    const col = makeColumn({ id: 'col_1', cards: [card0, card1, card2] as any });
-    const board = await Board.create(makeBoard(user._id, { columns: [col] as any }));
+    const col = makeColumn({
+      id: 'col_1',
+      cards: [card0, card1, card2] as any,
+    });
+    const board = await Board.create(
+      makeBoard(user._id, { columns: [col] as any }),
+    );
     const cardToDelete = board.columns[0].cards[1]._id; // card1
 
-    const updated = await deleteCard(board._id, user._id, 'col_1', cardToDelete);
+    const updated = await deleteCard(
+      board._id,
+      user._id,
+      'col_1',
+      cardToDelete,
+    );
 
     const orders = updated.columns[0].cards.map((c) => c.order).sort();
     expect(orders).toEqual([0, 1]);
@@ -199,7 +227,14 @@ describe('CardService.moveCard', () => {
     );
     const cardId = board.columns[0].cards[0]._id;
 
-    const updated = await moveCard(board._id, user._id, 'col_a', 'col_b', cardId, 0);
+    const updated = await moveCard(
+      board._id,
+      user._id,
+      'col_a',
+      'col_b',
+      cardId,
+      0,
+    );
 
     const sourceCards = updated.columns.find((c) => c.id === 'col_a')!.cards;
     const targetCards = updated.columns.find((c) => c.id === 'col_b')!.cards;
@@ -214,11 +249,20 @@ describe('CardService.moveCard', () => {
     const card0 = makeCard({ title: 'First', order: 0 });
     const card1 = makeCard({ title: 'Second', order: 1 });
     const col = makeColumn({ id: 'col_1', cards: [card0, card1] as any });
-    const board = await Board.create(makeBoard(user._id, { columns: [col] as any }));
+    const board = await Board.create(
+      makeBoard(user._id, { columns: [col] as any }),
+    );
     const card0Id = board.columns[0].cards[0]._id;
 
     // Move card0 to position 1 (swap)
-    const updated = await moveCard(board._id, user._id, 'col_1', 'col_1', card0Id, 1);
+    const updated = await moveCard(
+      board._id,
+      user._id,
+      'col_1',
+      'col_1',
+      card0Id,
+      1,
+    );
 
     const cards = updated.columns[0].cards.sort((a, b) => a.order - b.order);
     expect(cards[0].title).toBe('Second');
