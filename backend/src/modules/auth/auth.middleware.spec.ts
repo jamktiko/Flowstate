@@ -12,9 +12,15 @@
  *
  * COMMIT CHECKPOINT: "test(auth-middleware): checkAuth unit tests"
  */
-
+import {
+  vi,
+  type MockedFunction,
+  describe,
+  it,
+  expect,
+  beforeEach,
+} from 'vitest';
 import { Request, Response, NextFunction } from 'express';
-import { vi, type MockedFunction } from 'vitest';
 
 // ─────────────────────────────────────────────
 // Mock aws-jwt-verify at module level
@@ -22,7 +28,9 @@ import { vi, type MockedFunction } from 'vitest';
 
 // We create the mock before importing the middleware so the module receives
 // the mocked version. vi.mock is hoisted automatically by Vitest.
-const mockVerify = vi.fn();
+const { mockVerify } = vi.hoisted(() => ({
+  mockVerify: vi.fn(),
+}));
 
 vi.mock('aws-jwt-verify', () => ({
   CognitoJwtVerifier: {
@@ -47,7 +55,11 @@ function makeReq(authHeader?: string): Partial<Request> {
   };
 }
 
-function makeRes(): { res: Partial<Response>; json: MockedFunction<any>; status: MockedFunction<any> } {
+function makeRes(): {
+  res: Partial<Response>;
+  json: MockedFunction<any>;
+  status: MockedFunction<any>;
+} {
   const json = vi.fn();
   const status = vi.fn().mockReturnValue({ json });
   const res = { status, json } as unknown as Partial<Response>;
