@@ -115,7 +115,6 @@ describe('Board model — column validation', () => {
 
 describe('Board model — card validation', () => {
   it('rejects a card missing title', async () => {
-    // @ts-expect-error — intentionally omitting required field
     const card = makeCard({ title: undefined });
     const col = makeColumn({ cards: [card] as any });
 

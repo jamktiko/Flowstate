@@ -23,9 +23,9 @@
   </h2>
 
   <div class="boards">
-    @for (board of boards(); track board.id) {
+    @for (board of boards(); track board._id) {
       <div class="card">
-        <h4>{{ board.title }}</h4>
+        <h4>{{ board.name }}</h4>
 
         <div class="card-actions">
           <button
@@ -55,7 +55,7 @@
             class="icon-btn delete-btn"
             type="button"
             aria-label="Poista board"
-            (click)="deleteBoard(board.id)"
+            (click)="openDeleteModal(board)"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -99,4 +99,14 @@
     (saveBoard)="handleSaveBoard($event)"
   >
   </app-edit-board>
+
+  @if (deletingBoardId()) {
+    <app-delete-board
+      [isOpen]="isDeleteModalOpen()"
+      [boardId]="deletingBoardId()!"
+      (closeModal)="closeDeleteModal()"
+      (boardDeleted)="handleBoardDeleted($event)"
+    >
+    </app-delete-board>
+  }
 </div>
