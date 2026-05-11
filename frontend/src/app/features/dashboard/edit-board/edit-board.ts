@@ -1,5 +1,6 @@
 import { Component, input, output, inject, effect } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Board } from '@core/models/board.model';
 import { BasicModal } from '@shared/modals/basic-modal/basic-modal';
 
 @Component({
@@ -10,7 +11,7 @@ import { BasicModal } from '@shared/modals/basic-modal/basic-modal';
 })
 export class EditBoardModal {
   isOpen = input<boolean>(false);
-  initialData = input<{ title: string; description?: string } | null>(null);
+  initialData = input<Board | null>(null);
 
   closeModal = output<void>();
   saveBoard = output<{ title: string; description: string }>();
@@ -28,8 +29,7 @@ export class EditBoardModal {
         const data = this.initialData();
         if (data) {
           this.boardForm.patchValue({
-            title: data.title,
-            description: data.description || '',
+            title: data.name,
           });
         } else {
           this.boardForm.reset();
