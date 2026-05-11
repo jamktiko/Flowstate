@@ -31,6 +31,12 @@ export const getUserByCognitoSub = async (sub: string) => {
   return await User.findOne({ cognitoSub: sub });
 };
 
+// Added for Google login email lookup
+// Gets a user by their email address. Used in Google OAuth flow to link accounts.
+export const getUserByEmail = async (email: string) => {
+  return await User.findOne({ email });
+};
+
 /**
  * Finds a user by their MongoDB _id.
  * Used internally when userId is already known (e.g. board operations).

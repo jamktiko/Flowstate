@@ -9,6 +9,7 @@ import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import { createUser, getUserByCognitoSub } from '../users/user.service';
 import { sendSuccess, sendError } from '../../utils/responseHelpers';
+import { User } from '../users/user.model';
 
 const cognitoClient = new CognitoIdentityProviderClient({
   region: process.env.COGNITO_REGION,
@@ -140,49 +141,47 @@ export const googleCallbackController = async (req: Request, res: Response) => {
     const { id_token, access_token, refresh_token, expires_in } =
       tokenResponse.data;
 
-    // Extract user info from the ID token
     const decodedToken: any = jwt.decode(id_token);
-    console.log(
-      'TÄSSÄ TOKENIN SISÄLTÖ:',
-      JSON.stringify(decodedToken, null, 2),
-    );
-
-    // Pickup relevant user info from the token
     const { sub, email, nickname, middle_name } = decodedToken;
 
+    // try to find user by Cognito sub first (normal login flow)
     let user = await getUserByCognitoSub(sub);
 
+    // If not found by sub, try to find by email (handles case where user registered with email/password before)
     if (!user) {
-      // Handle the case where middle_name might contain the full name
-      let finalFirstName = nickname || email.split('@')[0];
-      let finalLastName = 'GoogleUser';
+      const existingUserByEmail = await User.findOne({ email: email });
 
-      if (middle_name) {
-        // If middle_name contains the full name, we can attempt to split it into first and last name.
-        const nameParts = middle_name.trim().split(/\s+/);
+      if (existingUserByEmail) {
+        existingUserByEmail.cognitoSub = sub;
+        await existingUserByEmail.save();
+        user = existingUserByEmail;
+        console.log(
+          'Linkitetty Google-kirjautuminen olemassa olevaan sähköpostiin:',
+          email,
+        );
+      } else {
+        let finalFirstName = nickname || email.split('@')[0];
+        let finalLastName = 'GoogleUser';
 
-        if (nameParts.length > 1) {
-          finalLastName = nameParts.pop();
-        } else {
-          finalLastName = middle_name;
+        if (middle_name) {
+          const nameParts = middle_name.trim().split(/\s+/);
+          if (nameParts.length > 1) {
+            finalLastName = nameParts.pop();
+          } else {
+            finalLastName = middle_name;
+          }
         }
+
+        user = await createUser({
+          cognitoSub: sub,
+          email: email,
+          firstName: finalFirstName,
+          lastName: finalLastName,
+          role: 'user',
+        });
+
+        console.log('Uusi Google-käyttäjä luotu:', email);
       }
-
-      user = await createUser({
-        cognitoSub: sub,
-        email: email,
-        firstName: finalFirstName,
-        lastName: finalLastName,
-        role: 'user',
-      });
-
-      console.log(
-        'New Google user synced to MongoDB:',
-        email,
-        'Names:',
-        finalFirstName,
-        finalLastName,
-      );
     }
 
     return sendSuccess(res, {
