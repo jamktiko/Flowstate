@@ -12,6 +12,8 @@ const cognitoClient = new CognitoIdentityProviderClient({
   region: process.env.COGNITO_REGION,
 });
 
+//comment to launch backend tests in CI/CD pipeline to check if tests go through
+
 /**
  * POST /api/auth/register
  * Handles user registration by signing up with AWS Cognito
