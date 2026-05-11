@@ -17,7 +17,8 @@ nav {
   }
 }
 
-.back-btn {
+.back-btn,
+.settings-btn {
   background: none;
   border: none;
   cursor: pointer;
@@ -26,6 +27,13 @@ nav {
 
 .back-btn svg {
   width: 3.125rem;
+  height: 2.4375rem;
+  stroke: white;
+  fill: none;
+}
+
+.settings-btn svg {
+  width: 2.125rem;
   height: 2.4375rem;
   stroke: white;
   fill: none;

@@ -24,7 +24,7 @@
 
   <div class="boards">
     @for (board of boards(); track board._id) {
-      <div class="card" (click)="openBoard(board._id)"         (keydown.enter)="openBoard(board._id)"
+      <div class="card" (click)="openBoard(board._id)" (keydown.enter)="openBoard(board._id)" 
         (keydown.space)="openBoard(board._id); $event.preventDefault()"
         tabindex="0"
         role="button" style="cursor: pointer;">
@@ -108,8 +108,16 @@
       [isOpen]="isDeleteModalOpen()"
       [boardId]="deletingBoardId()!"
       (closeModal)="closeDeleteModal()"
-      (boardDeleted)="handleBoardDeleted($event)"
+      (boardDeleted)="handleBoardDeleted()"
     >
     </app-delete-board>
   }
+
+  <app-edit-settings 
+    [isOpen]="isSettingsModalOpen()"
+    (closeModal)="isSettingsModalOpen.set(false)">
+  </app-edit-settings>
+
+  <!--Delete afterwards this + the function from ts-->
+    <button (click)="logDatabase()" style="background: red; color: white;">Log DB to Console</button>
 </div>
