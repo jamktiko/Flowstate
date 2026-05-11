@@ -96,6 +96,10 @@ export class BoardsPage implements OnInit {
     this.boards.set([...this.db.boards]);
   }
 
+  openBoard(boardId: string) {
+    this.router.navigate(['/dashboard/board', boardId]);
+  }
+
   private navBarService: NavBarService = inject(NavBarService);
   private router = inject(Router);
 

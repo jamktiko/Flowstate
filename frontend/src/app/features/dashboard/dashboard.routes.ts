@@ -7,7 +7,7 @@ export const DASHBOARD_ROUTES: Routes = [
     loadComponent: () => import('./list-boards/list-boards-page').then((m) => m.BoardsPage),
   },
   {
-    path: 'board',
+    path: 'board/:id',
     loadComponent: () => import('./board/board-page').then((m) => m.BoardPage),
   },
 ];

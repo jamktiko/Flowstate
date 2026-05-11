@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { Task } from './task/task';
+import { Column } from '@core/models/board.model';
 
 @Component({
   selector: 'app-list',
@@ -7,4 +8,6 @@ import { Task } from './task/task';
   templateUrl: './list.html',
   styleUrl: './list.css',
 })
-export class List {}
+export class List {
+  column = input.required<Column>();
+}

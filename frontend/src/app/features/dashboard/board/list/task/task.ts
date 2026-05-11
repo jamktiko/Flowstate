@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
+import { Card } from '@core/models/board.model';
 
 @Component({
   selector: 'app-task',
@@ -6,4 +7,6 @@ import { Component } from '@angular/core';
   templateUrl: './task.html',
   styleUrl: './task.css',
 })
-export class Task {}
+export class Task {
+  card = input.required<Card>();
+}
