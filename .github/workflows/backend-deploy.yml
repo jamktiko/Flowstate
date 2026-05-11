@@ -29,6 +29,15 @@ jobs:
         working-directory: ./backend
         run: npm ci
 
+      - name: Run Backend Tests
+        working-directory: ./backend
+        run: npm test
+        env:
+          NODE_ENV: test
+          COGNITO_REGION: ${{ secrets.COGNITO_REGION }}
+          COGNITO_DOMAIN: ${{ secrets.COGNITO_DOMAIN }}
+          COGNITO_CLIENT_ID: ${{ secrets.COGNITO_CLIENT_ID }}
+
       - name: Build Backend
         working-directory: ./backend
         run: npm run build
