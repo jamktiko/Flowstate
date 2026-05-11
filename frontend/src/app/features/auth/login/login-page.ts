@@ -1,13 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthLayout } from '../../../core/layout/auth-layout/auth-layout';
-import { AuthService } from '../../../core/auth/auth-service'; // Check the file path/name
+import { AuthLayout } from '@core/layout/auth-layout/auth-layout';
+import { AuthService } from '@core/auth/auth-service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-login-page',
-  standalone: true,
-  // ADDED RouterLink so you can link to the register page in the HTML
   imports: [AuthLayout, ReactiveFormsModule],
   templateUrl: './login-page.html',
   styleUrl: './login-page.css',
@@ -66,5 +65,18 @@ export class LoginPage {
       // Show validation errors
       this.loginForm.markAllAsTouched();
     }
+  }
+
+  // This method initiates the Google Sign-In flow using AWS Cognito's hosted UI
+  signInWithGoogle() {
+    const domain = 'https://eu-north-1sfwo3ekis.auth.eu-north-1.amazoncognito.com';
+    const clientId = '4obh8krimbm973e83gte5sfgh1';
+    const redirectUri = environment.redirectUri;
+    const scope = encodeURIComponent('email openid profile');
+
+    // build the URL for the Cognito hosted UI with Google as the identity provider
+    const googleUrl = `${domain}/oauth2/authorize?identity_provider=Google&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&client_id=${clientId}&scope=${scope}`;
+
+    window.location.href = googleUrl;
   }
 }

@@ -6,4 +6,5 @@ export const environment = {
     userPoolClientId: '4obh8krimbm973e83gte5sfgh1',
   },
   apiUrl: '/api/auth',
+  redirectUri: window.location.origin + '/auth/callback',
 };

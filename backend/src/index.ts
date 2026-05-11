@@ -1,21 +1,16 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import app from './app';
-import mongoose from 'mongoose';
+import { connectDB } from './config/db';
+import { validateEnv } from './config/env';
 
 const PORT = process.env.PORT || 8080;
-const MONGO_URI = process.env.MONGO_URI || '';
 
-//Comment to launch backend deployment pipeline!!
+const start = async () => {
+  validateEnv(); // fail fast if .env is missing variables
+  await connectDB(); // connect to MongoDB
+  app.listen(PORT, () => console.log(`✅ Server portissa ${PORT}`));
+};
 
-// Database connection (commented for testing.)
-
-if (MONGO_URI) {
-  mongoose
-    .connect(MONGO_URI, {
-      autoIndex: true, //  default in dev — creates indexes on startup
-      // autoIndex: false  //  recommended for production
-    }) //
-    .then(() => console.log('✅ MongoDB connected'))
-    .catch((err) => console.error('❌ Connection error:', err));
-}
-
-app.listen(PORT, () => console.log(`✅ Server portissa ${PORT}`));
+start();
