@@ -23,6 +23,13 @@ export class NavBar {
     }
   }
 
+  handleSettings() {
+    const customAction = this.navBarService.customSettingsAction();
+    if (customAction) {
+      customAction();
+    }
+  }
+
   async handleLogout() {
     try {
       // Call logout() in authService

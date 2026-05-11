@@ -13,10 +13,11 @@ import { EditBoardModal } from '../edit-board/edit-board';
 import { DeleteBoardModal } from '../delete-board/delete-board';
 import { FakeDatabaseService } from '@shared/fake-database/fake-database-service';
 import { Board } from '@core/models/board.model';
+import { EditSettings } from '../edit-settings/edit-settings';
 
 @Component({
   selector: 'app-boards-page',
-  imports: [EditBoardModal, DeleteBoardModal],
+  imports: [EditBoardModal, DeleteBoardModal, EditSettings],
   templateUrl: './list-boards-page.html',
   styleUrl: './list-boards-page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,6 +26,8 @@ export class BoardsPage implements OnInit {
   private db = inject(FakeDatabaseService);
 
   boards = signal<Board[]>([]);
+
+  isSettingsModalOpen = signal(false);
 
   isEditModalOpen = signal(false);
   editingBoardId = signal<string | null>(null);
@@ -40,6 +43,11 @@ export class BoardsPage implements OnInit {
 
   ngOnInit() {
     this.boards.set(this.db.boards);
+  }
+
+  // Add the method to handle navigation
+  openBoard(boardId: string) {
+    this.router.navigate(['/dashboard/board', boardId]);
   }
 
   openEditModal(board: Board) {
@@ -79,7 +87,11 @@ export class BoardsPage implements OnInit {
         _id: Math.random().toString(36).substring(2, 9),
         userId: 'currentUser',
         name: boardData.title,
-        columns: [],
+        columns: [
+          { id: 'col_1', name: 'To Do', order: 0, cards: [] },
+          { id: 'col_2', name: 'In Progress', order: 1, cards: [] },
+          { id: 'col_3', name: 'Done', order: 2, cards: [] },
+        ],
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -91,13 +103,9 @@ export class BoardsPage implements OnInit {
     this.closeEditModal();
   }
 
-  handleBoardDeleted(deletedId: string) {
+  handleBoardDeleted() {
     // Refresh the signal array from the db which now excludes the deleted board
     this.boards.set([...this.db.boards]);
-  }
-
-  openBoard(boardId: string) {
-    this.router.navigate(['/dashboard/board', boardId]);
   }
 
   private navBarService: NavBarService = inject(NavBarService);
@@ -105,15 +113,22 @@ export class BoardsPage implements OnInit {
 
   constructor() {
     // 1. Initialize navbar components when accessing this
-    this.navBarService.showBackButton.set(true);
-    this.navBarService.showLogoutButton.set(true);
-    this.navBarService.customBackAction.set(() => {
-      this.router.navigate(['/']);
+    this.navBarService.showBackButton.set(false);
+    this.navBarService.showSettingsButton.set(true);
+    this.navBarService.customSettingsAction.set(() => {
+      this.isSettingsModalOpen.set(true);
     });
+    this.navBarService.showLogoutButton.set(true);
 
     // 2. Reset navbar when you leave the page
     inject(DestroyRef).onDestroy(() => {
       this.navBarService.reset();
     });
+  }
+
+  // Delete after checking everything works
+  logDatabase() {
+    console.log(JSON.parse(JSON.stringify(this.db.boards)));
+    // JSON.stringify forces the console to snapshot the exact current state
   }
 }
