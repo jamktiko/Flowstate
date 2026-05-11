@@ -1,10 +1,14 @@
 <app-basic-modal [isOpen]="isOpen()" (closeModal)="closeModal.emit()">
-  <h3 modal-header>Delete Board</h3>
-  
-  <p>Are you sure you want to delete this board? This action cannot be undone.</p>
+  <div class="delete-modal">
+    <h3 modal-header class="delete-title">Delete Board</h3>
 
-  <div modal-footer class="modal-actions">
-    <button class="cancel-btn" (click)="closeModal.emit()">No, Cancel</button>
-    <button class="confirm-btn" (click)="deleteBoard()">Yes, Delete</button>
+    <p class="delete-text">
+      Are you sure you want to delete this board? This action cannot be undone.
+    </p>
+
+    <div modal-footer class="modal-actions">
+      <button type="button" class="cancel-btn" (click)="closeModal.emit()">No, Cancel</button>
+      <button type="button" class="confirm-btn" (click)="deleteBoard()">Yes, Delete</button>
+    </div>
   </div>
 </app-basic-modal>
