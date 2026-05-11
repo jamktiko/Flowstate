@@ -11,7 +11,7 @@
   z-index: 1000;
 }
 .modal-content {
-  background-color: white;
+  background-color: #f9fafb;
   border-radius: 8px;
   padding: 1.5rem;
   min-width: 300px;
