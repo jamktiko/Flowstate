@@ -2,9 +2,11 @@
   <header class="board-header"></header>
 
   <div class="board-container">
-    <app-list></app-list>
-    <app-list></app-list>
-    <app-list></app-list>
+    @if (board(); as b) {
+      @for (column of b.columns; track column.id) {
+        <app-list [column]="column"></app-list>
+      }
+    }
 
     <div class="add-task-wrapper">
       <button class="add-task-btn" (click)="openCreateTaskModal()">+</button>

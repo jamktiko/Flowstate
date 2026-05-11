@@ -1,7 +1,9 @@
 <div class="task-card">
   <div class="task-header">
-    <h4 class="task-title">Task Title</h4>
+    <h4 class="task-title">{{ card().title }}</h4>
     <span class="task-actions">&#8942;</span>
   </div>
-  <p class="task-description">Short description of the task...</p>
+  @if (card().description) {
+    <p class="task-description">{{ card().description }}</p>
+  }
 </div>

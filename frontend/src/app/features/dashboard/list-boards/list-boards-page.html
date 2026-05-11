@@ -24,7 +24,10 @@
 
   <div class="boards">
     @for (board of boards(); track board._id) {
-      <div class="card">
+      <div class="card" (click)="openBoard(board._id)"         (keydown.enter)="openBoard(board._id)"
+        (keydown.space)="openBoard(board._id); $event.preventDefault()"
+        tabindex="0"
+        role="button" style="cursor: pointer;">
         <h4>{{ board.name }}</h4>
 
         <div class="card-actions">
@@ -32,7 +35,7 @@
             class="icon-btn edit-btn"
             type="button"
             aria-label="Muokkaa boardia"
-            (click)="openEditModal(board)"
+            (click)="openEditModal(board); $event.stopPropagation()"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -55,7 +58,7 @@
             class="icon-btn delete-btn"
             type="button"
             aria-label="Poista board"
-            (click)="openDeleteModal(board)"
+            (click)="openDeleteModal(board); $event.stopPropagation()"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
