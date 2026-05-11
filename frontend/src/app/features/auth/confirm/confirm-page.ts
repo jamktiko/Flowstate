@@ -1,14 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthLayout } from '../../../core/layout/auth-layout/auth-layout';
-import { AuthService } from '../../../core/auth/auth-service';
+import { AuthLayout } from '@core/layout/auth-layout/auth-layout';
+import { AuthService } from '@core/auth/auth-service';
 
-//comment to laucn frontend deployment pipeline again
+//comment to launch frontend deployment pipeline again
 @Component({
   selector: 'app-confirm-page',
-  standalone: true,
-  // ADDED: These must be listed here to be used in the HTML template
   imports: [AuthLayout, ReactiveFormsModule],
   templateUrl: './confirm-page.html',
   styleUrl: './confirm-page.css',

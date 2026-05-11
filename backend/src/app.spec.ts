@@ -10,7 +10,7 @@
  *
  * COMMIT CHECKPOINT: "test(app): health and auth route smoke tests"
  */
-
+/// <reference types="vitest/globals" />
 import request from 'supertest';
 import { vi } from 'vitest';
 

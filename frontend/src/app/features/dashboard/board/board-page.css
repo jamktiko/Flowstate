@@ -33,7 +33,7 @@
   max-width: 250px;
 }
 
-.add-list-wrapper {
+.add-task-wrapper {
   position: fixed;
   right: 40px;
   bottom: 45px;
@@ -47,7 +47,7 @@
   z-index: 1000;
 }
 
-.add-list-btn {
+.add-task-btn {
   width: 56px;
   height: 56px;
   padding: 0;
@@ -69,7 +69,7 @@
   text-align: center;
 }
 
-.add-list-btn:hover {
+.add-task-btn:hover {
   background-color: #3f82ef;
 }
 
@@ -104,7 +104,7 @@
     max-width: 300px;
   }
 
-  .add-list-wrapper {
+  .add-task-wrapper {
     right: 40px;
     bottom: 45px;
   }

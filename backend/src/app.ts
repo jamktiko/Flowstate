@@ -11,6 +11,8 @@ import boardRouter from './modules/boards/board.routes';
 
 import authRouter from './modules/auth/auth.routes';
 
+import cardRouter from './modules/cards/card.routes';
+
 const app = express();
 
 // Middleware — must come before all routes
@@ -37,6 +39,8 @@ app.use('/api/auth', authRouter);
 app.use('/api/users', userRouter);
 
 app.use('/api/boards', boardRouter);
+// Cards share the /api/boards prefix since cards live inside boards
+app.use('/api/boards', cardRouter);
 // This route is for testing the server root, it can be removed later
 app.get('/', (req, res) => {
   res.send(

@@ -10,6 +10,11 @@ export const routes: Routes = [
     pathMatch: 'full',
     component: WelcomePage,
   },
+  {
+    path: 'auth/callback',
+    loadComponent: () =>
+      import('./features/auth/callback/callback').then((m) => m.AuthCallbackComponent),
+  },
   // 2. Pages WITH Layout (Navbar + children)
   {
     path: '',

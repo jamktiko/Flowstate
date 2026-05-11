@@ -96,14 +96,20 @@ export function makeColumn(overrides: ColumnInput = {}): ColumnInput & {
 // Board factory
 // ─────────────────────────────────────────────
 
-type BoardInput = Partial<Pick<IBoard, 'name'>> & { userId?: Types.ObjectId };
+type BoardInput = Partial<Pick<IBoard, 'name' | 'columns'>> & {
+  userId?: Types.ObjectId;
+};
 
 let boardCounter = 0;
 
 export function makeBoard(
   userId: Types.ObjectId,
   overrides: Omit<BoardInput, 'userId'> = {},
-): { userId: Types.ObjectId; name: string; columns: ReturnType<typeof makeColumn>[] } {
+): {
+  userId: Types.ObjectId;
+  name: string;
+  columns: ReturnType<typeof makeColumn>[];
+} {
   boardCounter++;
   return {
     userId,
@@ -128,6 +134,8 @@ type CalendarEventInput = Partial<
     | 'endTime'
     | 'isAllDay'
     | 'status'
+    | 'linkedCardId'
+    | 'linkedBoardId'
   >
 > & { userId?: Types.ObjectId };
 
