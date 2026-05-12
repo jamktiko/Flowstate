@@ -125,7 +125,7 @@ export const socialCallbackController = async (req: Request, res: Response) => {
   try {
     const domain = process.env.COGNITO_DOMAIN;
     const clientId = process.env.COGNITO_CLIENT_ID;
-    const redirectUri = process.env.GOOGLE_REDIRECT_URI; // Tätä voi käyttää molemmille, koska Cognito hyväksyy sen
+    const redirectUri = process.env.GOOGLE_REDIRECT_URI;
 
     const tokenResponse = await axios.post(
       `https://${domain}/oauth2/token`,
@@ -143,19 +143,18 @@ export const socialCallbackController = async (req: Request, res: Response) => {
 
     const decodedToken: any = jwt.decode(id_token);
 
-    // Noudetaan tokenista kaikki mahdolliset nimikentät (Google ja Microsoft käyttävät hieman eri kenttiä)
     const { sub, email, nickname, given_name, family_name, middle_name } =
       decodedToken;
 
-    // 1. Etsitään käyttäjää Cogniton sub-tunnisteella
+    // Find user by Cognito sub
     let user = await getUserByCognitoSub(sub);
 
-    // 2. Jos ei löydy, tarkistetaan onko sähköpostilla jo tili olemassa
+    // If not found, try to find by email and link accounts, or create new user
     if (!user) {
       const existingUserByEmail = await User.findOne({ email: email });
 
+      // Link existing user to new social login if email matches
       if (existingUserByEmail) {
-        // Linkitetään uusi sosiaalinen tili (esim. Microsoft) jo olemassa olevaan sähköpostiin
         existingUserByEmail.cognitoSub = sub;
         await existingUserByEmail.save();
         user = existingUserByEmail;
@@ -164,11 +163,10 @@ export const socialCallbackController = async (req: Request, res: Response) => {
           email,
         );
       } else {
-        // Luodaan kokonaan uusi käyttäjä
-        // Etusija: given_name (Microsoft/OIDC) -> nickname (Google) -> sähköpostin alkuosa
+        // Create new user if no existing email match
+        // Name parsing logic to handle different providers and missing fields
         let finalFirstName = given_name || nickname || email.split('@')[0];
 
-        // Etusija: family_name (Microsoft/OIDC) -> Google parsinta -> 'User'
         let finalLastName = family_name || 'User';
 
         if (!family_name && middle_name) {
@@ -188,10 +186,7 @@ export const socialCallbackController = async (req: Request, res: Response) => {
           role: 'user',
         });
 
-        console.log(
-          'Uusi käyttäjä luotu sosiaalisen kirjautumisen kautta:',
-          email,
-        );
+        console.log('New user created through social login:', email);
       }
     }
 

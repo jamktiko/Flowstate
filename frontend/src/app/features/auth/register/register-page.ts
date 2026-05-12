@@ -66,4 +66,17 @@ export class RegisterPage {
 
     window.location.href = googleUrl;
   }
+
+  // Method for Microsoft Sign-In
+  signInWithMicrosoft() {
+    const domain = 'https://eu-north-1sfwo3ekis.auth.eu-north-1.amazoncognito.com';
+    const clientId = '4obh8krimbm973e83gte5sfgh1';
+    const redirectUri = environment.redirectUri;
+    const scope = encodeURIComponent('email openid profile');
+
+    // Build the URL for the Cognito hosted UI with Microsoft as the identity provider
+    const microsoftUrl = `${domain}/oauth2/authorize?identity_provider=Microsoft&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&client_id=${clientId}&scope=${scope}`;
+
+    window.location.href = microsoftUrl;
+  }
 }
