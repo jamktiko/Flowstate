@@ -12,6 +12,7 @@ export interface ITag {
 export interface ICardNotifications {
   enabled: boolean | null; // null = inherit from user master toggle
   leadTime: number | null; // null = inherit user defaultLeadTime
+  sentAt?: Date | null; // tracks when notification was last sent — null = not sent yet
 }
 
 export interface ICard {
@@ -67,6 +68,7 @@ const CardNotificationsSchema = new Schema<ICardNotifications>(
   {
     enabled: { type: Boolean, default: null }, // null = inherit
     leadTime: { type: Number, default: null }, // null = inherit
+    sentAt: { type: Date, default: null }, // null = not sent yet, reset after dueDate passes
   },
   { _id: false },
 );
