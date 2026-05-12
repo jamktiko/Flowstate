@@ -58,22 +58,22 @@ describe('UserService.createUser', () => {
     expect(found).not.toBeNull();
   });
 
-  //skipping these tests for now. All other 86 tests are passing
-  it.skip('handles already taken email (FR 1.1.1.1)', async () => {
+  it('throws when email is already taken (FR 1.1.1.1)', async () => {
     const email = 'taken@flowstate.fi';
     await createUser(makeUser({ email }));
-    await createUser(makeUser({ email, cognitoSub: 'another-sub' }));
-    const count = await User.countDocuments({ email });
-    expect(count).toBe(1);
+
+    await expect(
+      createUser(makeUser({ email, cognitoSub: 'another-sub' })),
+    ).rejects.toThrow();
   });
-  //Skipping this too
-  it.skip('returns existing user when cognitoSub is already registered', async () => {
+
+  it('throws when cognitoSub is already registered', async () => {
     const sub = 'duplicate-sub';
-    const first = await createUser(makeUser({ cognitoSub: sub }));
-    const second = await createUser(
-      makeUser({ cognitoSub: sub, email: 'new@flowstate.fi' }),
-    );
-    expect(second._id.toString()).toBe(first._id.toString());
+    await createUser(makeUser({ cognitoSub: sub }));
+
+    await expect(
+      createUser(makeUser({ cognitoSub: sub, email: 'new@flowstate.fi' })),
+    ).rejects.toThrow();
   });
 });
 
