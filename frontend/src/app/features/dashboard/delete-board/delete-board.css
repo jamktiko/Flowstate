@@ -2,134 +2,125 @@
   display: block;
 }
 
-.delete-modal {
+/* MOBILE FIRST — 393x852 lähtökohta */
+
+h3[modal-header] {
+  display: block;
   width: 100%;
-  max-width: 405px;
-  box-sizing: border-box;
 
-  padding: 2.4rem 2.2rem 3.25rem;
-
-  background: #f9fafb;
-  font-family: Arial, Helvetica, sans-serif;
-  color: #111111;
-  text-align: center;
-}
-
-.delete-title {
-  margin: 0 0 1.55rem;
+  margin: 0 auto 48px;
   padding: 0;
-
-  text-align: center;
 
   font-family: Kanit, Arial, Helvetica, sans-serif;
-  font-size: 1.15rem;
-  font-weight: 600;
-  line-height: 1.2;
-}
-
-.delete-text {
-  max-width: 285px;
-  margin: 0 auto 3.25rem;
-  padding: 0;
-
-  text-align: center;
-
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 1.05rem;
+  font-size: 22px;
   font-weight: 400;
   line-height: 1.2;
-  color: #111111;
+
+  text-align: center;
+  color: #000000;
+}
+
+p {
+  max-width: 280px;
+  margin: 0 auto 44px;
+  padding: 0;
+
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 21px;
+  font-weight: 400;
+  line-height: 1.15;
+
+  text-align: left;
+  color: #000000;
 }
 
 .modal-actions {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 2.5rem;
+  gap: 38px;
+  flex-wrap: nowrap;
+
+  margin: 0;
+  padding: 0;
 }
 
 .cancel-btn,
 .confirm-btn {
-  width: 164px;
-  height: 42px;
+  height: 44px;
   box-sizing: border-box;
 
   border-radius: 999px;
 
   font-family: Kanit, Arial, Helvetica, sans-serif;
-  font-size: 0.95rem;
-  font-weight: 600;
+  font-size: 19px;
+  font-weight: 400;
+  line-height: 1;
 
+  white-space: nowrap;
   cursor: pointer;
 }
 
 .cancel-btn {
+  width: 153px;
+
   border: 1px solid #d9d9d9;
   background: #ffffff;
-  color: #111111;
+  color: #000000;
 }
 
 .confirm-btn {
+  width: 138px;
+
   border: 0;
   background: #4b86f8;
   color: #ffffff;
 }
 
-/* Mobile */
-@media (max-width: 430px) {
-  .delete-modal {
-    max-width: 405px;
-    padding: 2.4rem 2.2rem 3.25rem;
-  }
-
-  .delete-text {
-    max-width: 285px;
-    margin-bottom: 3.25rem;
-  }
-
-  .modal-actions {
-    gap: 2.5rem;
-  }
-
-  .cancel-btn,
-  .confirm-btn {
-    width: 164px;
-    height: 42px;
-  }
-}
-
-/* Very small mobile */
+/* pienemmät puhelimet */
 @media (max-width: 360px) {
-  .delete-modal {
-    padding: 2rem 1.4rem 2.6rem;
+  h3[modal-header] {
+    font-size: 20px;
   }
 
-  .delete-title {
-    margin-bottom: 1.25rem;
-  }
-
-  .delete-text {
-    max-width: 250px;
-    margin-bottom: 2.5rem;
-    font-size: 0.98rem;
-  }
-
-  .modal-actions {
-    gap: 1.4rem;
+  p {
+    font-size: 20px;
   }
 
   .cancel-btn,
   .confirm-btn {
-    width: 135px;
-    height: 40px;
-    font-size: 0.85rem;
+    font-size: 18px;
   }
 }
 
-/* Desktop */
+/* DESKTOP */
 @media (min-width: 768px) {
-  .delete-modal {
-    max-width: 405px;
-    padding: 2.6rem 2.2rem 3.25rem;
+  h3[modal-header] {
+    margin-bottom: 48px;
+    font-size: 22px;
+  }
+
+  p {
+    max-width: 280px;
+    margin-bottom: 44px;
+    font-size: 22px;
+  }
+
+  .modal-actions {
+    gap: 40px;
+  }
+
+  .cancel-btn,
+  .confirm-btn {
+    height: 44px;
+    font-size: 20px;
+  }
+
+  .cancel-btn {
+    width: 153px;
+  }
+
+  .confirm-btn {
+    width: 138px;
   }
 }

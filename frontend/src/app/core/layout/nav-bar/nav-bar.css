@@ -5,51 +5,28 @@ nav {
 
   display: flex;
   align-items: center;
-  padding-left: 16px;
-  nav {
-    width: 100%;
-    height: 3.875rem;
-    background-color: #4c90ff;
-
-    display: flex;
-    align-items: center;
-    padding-left: 16px;
-  }
+  padding: 0 16px;
+  box-sizing: border-box;
 }
 
-.back-btn,
-.settings-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-}
-
-.back-btn svg {
-  width: 3.125rem;
-  height: 2.4375rem;
-  stroke: white;
-  fill: none;
-}
-
-.settings-btn svg {
-  width: 2.125rem;
-  height: 2.4375rem;
-  stroke: white;
-  fill: none;
+.left-section,
+.right-section {
+  display: flex;
+  align-items: center;
 }
 
 .right-section {
   margin-left: auto;
-  padding-right: 16px;
 }
+
+.back-btn,
+.settings-btn,
 .logout-btn {
-  width: 3rem;
-  height: 3rem;
-  background-color: #4c90ff;
+  background: none;
   border: none;
   padding: 0;
   margin: 0;
+
   cursor: pointer;
 
   display: flex;
@@ -58,6 +35,37 @@ nav {
 
   appearance: none;
   -webkit-appearance: none;
+}
+
+.settings-btn {
+  width: 3rem;
+  height: 3rem;
+}
+
+.settings-btn svg {
+  width: 2.3rem;
+  height: 2.3rem;
+  display: block;
+  stroke: white;
+  fill: none;
+}
+
+.back-btn {
+  width: 3.125rem;
+  height: 2.4375rem;
+}
+
+.back-btn svg {
+  width: 3.125rem;
+  height: 2.4375rem;
+  display: block;
+  stroke: white;
+  fill: none;
+}
+
+.logout-btn {
+  width: 3rem;
+  height: 3rem;
 }
 
 .logout-btn svg {

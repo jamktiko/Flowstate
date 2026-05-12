@@ -1,6 +1,16 @@
 .settings-content {
   padding: 1rem;
 }
+[modal-header] {
+  width: 100%;
+  text-align: center;
+}
+
+[modal-header] h3 {
+  text-align: center;
+  font-family: kanit, sans-serif;
+  font-weight: 400;
+}
 
 .settings-form {
   display: flex;
@@ -59,18 +69,18 @@ label {
   right: 0;
   bottom: 0;
   background-color: #ccc;
-  transition: .4s;
+  transition: 0.4s;
 }
 
 .slider:before {
   position: absolute;
-  content: "";
+  content: '';
   height: 16px;
   width: 16px;
   left: 4px;
   bottom: 4px;
   background-color: white;
-  transition: .4s;
+  transition: 0.4s;
 }
 
 input:checked + .slider {
@@ -98,9 +108,13 @@ input:checked + .slider:before {
   color: white;
   border: none;
   padding: 0.5rem 1rem;
-  border-radius: 4px;
+  border-radius: 15px;
   cursor: pointer;
   font-weight: bold;
+  width: 80px;
+  height: 35px;
+  font-family: kanit, sans-serif;
+  font-weight: 400;
 }
 
 .save-btn:hover {
@@ -109,12 +123,24 @@ input:checked + .slider:before {
 
 .cancel-btn {
   background-color: transparent;
-  color: #777;
-  border: none;
+  color: #060606;
+  border: #cfcfcf solid 1px;
+  border-radius: 15px;
   padding: 0.5rem 1rem;
   cursor: pointer;
+  width: 80px;
+  height: 35px;
+  font-family: kanit, sans-serif;
+  font-weight: 400;
 }
 
 .cancel-btn:hover {
-  color: #555;
+  background-color: #f2f2f2;
+  border-color: #cfcfcf;
+}
+.settings-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
 }
