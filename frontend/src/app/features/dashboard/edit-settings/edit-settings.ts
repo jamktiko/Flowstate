@@ -2,7 +2,7 @@ import { Component, input, output, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BasicModal } from '@shared/modals/basic-modal/basic-modal';
 import { FakeDatabaseService } from '@shared/fake-database/fake-database-service';
-import { Board } from '@core/models/board.model';
+import { Board } from '@core/models/board-model';
 
 @Component({
   selector: 'app-edit-settings',

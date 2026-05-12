@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Board } from '@core/models/board.model';
+import { Board } from '@core/models/board-model';
 
 @Injectable({
   providedIn: 'root',

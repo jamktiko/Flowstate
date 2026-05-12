@@ -1,6 +1,6 @@
 import { Component, input, output, inject, effect } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Board } from '@core/models/board.model';
+import { Board } from '@core/models/board-model';
 import { BasicModal } from '@shared/modals/basic-modal/basic-modal';
 
 @Component({

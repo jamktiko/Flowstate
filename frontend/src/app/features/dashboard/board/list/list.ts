@@ -1,6 +1,6 @@
 import { Component, input } from '@angular/core';
 import { Task } from './task/task';
-import { Column } from '@core/models/board.model';
+import { Column } from '@core/models/board-model';
 
 @Component({
   selector: 'app-list',

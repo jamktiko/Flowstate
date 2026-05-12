@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 import { EditBoardModal } from '../edit-board/edit-board';
 import { DeleteBoardModal } from '../delete-board/delete-board';
 import { FakeDatabaseService } from '@shared/fake-database/fake-database-service';
-import { Board } from '@core/models/board.model';
+import { Board } from '@core/models/board-model';
 import { EditSettings } from '../edit-settings/edit-settings';
 
 @Component({
