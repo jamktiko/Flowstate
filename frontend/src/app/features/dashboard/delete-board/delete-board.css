@@ -1,0 +1,126 @@
+:host {
+  display: block;
+}
+
+/* MOBILE FIRST — 393x852 lähtökohta */
+
+h3[modal-header] {
+  display: block;
+  width: 100%;
+
+  margin: 0 auto 48px;
+  padding: 0;
+
+  font-family: Kanit, Arial, Helvetica, sans-serif;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1.2;
+
+  text-align: center;
+  color: #000000;
+}
+
+p {
+  max-width: 280px;
+  margin: 0 auto 44px;
+  padding: 0;
+
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 21px;
+  font-weight: 400;
+  line-height: 1.15;
+
+  text-align: left;
+  color: #000000;
+}
+
+.modal-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 38px;
+  flex-wrap: nowrap;
+
+  margin: 0;
+  padding: 0;
+}
+
+.cancel-btn,
+.confirm-btn {
+  height: 44px;
+  box-sizing: border-box;
+
+  border-radius: 999px;
+
+  font-family: Kanit, Arial, Helvetica, sans-serif;
+  font-size: 19px;
+  font-weight: 400;
+  line-height: 1;
+
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.cancel-btn {
+  width: 153px;
+
+  border: 1px solid #d9d9d9;
+  background: #ffffff;
+  color: #000000;
+}
+
+.confirm-btn {
+  width: 138px;
+
+  border: 0;
+  background: #4b86f8;
+  color: #ffffff;
+}
+
+/* pienemmät puhelimet */
+@media (max-width: 360px) {
+  h3[modal-header] {
+    font-size: 20px;
+  }
+
+  p {
+    font-size: 20px;
+  }
+
+  .cancel-btn,
+  .confirm-btn {
+    font-size: 18px;
+  }
+}
+
+/* DESKTOP */
+@media (min-width: 768px) {
+  h3[modal-header] {
+    margin-bottom: 48px;
+    font-size: 22px;
+  }
+
+  p {
+    max-width: 280px;
+    margin-bottom: 44px;
+    font-size: 22px;
+  }
+
+  .modal-actions {
+    gap: 40px;
+  }
+
+  .cancel-btn,
+  .confirm-btn {
+    height: 44px;
+    font-size: 20px;
+  }
+
+  .cancel-btn {
+    width: 153px;
+  }
+
+  .confirm-btn {
+    width: 138px;
+  }
+}
