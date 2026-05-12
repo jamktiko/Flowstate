@@ -93,9 +93,9 @@ export class AuthService {
     };
   }
 
-  async handleGoogleLogin(code: string): Promise<void> {
+  async handleSocialLogin(code: string): Promise<void> {
     const res = await firstValueFrom(
-      this.http.post<AuthResponse>(`${this.apiUrl}/google-callback`, { code }),
+      this.http.post<AuthResponse>(`${this.apiUrl}/social-callback`, { code }),
     );
 
     if (res.data?.accessToken) {

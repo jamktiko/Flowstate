@@ -24,8 +24,8 @@ authRouter.post('/login', loginController);
 // POST /api/auth/confirm - Cognito signup confirmation
 authRouter.post('/confirm', confirmRegistrationController);
 
-// POST /api/auth/google-callback - OAuth callback
-authRouter.post('/google-callback', socialCallbackController);
+// POST /api/auth/social-callback - OAuth callback
+authRouter.post('/social-callback', socialCallbackController);
 /**
  * Google Calendar Integration Routes (Disabled for now)
  */

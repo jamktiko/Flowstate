@@ -16,7 +16,7 @@ export class AuthCallbackComponent implements OnInit {
 
     if (code) {
       try {
-        await this.authService.handleGoogleLogin(code);
+        await this.authService.handleSocialLogin(code);
         this.router.navigate(['/dashboard']);
       } catch (error) {
         console.error('Social login failed', error);
