@@ -85,7 +85,9 @@ export class LoginPage {
     const domain = 'https://eu-north-1sfwo3ekis.auth.eu-north-1.amazoncognito.com';
     const clientId = '4obh8krimbm973e83gte5sfgh1';
     const redirectUri = environment.redirectUri;
-    const scope = encodeURIComponent('email openid profile');
+    const scope = encodeURIComponent(
+      'openid email profile User.Read Calendars.Read Calendars.ReadWrite',
+    );
 
     // Build the URL for the Cognito hosted UI with Microsoft as the identity provider
     const microsoftUrl = `${domain}/oauth2/authorize?identity_provider=Microsoft&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&client_id=${clientId}&scope=${scope}`;
