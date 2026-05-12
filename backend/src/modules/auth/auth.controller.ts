@@ -112,10 +112,10 @@ export const loginController = async (req: Request, res: Response) => {
 };
 
 /**
- * POST /api/auth/google-callback
- * Handles the callback from Google OAuth, exchanges code for tokens, and syncs user to MongoDB
+ * POST /api/auth/social-callback
+ * Handles the callback from Google/Microsoft OAuth, exchanges code for tokens, and syncs user to MongoDB
  */
-export const googleCallbackController = async (req: Request, res: Response) => {
+export const socialCallbackController = async (req: Request, res: Response) => {
   const { code } = req.body;
 
   if (!code) {
@@ -125,7 +125,7 @@ export const googleCallbackController = async (req: Request, res: Response) => {
   try {
     const domain = process.env.COGNITO_DOMAIN;
     const clientId = process.env.COGNITO_CLIENT_ID;
-    const redirectUri = process.env.GOOGLE_REDIRECT_URI;
+    const redirectUri = process.env.GOOGLE_REDIRECT_URI; // Tätä voi käyttää molemmille, koska Cognito hyväksyy sen
 
     const tokenResponse = await axios.post(
       `https://${domain}/oauth2/token`,
@@ -142,28 +142,36 @@ export const googleCallbackController = async (req: Request, res: Response) => {
       tokenResponse.data;
 
     const decodedToken: any = jwt.decode(id_token);
-    const { sub, email, nickname, middle_name } = decodedToken;
 
-    // try to find user by Cognito sub first (normal login flow)
+    // Noudetaan tokenista kaikki mahdolliset nimikentät (Google ja Microsoft käyttävät hieman eri kenttiä)
+    const { sub, email, nickname, given_name, family_name, middle_name } =
+      decodedToken;
+
+    // 1. Etsitään käyttäjää Cogniton sub-tunnisteella
     let user = await getUserByCognitoSub(sub);
 
-    // If not found by sub, try to find by email (handles case where user registered with email/password before)
+    // 2. Jos ei löydy, tarkistetaan onko sähköpostilla jo tili olemassa
     if (!user) {
       const existingUserByEmail = await User.findOne({ email: email });
 
       if (existingUserByEmail) {
+        // Linkitetään uusi sosiaalinen tili (esim. Microsoft) jo olemassa olevaan sähköpostiin
         existingUserByEmail.cognitoSub = sub;
         await existingUserByEmail.save();
         user = existingUserByEmail;
         console.log(
-          'Linkitetty Google-kirjautuminen olemassa olevaan sähköpostiin:',
+          'Linkitetty sosiaalinen kirjautuminen olemassa olevaan sähköpostiin:',
           email,
         );
       } else {
-        let finalFirstName = nickname || email.split('@')[0];
-        let finalLastName = 'GoogleUser';
+        // Luodaan kokonaan uusi käyttäjä
+        // Etusija: given_name (Microsoft/OIDC) -> nickname (Google) -> sähköpostin alkuosa
+        let finalFirstName = given_name || nickname || email.split('@')[0];
 
-        if (middle_name) {
+        // Etusija: family_name (Microsoft/OIDC) -> Google parsinta -> 'User'
+        let finalLastName = family_name || 'User';
+
+        if (!family_name && middle_name) {
           const nameParts = middle_name.trim().split(/\s+/);
           if (nameParts.length > 1) {
             finalLastName = nameParts.pop();
@@ -180,7 +188,10 @@ export const googleCallbackController = async (req: Request, res: Response) => {
           role: 'user',
         });
 
-        console.log('Uusi Google-käyttäjä luotu:', email);
+        console.log(
+          'Uusi käyttäjä luotu sosiaalisen kirjautumisen kautta:',
+          email,
+        );
       }
     }
 
@@ -191,7 +202,7 @@ export const googleCallbackController = async (req: Request, res: Response) => {
       user,
     });
   } catch (error: any) {
-    console.error('Google Auth Error:', error.response?.data || error.message);
-    return sendError(res, 'Google authentication failed', 400);
+    console.error('Social Auth Error:', error.response?.data || error.message);
+    return sendError(res, 'Social authentication failed', 400);
   }
 };
