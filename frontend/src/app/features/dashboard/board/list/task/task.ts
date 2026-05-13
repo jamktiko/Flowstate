@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { Card } from '@core/models/board.model';
+import { Card } from '@core/models/board-model';
 
 @Component({
   selector: 'app-task',

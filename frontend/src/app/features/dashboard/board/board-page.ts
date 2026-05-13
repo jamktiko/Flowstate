@@ -1,10 +1,10 @@
 import { Component, signal, inject, OnInit } from '@angular/core';
 import { List } from './list/list';
 import { TaskModal } from '@shared/modals/task-modal/task-modal';
-import { Task } from '@core/models/task.model';
+import { Task } from '@core/models/task-model';
 import { ActivatedRoute } from '@angular/router';
 import { FakeDatabaseService } from '@shared/fake-database/fake-database-service';
-import { Board, Card } from '@core/models/board.model';
+import { Board, Card } from '@core/models/board-model';
 
 @Component({
   selector: 'app-board-page',
