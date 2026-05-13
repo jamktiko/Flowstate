@@ -10,6 +10,9 @@ export const validateEnv = (): void => {
     'COGNITO_REGION',
     'TOKEN_ENCRYPTION_KEY',
     'FRONTEND_URL',
+    'VAPID_PUBLIC_KEY',
+    'VAPID_PRIVATE_KEY',
+    'VAPID_SUBJECT',
   ];
 
   const missing = required.filter((key) => !process.env[key]);

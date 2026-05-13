@@ -19,7 +19,8 @@
     "helmet": "^7.1.0",
     "jsonwebtoken": "^9.0.3",
     "mongodb": "^7.2.0",
-    "mongoose": "^8.0.0"
+    "mongoose": "^8.0.0",
+    "web-push": "^3.6.7"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
@@ -27,6 +28,7 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^20.10.0",
     "@types/supertest": "^7.2.0",
+    "@types/web-push": "^3.6.4",
     "@vitest/coverage-v8": "^4.1.5",
     "mongodb-memory-server": "^11.0.1",
     "supertest": "^7.2.2",
