@@ -23,9 +23,9 @@ router.post(
   pushCardToGoogleController,
 );
 
-// PUT /api/calendar/sync/update-card/:boardId/:cardId
+// PATCH /api/calendar/sync/update-card/:boardId/:cardId
 // Updates a card's linked Google Calendar event
-router.put(
+router.patch(
   '/update-card/:boardId/:cardId',
   checkAuth,
   updateCardInGoogleController,

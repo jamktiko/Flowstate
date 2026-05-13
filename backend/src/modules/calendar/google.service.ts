@@ -206,7 +206,7 @@ class GoogleCalendarService {
     const expiryDate = user.integrations.google.expiryDate;
 
     // Check if token is expired and refresh if needed
-    if (expiryDate && Date.now() >= expiryDate && refreshToken) {
+    if (expiryDate && Date.now() >= expiryDate - 60_000 && refreshToken) {
       try {
         const decryptedRefreshToken = decrypt(refreshToken);
         const { accessToken: refreshedAccessToken, expiresIn } =

@@ -18,8 +18,9 @@ const start = async () => {
     initGoogleCalendarService();
     console.log('✅ Google Calendar service initialized');
   } catch (err) {
-    console.error('Failed to initialize Google Calendar service:', err);
-    process.exit(1);
+    console.warn(
+      '⚠️ Google Calendar service not initialized — calendar sync disabled',
+    );
   }
 
   // Start notification job after DB is connected
