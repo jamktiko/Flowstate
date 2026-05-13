@@ -2,7 +2,7 @@
   <h2 class="page-title">
     Your boards
 
-    <button class="boards-menu-btn" type="button" aria-label="Avaa board-valikko">
+    <button class="boards-menu-btn" type="button" aria-label="Avaa board-valikko" (click)="isViewSelectorModalOpen.set(true)">
       <svg
         class="title-arrow"
         xmlns="http://www.w3.org/2000/svg"
@@ -117,6 +117,11 @@
     [isOpen]="isSettingsModalOpen()"
     (closeModal)="isSettingsModalOpen.set(false)">
   </app-edit-settings>
+
+  <app-view-selector 
+    [isOpen]="isViewSelectorModalOpen()"
+    (closeModal)="isViewSelectorModalOpen.set(false)">
+  </app-view-selector>
 
   <!--Delete afterwards this + the function from ts-->
     <button (click)="logDatabase()" style="background: red; color: white;">Log DB to Console</button>
