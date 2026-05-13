@@ -36,6 +36,17 @@ export interface IBoardRef {
   name: string;
 }
 
+/** Browser-generated push subscription object.
+ *  Stored as-is from the frontend's pushManager.subscribe() call.
+ *  Passed directly to webpush.sendNotification(). */
+export interface IPushSubscription {
+  endpoint: string;
+  keys: {
+    p256dh: string; // client public key — used to encrypt the payload
+    auth: string; // auth secret — prevents other servers spoofing messages
+  };
+}
+
 // ─────────────────────────────────────────────
 // Root user interface
 // ─────────────────────────────────────────────
@@ -50,6 +61,7 @@ export interface IUser extends Document {
   notifications: INotificationPrefs;
   integrations: IUserIntegrations;
   boards: IBoardRef[];
+  pushSubscription: IPushSubscription | null; // null = user hasn't opted in
   createdAt: Date;
   updatedAt: Date;
 }
@@ -101,6 +113,17 @@ const BoardRefSchema = new Schema<IBoardRef>(
   { _id: false },
 );
 
+const PushSubscriptionSchema = new Schema<IPushSubscription>(
+  {
+    endpoint: { type: String, required: true },
+    keys: {
+      p256dh: { type: String, required: true },
+      auth: { type: String, required: true },
+    },
+  },
+  { _id: false },
+);
+
 // ─────────────────────────────────────────────
 // Root schema
 // ─────────────────────────────────────────────
@@ -134,6 +157,9 @@ const UserSchema = new Schema<IUser>(
     },
 
     boards: { type: [BoardRefSchema], default: [] },
+
+    // Optional — only present after user grants notification permission
+    pushSubscription: { type: PushSubscriptionSchema, default: null },
   },
   {
     timestamps: true, // auto-manages createdAt + updatedAt
