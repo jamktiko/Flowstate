@@ -40,7 +40,9 @@ describe('GoogleCalendarService', () => {
       expect(url).toContain('state=test-state-token');
       expect(url).toContain('access_type=offline');
       expect(url).toContain('prompt=consent');
-      expect(url).toContain('https://www.googleapis.com/auth/calendar.events');
+      expect(url).toContain(
+        encodeURIComponent('https://www.googleapis.com/auth/calendar.events'),
+      );
     });
 
     it('should include both calendar scopes', () => {
