@@ -14,10 +14,11 @@ import { DeleteBoardModal } from '../delete-board/delete-board';
 import { FakeDatabaseService } from '@shared/fake-database/fake-database-service';
 import { Board } from '@core/models/board-model';
 import { EditSettings } from '../edit-settings/edit-settings';
+import { ViewSelector } from '../view-selector/view-selector';
 
 @Component({
   selector: 'app-boards-page',
-  imports: [EditBoardModal, DeleteBoardModal, EditSettings],
+  imports: [EditBoardModal, DeleteBoardModal, EditSettings, ViewSelector],
   templateUrl: './list-boards-page.html',
   styleUrl: './list-boards-page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,6 +29,7 @@ export class BoardsPage implements OnInit {
   boards = signal<Board[]>([]);
 
   isSettingsModalOpen = signal(false);
+  isViewSelectorModalOpen = signal(false);
 
   isEditModalOpen = signal(false);
   editingBoardId = signal<string | null>(null);
