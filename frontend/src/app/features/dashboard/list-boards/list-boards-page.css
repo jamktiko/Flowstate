@@ -114,11 +114,9 @@
   height: 20px;
   display: block;
 }
-
-button:hover {
-  opacity: 0.88;
+.add-board-btn:hover {
+  background: #3a7ae0;
 }
-
 button:active {
   transform: scale(0.97);
 }
