@@ -17,7 +17,12 @@
 
       <div class="action-row">
         @if (linkedStatus().isLinked) {
-          <button type="button" class="secondary-btn" (click)="unlinkGoogleCalendar()" [disabled]="isSyncing()">
+          <button
+            type="button"
+            class="secondary-btn"
+            (click)="unlinkGoogleCalendar()"
+            [disabled]="isSyncing()"
+          >
             Unlink
           </button>
         } @else {
@@ -26,7 +31,12 @@
           </button>
         }
 
-        <button type="button" class="secondary-btn" (click)="importGoogleEvents()" [disabled]="isSyncing()">
+        <button
+          type="button"
+          class="secondary-btn"
+          (click)="importGoogleEvents()"
+          [disabled]="isSyncing()"
+        >
           Import
         </button>
       </div>

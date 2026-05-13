@@ -1,292 +1,292 @@
 .calendar-page {
-	display: grid;
-	gap: 1rem;
-	padding: 1rem;
-	background:
-		radial-gradient(circle at top left, rgba(76, 144, 255, 0.18), transparent 28%),
-		linear-gradient(180deg, #f6f9ff 0%, #ffffff 48%, #f3f7ff 100%);
-	min-height: calc(100vh - 3.875rem);
-	box-sizing: border-box;
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+  background:
+    radial-gradient(circle at top left, rgba(76, 144, 255, 0.18), transparent 28%),
+    linear-gradient(180deg, #f6f9ff 0%, #ffffff 48%, #f3f7ff 100%);
+  min-height: calc(100vh - 3.875rem);
+  box-sizing: border-box;
 }
 
 .hero-card,
 .toolbar-card,
 .calendar-panel,
 .events-panel {
-	background: rgba(255, 255, 255, 0.92);
-	border: 1px solid rgba(76, 144, 255, 0.12);
-	border-radius: 20px;
-	box-shadow: 0 18px 50px rgba(18, 41, 74, 0.08);
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(76, 144, 255, 0.12);
+  border-radius: 20px;
+  box-shadow: 0 18px 50px rgba(18, 41, 74, 0.08);
 }
 
 .hero-card {
-	display: flex;
-	justify-content: space-between;
-	gap: 1rem;
-	padding: 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem;
 }
 
 .eyebrow,
 .toolbar-label {
-	margin: 0 0 0.25rem;
-	text-transform: uppercase;
-	letter-spacing: 0.12em;
-	font-size: 0.75rem;
-	color: #4c90ff;
-	font-weight: 700;
+  margin: 0 0 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.75rem;
+  color: #4c90ff;
+  font-weight: 700;
 }
 
 h1,
 h2,
 h3,
 p {
-	margin-top: 0;
+  margin-top: 0;
 }
 
 .hero-copy {
-	max-width: 46rem;
-	color: #4a5568;
-	line-height: 1.55;
-	margin-bottom: 0;
+  max-width: 46rem;
+  color: #4a5568;
+  line-height: 1.55;
+  margin-bottom: 0;
 }
 
 .status-stack {
-	display: grid;
-	align-content: start;
-	gap: 0.75rem;
-	min-width: 18rem;
+  display: grid;
+  align-content: start;
+  gap: 0.75rem;
+  min-width: 18rem;
 }
 
 .status-pill {
-	display: inline-flex;
-	align-items: center;
-	gap: 0.5rem;
-	padding: 0.55rem 0.8rem;
-	border-radius: 999px;
-	background: #f3f7ff;
-	color: #2f3a4f;
-	font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.8rem;
+  border-radius: 999px;
+  background: #f3f7ff;
+  color: #2f3a4f;
+  font-weight: 600;
 }
 
 .status-pill.connected {
-	background: #e8f6ee;
-	color: #0f6a3f;
+  background: #e8f6ee;
+  color: #0f6a3f;
 }
 
 .status-dot {
-	width: 0.7rem;
-	height: 0.7rem;
-	border-radius: 999px;
-	background: #4c90ff;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 999px;
+  background: #4c90ff;
 }
 
 .status-pill.connected .status-dot {
-	background: #1cc309;
+  background: #1cc309;
 }
 
 .action-row,
 .toolbar-actions {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
 }
 
 .primary-btn,
 .secondary-btn,
 .ghost-btn {
-	appearance: none;
-	border: none;
-	border-radius: 999px;
-	cursor: pointer;
-	font: inherit;
-	padding: 0.75rem 1rem;
-	transition:
-		transform 0.15s ease,
-		box-shadow 0.15s ease,
-		background-color 0.15s ease;
+  appearance: none;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  font: inherit;
+  padding: 0.75rem 1rem;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background-color 0.15s ease;
 }
 
 .primary-btn {
-	background: linear-gradient(135deg, #4c90ff, #2f72ef);
-	color: #fff;
-	box-shadow: 0 12px 24px rgba(76, 144, 255, 0.24);
+  background: linear-gradient(135deg, #4c90ff, #2f72ef);
+  color: #fff;
+  box-shadow: 0 12px 24px rgba(76, 144, 255, 0.24);
 }
 
 .secondary-btn,
 .ghost-btn {
-	background: #f3f7ff;
-	color: #1f2a44;
+  background: #f3f7ff;
+  color: #1f2a44;
 }
 
 .primary-btn:hover,
 .secondary-btn:hover,
 .ghost-btn:hover {
-	transform: translateY(-1px);
+  transform: translateY(-1px);
 }
 
 .primary-btn:disabled,
 .secondary-btn:disabled,
 .ghost-btn:disabled {
-	opacity: 0.6;
-	cursor: wait;
-	transform: none;
+  opacity: 0.6;
+  cursor: wait;
+  transform: none;
 }
 
 .notice {
-	padding: 0.9rem 1rem;
-	border-radius: 16px;
-	font-weight: 600;
+  padding: 0.9rem 1rem;
+  border-radius: 16px;
+  font-weight: 600;
 }
 
 .notice-success {
-	background: #e8f6ee;
-	color: #0f6a3f;
+  background: #e8f6ee;
+  color: #0f6a3f;
 }
 
 .notice-error {
-	background: #fff1f1;
-	color: #9d174d;
+  background: #fff1f1;
+  color: #9d174d;
 }
 
 .toolbar-card {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	gap: 1rem;
-	padding: 1rem 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
 }
 
 .calendar-layout {
-	display: grid;
-	grid-template-columns: minmax(0, 1.6fr) minmax(300px, 0.9fr);
-	gap: 1rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(300px, 0.9fr);
+  gap: 1rem;
 }
 
 .calendar-panel {
-	padding: 1rem;
-	overflow: hidden;
+  padding: 1rem;
+  overflow: hidden;
 }
 
 .events-panel {
-	padding: 1rem;
-	display: grid;
-	gap: 0.85rem;
-	align-content: start;
+  padding: 1rem;
+  display: grid;
+  gap: 0.85rem;
+  align-content: start;
 }
 
 .panel-header {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .panel-header h3 {
-	margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .panel-header span {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	min-width: 2rem;
-	height: 2rem;
-	border-radius: 999px;
-	background: #eef4ff;
-	color: #2f5fca;
-	font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  background: #eef4ff;
+  color: #2f5fca;
+  font-weight: 700;
 }
 
 .empty-state {
-	padding: 1rem;
-	border-radius: 16px;
-	background: #f8fbff;
-	color: #5b6476;
-	line-height: 1.5;
+  padding: 1rem;
+  border-radius: 16px;
+  background: #f8fbff;
+  color: #5b6476;
+  line-height: 1.5;
 }
 
 .event-list {
-	display: grid;
-	gap: 0.75rem;
+  display: grid;
+  gap: 0.75rem;
 }
 
 .event-card {
-	padding: 0.9rem 1rem;
-	border-radius: 16px;
-	background: #f9fbff;
-	border: 1px solid #e6ecf8;
+  padding: 0.9rem 1rem;
+  border-radius: 16px;
+  background: #f9fbff;
+  border: 1px solid #e6ecf8;
 }
 
 .event-card-head {
-	display: flex;
-	justify-content: space-between;
-	gap: 0.75rem;
-	align-items: start;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: start;
 }
 
 .event-card p,
 .event-description {
-	margin: 0.35rem 0 0;
-	color: #556074;
+  margin: 0.35rem 0 0;
+  color: #556074;
 }
 
 .event-meta {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 0.5rem;
-	margin-top: 0.6rem;
-	color: #4c90ff;
-	font-size: 0.85rem;
-	font-weight: 600;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+  color: #4c90ff;
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
 .provider-chip {
-	display: inline-flex;
-	align-items: center;
-	border-radius: 999px;
-	padding: 0.3rem 0.6rem;
-	background: #e8f0ff;
-	color: #2d5ab7;
-	font-size: 0.8rem;
-	text-transform: capitalize;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.3rem 0.6rem;
+  background: #e8f0ff;
+  color: #2d5ab7;
+  font-size: 0.8rem;
+  text-transform: capitalize;
 }
 
 .provider-chip.google {
-	background: #e3f2ff;
-	color: #1a73e8;
+  background: #e3f2ff;
+  color: #1a73e8;
 }
 
 @media (max-width: 980px) {
-	.hero-card,
-	.toolbar-card {
-		flex-direction: column;
-		align-items: stretch;
-	}
+  .hero-card,
+  .toolbar-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
 
-	.calendar-layout {
-		grid-template-columns: 1fr;
-	}
+  .calendar-layout {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 640px) {
-	.calendar-page {
-		padding: 0.75rem;
-	}
+  .calendar-page {
+    padding: 0.75rem;
+  }
 
-	.hero-card,
-	.toolbar-card,
-	.calendar-panel,
-	.events-panel {
-		border-radius: 16px;
-	}
+  .hero-card,
+  .toolbar-card,
+  .calendar-panel,
+  .events-panel {
+    border-radius: 16px;
+  }
 
-	.action-row,
-	.toolbar-actions {
-		width: 100%;
-	}
+  .action-row,
+  .toolbar-actions {
+    width: 100%;
+  }
 
-	.primary-btn,
-	.secondary-btn,
-	.ghost-btn {
-		flex: 1 1 10rem;
-	}
+  .primary-btn,
+  .secondary-btn,
+  .ghost-btn {
+    flex: 1 1 10rem;
+  }
 }

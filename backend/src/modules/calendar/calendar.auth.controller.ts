@@ -8,6 +8,35 @@ import {
   isGoogleCalendarLinked,
 } from './calendar.auth.service';
 
+const isLocalHost = (value: string): boolean => {
+  return value.includes('localhost') || value.includes('127.0.0.1');
+};
+
+const getRequestOrigin = (req: Request): string => {
+  const forwardedProto = req.header('x-forwarded-proto');
+  const protocol = forwardedProto ? forwardedProto.split(',')[0] : req.protocol;
+  const host =
+    req.header('x-forwarded-host') || req.get('host') || 'localhost:8080';
+
+  return `${protocol}://${host}`;
+};
+
+const getFrontendBaseUrl = (req: Request): string => {
+  const configured = process.env.FRONTEND_URL?.trim();
+  const requestOrigin = getRequestOrigin(req);
+
+  // In production behind CloudFront/ALB, a localhost FRONTEND_URL is almost always a bad deploy env.
+  if (configured) {
+    if (isLocalHost(configured) && !isLocalHost(requestOrigin)) {
+      return requestOrigin;
+    }
+
+    return configured;
+  }
+
+  return requestOrigin;
+};
+
 // ─────────────────────────────────────────────
 // Helper — resolves cognitoSub → MongoDB user._id
 // ─────────────────────────────────────────────
@@ -52,6 +81,8 @@ export const initiateLinkingController = async (
  */
 export const oauthCallbackController = async (req: Request, res: Response) => {
   try {
+    const frontendBaseUrl = getFrontendBaseUrl(req);
+
     // Extract authorization code and state from query parameters
     const { code, state, error, error_description } = req.query;
 
@@ -62,7 +93,7 @@ export const oauthCallbackController = async (req: Request, res: Response) => {
         : String(error_description || 'OAuth flow cancelled or failed');
       // Redirect to frontend with error (or return error response)
       return res.redirect(
-        `${process.env.FRONTEND_URL}/calendar-error?error=${encodeURIComponent(errorMsg)}`,
+        `${frontendBaseUrl}/calendar-error?error=${encodeURIComponent(errorMsg)}`,
       );
     }
 
@@ -77,18 +108,19 @@ export const oauthCallbackController = async (req: Request, res: Response) => {
 
       // Success — redirect to frontend success page with user ID as confirmation
       return res.redirect(
-        `${process.env.FRONTEND_URL}/calendar-linked?success=true&userId=${user._id}`,
+        `${frontendBaseUrl}/calendar-linked?success=true&userId=${user._id}`,
       );
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : 'Unknown error';
       return res.redirect(
-        `${process.env.FRONTEND_URL}/calendar-error?error=${encodeURIComponent(errorMsg)}`,
+        `${frontendBaseUrl}/calendar-error?error=${encodeURIComponent(errorMsg)}`,
       );
     }
   } catch (error) {
+    const frontendBaseUrl = getFrontendBaseUrl(req);
     const message = error instanceof Error ? error.message : 'Unknown error';
     return res.redirect(
-      `${process.env.FRONTEND_URL}/calendar-error?error=${encodeURIComponent(message)}`,
+      `${frontendBaseUrl}/calendar-error?error=${encodeURIComponent(message)}`,
     );
   }
 };
