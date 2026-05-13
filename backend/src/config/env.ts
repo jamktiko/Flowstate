@@ -10,6 +10,9 @@ export const validateEnv = (): void => {
     'COGNITO_REGION',
     'TOKEN_ENCRYPTION_KEY',
     'FRONTEND_URL',
+    'GOOGLE_CLIENT_ID',
+    'GOOGLE_CLIENT_SECRET',
+    'GOOGLE_CALENDAR_REDIRECT_URI',
   ];
 
   const missing = required.filter((key) => !process.env[key]);
