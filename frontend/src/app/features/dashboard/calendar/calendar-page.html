@@ -1,4 +1,111 @@
-<mwl-calendar-week-view
-  [viewDate]="viewDate"
-  [events]="events">
-</mwl-calendar-week-view>
+<div class="calendar-page">
+  <section class="hero-card">
+    <div>
+      <p class="eyebrow">Calendar sync</p>
+      <h1>Google Calendar integration</h1>
+      <p class="hero-copy">
+        Link your Google account, import external events, and keep Flowstate tasks in the same
+        weekly view.
+      </p>
+    </div>
+
+    <div class="status-stack">
+      <div class="status-pill" [class.connected]="linkedStatus().isLinked">
+        <span class="status-dot"></span>
+        {{ linkedStatus().isLinked ? 'Google connected' : 'Google not connected' }}
+      </div>
+
+      <div class="action-row">
+        @if (linkedStatus().isLinked) {
+          <button type="button" class="secondary-btn" (click)="unlinkGoogleCalendar()" [disabled]="isSyncing()">
+            Unlink
+          </button>
+        } @else {
+          <button type="button" class="primary-btn" (click)="linkGoogleCalendar()">
+            Link Google Calendar
+          </button>
+        }
+
+        <button type="button" class="secondary-btn" (click)="importGoogleEvents()" [disabled]="isSyncing()">
+          Import
+        </button>
+      </div>
+    </div>
+  </section>
+
+  @if (infoMessage()) {
+    <div class="notice notice-success">{{ infoMessage() }}</div>
+  }
+
+  @if (errorMessage()) {
+    <div class="notice notice-error">{{ errorMessage() }}</div>
+  }
+
+  <section class="toolbar-card">
+    <div>
+      <p class="toolbar-label">Visible range</p>
+      <h2>{{ visibleRangeLabel() || 'This week' }}</h2>
+    </div>
+
+    <div class="toolbar-actions">
+      <button type="button" class="ghost-btn" (click)="goToToday()">Today</button>
+      <button type="button" class="ghost-btn" (click)="goToPreviousPeriod()">Previous</button>
+      <button type="button" class="ghost-btn" (click)="goToNextPeriod()">Next</button>
+      <button type="button" class="ghost-btn" (click)="refreshCalendar()" [disabled]="isLoading()">
+        Refresh
+      </button>
+    </div>
+  </section>
+
+  <section class="calendar-layout">
+    <div class="calendar-panel">
+      <mwl-calendar-week-view [viewDate]="viewDate" [events]="events()"></mwl-calendar-week-view>
+    </div>
+
+    <aside class="events-panel">
+      <div class="panel-header">
+        <h3>Loaded events</h3>
+        <span>{{ events().length }}</span>
+      </div>
+
+      @if (isLoading()) {
+        <div class="empty-state">Loading calendar events...</div>
+      } @else if (events().length === 0) {
+        <div class="empty-state">
+          No events found for this range yet.
+          <br />
+          Import from Google Calendar or create a local calendar event in the backend.
+        </div>
+      } @else {
+        <div class="event-list">
+          @for (event of events(); track event.meta?._id) {
+            <article class="event-card">
+              <div class="event-card-head">
+                <strong>{{ event.title }}</strong>
+                <span class="provider-chip" [class.google]="event.meta?.provider === 'google'">
+                  {{ event.meta?.provider ?? 'local' }}
+                </span>
+              </div>
+
+              <p>{{ formatEventWindow(event.meta!) }}</p>
+
+              <div class="event-meta">
+                <span>{{ formatStatus(event.meta!.status) }}</span>
+                @if (event.meta?.linkedCardId) {
+                  <span>Linked card</span>
+                }
+                @if (event.meta?.isAllDay) {
+                  <span>All day</span>
+                }
+              </div>
+
+              @if (event.meta?.description) {
+                <p class="event-description">{{ event.meta?.description }}</p>
+              }
+            </article>
+          }
+        </div>
+      }
+    </aside>
+  </section>
+</div>

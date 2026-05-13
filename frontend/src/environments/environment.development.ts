@@ -4,6 +4,6 @@ export const environment = {
     userPoolId: 'eu-north-1_SfWo3EkIs',
     userPoolClientId: '4obh8krimbm973e83gte5sfgh1',
   },
-  apiUrl: 'http://localhost:8080/api/auth',
+  apiBaseUrl: 'http://localhost:8080/api',
   redirectUri: 'http://localhost:4200/auth/callback',
 };
