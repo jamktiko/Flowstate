@@ -10,7 +10,7 @@ import { Board } from '../models/board-model'; // Adjust the import path if this
 export class BoardService {
   private http = inject(HttpClient);
   // Assuming your backend routes are prefixed with '/boards'
-  private apiUrl = `${environment.apiUrl}/boards`;
+  private apiUrl = `${environment.apiBaseUrl}/boards`;
 
   // CREATE: Add a new board
   async createBoard(name: string): Promise<Board> {

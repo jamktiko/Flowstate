@@ -1,0 +1,93 @@
+.result-shell {
+  min-height: calc(100vh - 3.875rem);
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background:
+    radial-gradient(circle at top, rgba(76, 144, 255, 0.22), transparent 32%),
+    linear-gradient(180deg, #f5f9ff 0%, #ffffff 100%);
+  box-sizing: border-box;
+}
+
+.result-card {
+  width: min(42rem, 100%);
+  padding: 2rem;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(76, 144, 255, 0.12);
+  box-shadow: 0 24px 64px rgba(18, 41, 74, 0.12);
+}
+
+.result-card.error {
+  border-color: rgba(236, 72, 153, 0.18);
+}
+
+.eyebrow {
+  margin: 0 0 0.35rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #4c90ff;
+}
+
+h1,
+p {
+  margin-top: 0;
+}
+
+.message {
+  color: #4a5568;
+  line-height: 1.6;
+}
+
+.details {
+  padding: 0.9rem 1rem;
+  border-radius: 16px;
+  background: #f7faff;
+  color: #51607a;
+  word-break: break-word;
+}
+
+.actions {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.primary-btn,
+.secondary-btn {
+  appearance: none;
+  border: none;
+  border-radius: 999px;
+  padding: 0.8rem 1.15rem;
+  cursor: pointer;
+  font: inherit;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, #4c90ff, #2f72ef);
+  color: #fff;
+}
+
+.secondary-btn {
+  background: #f3f7ff;
+  color: #1f2a44;
+}
+
+@media (max-width: 640px) {
+  .result-card {
+    padding: 1.5rem;
+    border-radius: 20px;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .primary-btn,
+  .secondary-btn {
+    width: 100%;
+  }
+}
