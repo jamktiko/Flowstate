@@ -19,14 +19,14 @@ export class RegisterPage {
 
   registerForm = this.fb.group({
     firstName: ['', Validators.required],
-    surname: ['', Validators.required],
+    lastName: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
   });
 
   async register(): Promise<void> {
     if (this.registerForm.valid) {
-      const { email, password, firstName, surname } = this.registerForm.getRawValue();
+      const { email, password, firstName, lastName } = this.registerForm.getRawValue();
 
       try {
         // result on nyt tyypitetty RegisterResult
@@ -34,7 +34,7 @@ export class RegisterPage {
           email!,
           password!,
           firstName!,
-          surname!,
+          lastName!,
         );
 
         if (result.nextStep?.signUpStep === 'CONFIRM_SIGN_UP') {

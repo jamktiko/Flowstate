@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { firstValueFrom } from 'rxjs';
+
 interface AuthResponse {
   data?: {
     accessToken?: string;
@@ -25,17 +26,19 @@ export class AuthService {
   private http = inject(HttpClient);
   private apiUrl = environment.apiUrl;
 
-  async register(email: string, salasana: string, firstName: string, surname: string) {
+  async register(email: string, password: string, firstName: string, lastName: string) {
     try {
-      await firstValueFrom(
-        this.http.post<AuthResponse>(`${this.apiUrl}/register`, {
+      const res = await firstValueFrom(
+        this.http.post(`${this.apiUrl}/register`, {
           email,
-          password: salasana,
+          password,
           firstName,
-          lastName: surname,
+          lastName,
         }),
       );
 
+      // Delete console.log after testing!
+      console.log('Backend response from /register:', res);
       return { nextStep: { signUpStep: 'CONFIRM_SIGN_UP' } };
     } catch (error) {
       console.error('Error in AuthService.register:', error);
