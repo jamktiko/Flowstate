@@ -15,7 +15,10 @@ import { makeCalendarEvent } from '../../test/factories';
 
 const fakeUserId = new Types.ObjectId();
 
-beforeAll(connectTestDB);
+beforeAll(async () => {
+  await connectTestDB();
+  await CalendarEvent.syncIndexes();
+});
 afterEach(clearTestDB);
 afterAll(disconnectTestDB);
 
