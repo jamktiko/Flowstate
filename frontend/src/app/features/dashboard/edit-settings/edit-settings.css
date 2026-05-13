@@ -1,6 +1,7 @@
 .settings-content {
   padding: 1rem;
 }
+
 [modal-header] {
   width: 100%;
   text-align: center;
@@ -36,10 +37,12 @@ label {
 }
 
 .form-control {
+  width: 100%;
   padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 1rem;
+  box-sizing: border-box;
 }
 
 .form-control:focus {
@@ -53,6 +56,7 @@ label {
   display: inline-block;
   width: 50px;
   height: 24px;
+  flex-shrink: 0;
 }
 
 .switch input {
@@ -64,10 +68,7 @@ label {
 .slider {
   position: absolute;
   cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background-color: #ccc;
   transition: 0.4s;
 }
@@ -103,18 +104,40 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
+.settings-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
+}
+
+/* Shared button styles */
+.save-btn,
+.cancel-btn {
+  min-width: 90px;
+  height: 36px;
+  padding: 0 1rem;
+
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 18px;
+  cursor: pointer;
+
+  font-family: kanit, sans-serif;
+  font-weight: 500;
+  font-size: 1.1rem;
+  line-height: 1;
+
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
 .save-btn {
   background-color: #4c90ff;
   color: white;
   border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 15px;
-  cursor: pointer;
-  font-weight: bold;
-  width: 80px;
-  height: 35px;
-  font-family: kanit, sans-serif;
-  font-weight: 400;
 }
 
 .save-btn:hover {
@@ -125,22 +148,31 @@ input:checked + .slider:before {
   background-color: transparent;
   color: #060606;
   border: #cfcfcf solid 1px;
-  border-radius: 15px;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  width: 80px;
-  height: 35px;
-  font-family: kanit, sans-serif;
-  font-weight: 400;
 }
 
 .cancel-btn:hover {
   background-color: #f2f2f2;
   border-color: #cfcfcf;
 }
-.settings-actions {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 2rem;
+
+@media (max-width: 320px) {
+  .settings-content {
+    padding: 0.75rem;
+  }
+
+  .settings-form {
+    gap: 1.25rem;
+  }
+
+  .settings-actions {
+    gap: 1rem;
+  }
+
+  .save-btn,
+  .cancel-btn {
+    min-width: 74px;
+    height: 34px;
+    padding: 0 0.75rem;
+    font-size: 1rem;
+  }
 }
