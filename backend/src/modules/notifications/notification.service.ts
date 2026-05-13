@@ -1,6 +1,7 @@
 import { Types } from 'mongoose';
 import { Board } from '../boards/board.model';
 import { User } from '../users/user.model';
+import { sendPushToUser } from '../push/push.service';
 
 /**
  * Scans all boards for cards with upcoming due dates and sends notifications.
@@ -101,21 +102,25 @@ export async function checkAndSendNotifications(): Promise<void> {
 }
 
 /**
- * Sends a notification to a user about an upcoming card deadline.
- * Currently logs to console — replace with real notification delivery
- * (email, push notification, WebSocket) when implementing FR 6.1.
- * @param userId - MongoDB ObjectId of the user to notify
+ * Sends a push notification to a user about an upcoming card deadline.
+ * Silently skips if the user hasn't opted in to push notifications.
+ *
+ * @param userId    - MongoDB ObjectId of the user to notify
  * @param cardTitle - Title of the card with upcoming deadline
- * @param dueDate - Due date of the card
+ * @param dueDate   - Due date of the card
  */
 async function sendNotification(
   userId: Types.ObjectId,
   cardTitle: string,
   dueDate: Date,
 ): Promise<void> {
-  // TODO: replace with real notification delivery
-  // Options: email (nodemailer), push (Firebase), WebSocket (socket.io)
-  console.log(
-    `🔔 Notification for user ${userId}: "${cardTitle}" is due at ${dueDate.toISOString()}`,
-  );
+  const dueString = dueDate.toLocaleString('en-GB', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  });
+
+  await sendPushToUser(userId, {
+    title: '⏰ Task due soon',
+    body: `"${cardTitle}" is due at ${dueString}`,
+  });
 }
