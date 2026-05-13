@@ -3,7 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthLayout } from '@core/layout/auth-layout/auth-layout';
 import { AuthService } from '@core/auth/auth-service';
-import { environment } from '../../../../environments/environment';
+import { environment } from '@environments/environment';
 
 @Component({
   selector: 'app-login-page',

@@ -3,7 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthLayout } from '@core/layout/auth-layout/auth-layout';
 import { AuthService, RegisterResult } from '@core/auth/auth-service';
 import { Router } from '@angular/router';
-import { environment } from '../../../../environments/environment';
+import { environment } from '@environments/environment';
 
 @Component({
   selector: 'app-register-page',
