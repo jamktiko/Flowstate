@@ -1,3 +1,13 @@
+<div class="toast-container">
+  @if (infoMessage()) {
+    <div class="toast toast-success">{{ infoMessage() }}</div>
+  }
+
+  @if (errorMessage()) {
+    <div class="toast toast-error">{{ errorMessage() }}</div>
+  }
+</div>
+
 <div class="calendar-page">
   <section class="hero-card">
     <div>
@@ -33,14 +43,6 @@
       </div>
     </div>
   </section>
-
-  @if (infoMessage()) {
-    <div class="notice notice-success">{{ infoMessage() }}</div>
-  }
-
-  @if (errorMessage()) {
-    <div class="notice notice-error">{{ errorMessage() }}</div>
-  }
 
   <section class="toolbar-card">
     <div>
