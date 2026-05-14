@@ -1,5 +1,10 @@
 <app-auth-layout>
   <h2>Create an account</h2>
+
+  @if (registrationError) {
+    <p class="form-error" role="alert">{{ registrationError }}</p>
+  }
+
   <form [formGroup]="registerForm" (ngSubmit)="register()">
     <div>
       <label for="firstName">First Name</label>

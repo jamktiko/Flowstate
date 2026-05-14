@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
 import { AuthLayout } from '@core/layout/auth-layout/auth-layout';
 import { AuthService, RegisterResult } from '@core/auth/auth-service';
 import { Router } from '@angular/router';
@@ -16,6 +17,7 @@ export class RegisterPage {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
+  registrationError: string | null = null;
 
   registerForm = this.fb.group({
     firstName: ['', Validators.required],
@@ -27,6 +29,7 @@ export class RegisterPage {
   async register(): Promise<void> {
     if (this.registerForm.valid) {
       const { email, password, firstName, lastName } = this.registerForm.getRawValue();
+      this.registrationError = null;
 
       try {
         // result on nyt tyypitetty RegisterResult
@@ -44,11 +47,27 @@ export class RegisterPage {
         }
       } catch (error: unknown) {
         console.error('Registration failed:', error);
-        let errorMessage = 'An unexpected error occurred during registration.';
-        if (error instanceof Error) {
-          errorMessage = error.message;
+
+        if (error instanceof HttpErrorResponse) {
+          const backendMessage =
+            typeof error.error?.message === 'string' ? error.error.message : '';
+
+          if (
+            error.status === 409 ||
+            backendMessage.toLowerCase().includes('already registered') ||
+            backendMessage.toLowerCase().includes('already exists')
+          ) {
+            this.registrationError =
+              'This email is already registered. Please sign in or reset your password.';
+            return;
+          }
+
+          this.registrationError =
+            backendMessage || 'An unexpected error occurred during registration.';
+          return;
         }
-        alert(errorMessage);
+
+        this.registrationError = 'An unexpected error occurred during registration.';
       }
     } else {
       this.registerForm.markAllAsTouched();
