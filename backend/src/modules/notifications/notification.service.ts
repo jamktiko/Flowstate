@@ -50,7 +50,16 @@ export async function checkAndSendNotifications(): Promise<void> {
           // Check if we're within the notification window
           if (now >= notifyAt && now < card.dueDate) {
             // Send notification
-            await sendNotification(user._id, card.title, card.dueDate);
+            try {
+              await sendNotification(user._id, card.title, card.dueDate);
+            } catch (err) {
+              // Log and continue — one user's failed push should never
+              // stop notifications for everyone else in the cron tick
+              console.error(
+                `Failed to send notification to user ${user._id}:`,
+                err,
+              );
+            }
 
             // Mark notification as sent — prevents duplicate notifications
             await Board.updateOne(
