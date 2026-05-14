@@ -216,6 +216,24 @@ p {
   border: 1px solid #e6ecf8;
 }
 
+.delete-btn {
+  margin-top: 0.85rem;
+  appearance: none;
+  border: 1px solid #f6c2c2;
+  background: #fff1f1;
+  color: #9d174d;
+  border-radius: 999px;
+  padding: 0.55rem 0.85rem;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+}
+
+.delete-btn:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
 .event-card-head {
   display: flex;
   justify-content: space-between;

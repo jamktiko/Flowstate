@@ -3,14 +3,5 @@
     <p class="eyebrow">Google Calendar</p>
     <h1>{{ title() }}</h1>
     <p class="message">{{ message() }}</p>
-
-    @if (details()) {
-      <p class="details">{{ isSuccess() ? 'User reference: ' : 'Error: ' }}{{ details() }}</p>
-    }
-
-    <div class="actions">
-      <button type="button" class="primary-btn" (click)="goToCalendar()">Open calendar</button>
-      <button type="button" class="secondary-btn" (click)="goToDashboard()">Go to dashboard</button>
-    </div>
   </div>
 </section>
