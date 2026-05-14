@@ -30,15 +30,6 @@
             Link Google Calendar
           </button>
         }
-
-        <button
-          type="button"
-          class="secondary-btn"
-          (click)="importGoogleEvents()"
-          [disabled]="isSyncing()"
-        >
-          Import
-        </button>
       </div>
     </div>
   </section>
@@ -84,7 +75,7 @@
         <div class="empty-state">
           No events found for this range yet.
           <br />
-          Import from Google Calendar or create a local calendar event in the backend.
+          Create an event or import them from Google Calendar.
         </div>
       } @else {
         <div class="event-list">

@@ -1,10 +1,9 @@
 import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   DateAdapter,
   provideCalendar,
   CalendarEvent,
-  CalendarEventAction,
   CalendarView,
   CalendarWeekViewComponent,
 } from 'angular-calendar';
@@ -58,6 +57,7 @@ export class CalendarPage implements OnInit {
   private calendarApi = inject(CalendarApiService);
   private navBarService = inject(NavBarService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   constructor() {
     this.navBarService.showBackButton.set(true);
@@ -77,7 +77,14 @@ export class CalendarPage implements OnInit {
 
   async ngOnInit() {
     await this.refreshConnectionStatus();
-    await this.refreshCalendar();
+
+    // Auto-import Google events if user just linked their account
+    const justLinked = this.route.snapshot.queryParamMap.get('justLinked') === 'true';
+    if (justLinked && this.linkedStatus().isLinked) {
+      await this.importGoogleEvents();
+    } else {
+      await this.refreshCalendar();
+    }
   }
 
   setView(view: CalendarView) {
@@ -205,24 +212,12 @@ export class CalendarPage implements OnInit {
   }
 
   private toCalendarEvent(event: CalendarEventRecord): CalendarEvent {
-    const actions: CalendarEventAction[] = [
-      {
-        label: 'Delete',
-        a11yLabel: `Delete ${event.title}`,
-        cssClass: 'delete-event-action',
-        onClick: ({ event: calendarEvent }) => {
-          void this.deleteCalendarEvent(calendarEvent);
-        },
-      },
-    ];
-
     return {
       start: new Date(event.startTime),
       end: new Date(event.endTime),
       title: event.title,
       allDay: event.isAllDay,
       color: this.getColor(event),
-      actions,
       meta: event,
     };
   }

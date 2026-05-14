@@ -1,5 +1,6 @@
 .calendar-page {
   display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 1rem;
   padding: 1rem;
   background:
@@ -160,6 +161,7 @@ p {
   display: grid;
   grid-template-columns: minmax(0, 1.6fr) minmax(300px, 0.9fr);
   gap: 1rem;
+  grid-column: 1 / -1;
 }
 
 .calendar-panel {
@@ -271,6 +273,12 @@ p {
 .provider-chip.google {
   background: #e3f2ff;
   color: #1a73e8;
+}
+
+@media (max-width: 1200px) {
+  .calendar-page {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 980px) {
