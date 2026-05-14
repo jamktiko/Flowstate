@@ -4,6 +4,7 @@ import {
   DateAdapter,
   provideCalendar,
   CalendarEvent,
+  CalendarEventAction,
   CalendarView,
   CalendarWeekViewComponent,
 } from 'angular-calendar';
@@ -137,6 +138,32 @@ export class CalendarPage implements OnInit {
     }
   }
 
+  async deleteCalendarEvent(event: CalendarEvent) {
+    const eventId = event.meta?._id;
+    if (!eventId) {
+      this.errorMessage.set('This calendar event cannot be deleted because it has no saved ID.');
+      return;
+    }
+
+    const confirmed = window.confirm(`Delete "${event.title}"? This cannot be undone.`);
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      this.isSyncing.set(true);
+      this.errorMessage.set(null);
+
+      const result = await this.calendarApi.deleteCalendarEvent(eventId);
+      await this.refreshCalendar();
+      this.infoMessage.set(result.message ?? 'Event deleted successfully.');
+    } catch (error) {
+      this.errorMessage.set(this.formatError(error));
+    } finally {
+      this.isSyncing.set(false);
+    }
+  }
+
   async importGoogleEvents() {
     try {
       this.isSyncing.set(true);
@@ -178,12 +205,24 @@ export class CalendarPage implements OnInit {
   }
 
   private toCalendarEvent(event: CalendarEventRecord): CalendarEvent {
+    const actions: CalendarEventAction[] = [
+      {
+        label: 'Delete',
+        a11yLabel: `Delete ${event.title}`,
+        cssClass: 'delete-event-action',
+        onClick: ({ event: calendarEvent }) => {
+          void this.deleteCalendarEvent(calendarEvent);
+        },
+      },
+    ];
+
     return {
       start: new Date(event.startTime),
       end: new Date(event.endTime),
       title: event.title,
       allDay: event.isAllDay,
       color: this.getColor(event),
+      actions,
       meta: event,
     };
   }

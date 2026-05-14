@@ -112,6 +112,15 @@
               @if (event.meta?.description) {
                 <p class="event-description">{{ event.meta?.description }}</p>
               }
+
+              <button
+                type="button"
+                class="delete-btn"
+                (click)="deleteCalendarEvent(event); $event.stopPropagation()"
+                [disabled]="isSyncing()"
+              >
+                Delete event
+              </button>
             </article>
           }
         </div>

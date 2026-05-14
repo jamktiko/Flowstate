@@ -22,6 +22,10 @@ export interface GoogleCalendarLinkStatus {
   isLinked: boolean;
 }
 
+export interface DeleteCalendarEventResult {
+  message?: string;
+}
+
 interface ApiResponse<T> {
   data?: T;
   message?: string;
@@ -93,5 +97,13 @@ export class CalendarApiService {
     );
 
     return response.data ?? { count: 0 };
+  }
+
+  async deleteCalendarEvent(eventId: string): Promise<DeleteCalendarEventResult> {
+    const response = await firstValueFrom(
+      this.http.delete<ApiResponse<DeleteCalendarEventResult>>(`${this.calendarApiUrl}/${eventId}`),
+    );
+
+    return response.data ?? { message: 'Event deleted successfully' };
   }
 }
