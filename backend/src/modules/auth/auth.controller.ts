@@ -15,6 +15,43 @@ const cognitoClient = new CognitoIdentityProviderClient({
   region: process.env.COGNITO_REGION,
 });
 
+const isLocalHost = (value: string): boolean => {
+  return value.includes('localhost') || value.includes('127.0.0.1');
+};
+
+const getRequestOrigin = (req: Request): string => {
+  const forwardedProto = req.header('x-forwarded-proto');
+  const protocol = forwardedProto ? forwardedProto.split(',')[0] : req.protocol;
+  const host =
+    req.header('x-forwarded-host') || req.get('host') || 'localhost:8080';
+
+  return `${protocol}://${host}`;
+};
+
+const getSocialRedirectUri = (req: Request): string => {
+  const configured = process.env.GOOGLE_REDIRECT_URI?.trim();
+  const frontendUrl = process.env.FRONTEND_URL?.trim();
+  const requestOrigin = getRequestOrigin(req);
+
+  if (configured) {
+    if (isLocalHost(configured) && !isLocalHost(requestOrigin)) {
+      return `${requestOrigin}/auth/callback`;
+    }
+
+    return configured;
+  }
+
+  if (frontendUrl) {
+    if (isLocalHost(frontendUrl) && !isLocalHost(requestOrigin)) {
+      return `${requestOrigin}/auth/callback`;
+    }
+
+    return `${frontendUrl}/auth/callback`;
+  }
+
+  return `${requestOrigin}/auth/callback`;
+};
+
 //comment to launch backend tests in CI/CD pipeline to check if tests go through!!!!
 
 /**
@@ -125,15 +162,19 @@ export const socialCallbackController = async (req: Request, res: Response) => {
   try {
     const domain = process.env.COGNITO_DOMAIN;
     const clientId = process.env.COGNITO_CLIENT_ID;
-    const redirectUri = process.env.GOOGLE_REDIRECT_URI;
+    const redirectUri = getSocialRedirectUri(req);
+
+    if (!domain || !clientId) {
+      return sendError(res, 'Cognito OAuth is not configured properly', 500);
+    }
 
     const tokenResponse = await axios.post(
       `https://${domain}/oauth2/token`,
       new URLSearchParams({
         grant_type: 'authorization_code',
-        client_id: clientId!,
+        client_id: clientId,
         code: code,
-        redirect_uri: redirectUri!,
+        redirect_uri: redirectUri,
       }).toString(),
       { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
     );
