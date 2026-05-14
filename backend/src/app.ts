@@ -15,6 +15,8 @@ import cardRouter from './modules/cards/card.routes';
 
 import calendarRouter from './modules/calendar/calendarEvent.routes';
 
+import pushRouter from './modules/push/push.routes';
+
 const app = express();
 
 // Middleware — must come before all routes
@@ -45,6 +47,8 @@ app.use('/api/boards', boardRouter);
 app.use('/api/boards', cardRouter);
 
 app.use('/api/calendar', calendarRouter);
+
+app.use('/api/push', pushRouter);
 
 // This route is for testing the server root, it can be removed later
 app.get('/', (req, res) => {
