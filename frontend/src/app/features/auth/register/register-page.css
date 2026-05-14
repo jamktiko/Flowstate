@@ -94,6 +94,19 @@ h2 {
   text-align: center;
   margin-bottom: 35px;
 }
+
+.form-error {
+  margin: 0 0 16px;
+  padding: 10px 12px;
+  border: 1px solid #f2b4b4;
+  border-radius: 8px;
+  background: #fff1f1;
+  color: #9d174d;
+  font-family: kanit, Arial, sans-serif;
+  font-size: 14px;
+  text-align: left;
+}
+
 .password-hint {
   margin: 10px 0 0;
   text-align: center;

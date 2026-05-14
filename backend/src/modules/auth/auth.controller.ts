@@ -58,9 +58,21 @@ const getSocialRedirectUri = (req: Request): string => {
  * POST /api/auth/register
  */
 export const registerController = async (req: Request, res: Response) => {
-  const { email, password, firstName, lastName } = req.body;
+  const { email: rawEmail, password, firstName, lastName } = req.body;
+  const email = String(rawEmail || '').trim();
+
+  const duplicateAccountMessage =
+    'This email is already registered. Please sign in or reset your password.';
 
   try {
+    const escapedEmail = email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const existingUser = await User.findOne({
+      email: new RegExp(`^${escapedEmail}$`, 'i'),
+    });
+    if (existingUser) {
+      return sendError(res, duplicateAccountMessage, 409);
+    }
+
     const cognitoResult = await cognitoClient.send(
       new SignUpCommand({
         ClientId: process.env.COGNITO_CLIENT_ID,
@@ -89,9 +101,27 @@ export const registerController = async (req: Request, res: Response) => {
     });
 
     return sendSuccess(res, user, 201);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Registration Error:', error);
-    return sendError(res, error.message || 'Registration failed', 400);
+
+    const cognitoErrorName =
+      typeof error === 'object' && error !== null && 'name' in error
+        ? String((error as { name?: string }).name)
+        : '';
+
+    if (
+      cognitoErrorName === 'UsernameExistsException' ||
+      cognitoErrorName === 'AliasExistsException'
+    ) {
+      return sendError(res, duplicateAccountMessage, 409);
+    }
+
+    const errorMessage =
+      typeof error === 'object' && error !== null && 'message' in error
+        ? String((error as { message?: string }).message)
+        : 'Registration failed';
+
+    return sendError(res, errorMessage, 400);
   }
 };
 
