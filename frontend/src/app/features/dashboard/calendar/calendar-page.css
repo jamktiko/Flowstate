@@ -195,6 +195,7 @@ p {
   align-items: center;
   gap: 1rem;
   flex-wrap: wrap;
+  position: relative;
 }
 
 .date-picker-body {
@@ -298,6 +299,37 @@ p {
 
 .date-picker-footer {
   width: 100%;
+}
+
+.date-picker-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 1200;
+  min-width: 320px;
+}
+
+.date-picker-card {
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid rgba(76, 144, 255, 0.12);
+  border-radius: 12px;
+  box-shadow: 0 18px 50px rgba(18, 41, 74, 0.08);
+  padding: 0.75rem;
+}
+
+@media (max-width: 640px) {
+  .date-picker-popover {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: auto;
+    bottom: 0;
+    min-width: auto;
+    padding: 0.5rem;
+  }
+  .date-picker-card {
+    border-radius: 12px 12px 0 0;
+  }
 }
 
 .calendar-layout {

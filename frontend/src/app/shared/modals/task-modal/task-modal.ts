@@ -81,7 +81,7 @@ export class TaskModal {
         tags: selectedTags,
       };
 
-      this.saveTask.emit(payload as any);
+      this.saveTask.emit(payload as Task);
       this.onClose();
     }
   }
