@@ -1,31 +1,22 @@
-/**
- * db.ts — Shared mongodb-memory-server helpers
- *
- * WHY: Every spec that touches Mongoose needs a real in-memory Mongo instance.
- * Centralising connect/disconnect/clear here means we never duplicate this
- * setup boilerplate across files, and we never mock the Mongoose driver
- * (mocking the driver produces false confidence — it won't catch schema errors).
- *
- * Usage in a spec file:
- *   import { connectTestDB, disconnectTestDB, clearTestDB } from '../test/db';
- *   beforeAll(connectTestDB);
- *   afterEach(clearTestDB);   // isolate each test
- *   afterAll(disconnectTestDB);
- */
-
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 
+// Import all models so Mongoose registers them before syncIndexes runs
+import '../../src/modules/users/user.model';
+import '../../src/modules/calendar/calendarEvent.model';
+import '../../src/modules/boards/board.model';
+
 let mongod: MongoMemoryServer;
 
-/** Start an in-memory Mongo instance and connect Mongoose to it. */
 export async function connectTestDB(): Promise<void> {
   mongod = await MongoMemoryServer.create();
   const uri = mongod.getUri();
-  await mongoose.connect(uri);
+  await mongoose.connect(uri, { autoIndex: true });
+  // Wait for all indexes to be built before any test runs
+  await mongoose.syncIndexes();
 }
 
-/** Drop all collections between tests — gives each `it` a clean slate. */
+/** Revert to deleteMany — drop() was too aggressive, it destroys indexes */
 export async function clearTestDB(): Promise<void> {
   const collections = mongoose.connection.collections;
   for (const key in collections) {
@@ -33,7 +24,6 @@ export async function clearTestDB(): Promise<void> {
   }
 }
 
-/** Close the Mongoose connection and stop the in-memory server. */
 export async function disconnectTestDB(): Promise<void> {
   await mongoose.connection.dropDatabase();
   await mongoose.connection.close();

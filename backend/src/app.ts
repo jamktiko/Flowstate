@@ -17,6 +17,8 @@ import calendarRouter from './modules/calendar/calendarEvent.routes';
 import calendarAuthRouter from './modules/calendar/calendar.auth.routes';
 import calendarSyncRouter from './modules/calendar/calendar.sync.routes';
 
+import pushRouter from './modules/push/push.routes';
+
 const app = express();
 
 // Middleware — must come before all routes
@@ -51,6 +53,8 @@ app.use('/api/calendar', calendarRouter);
 app.use('/api/calendar/auth', calendarAuthRouter);
 // Calendar sync routes for pushing/pulling events
 app.use('/api/calendar/sync', calendarSyncRouter);
+
+app.use('/api/push', pushRouter);
 
 // This route is for testing the server root, it can be removed later
 app.get('/', (req, res) => {

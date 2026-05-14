@@ -23,6 +23,14 @@ vi.mock('aws-jwt-verify', () => ({
     })),
   },
 }));
+// Mock web-push so importing app.ts doesn't fail when VAPID env vars
+// are absent in the test environment.
+vi.mock('web-push', () => ({
+  default: {
+    setVapidDetails: vi.fn(),
+    sendNotification: vi.fn(),
+  },
+}));
 
 import app from './app';
 
