@@ -32,7 +32,7 @@ export class CalendarLinkResultPage implements OnInit {
     );
 
     this.redirectTimer = setTimeout(() => {
-      void this.router.navigate(['/dashboard/calendar']);
+      void this.router.navigate(['/dashboard/calendar'], { queryParams: { justLinked: 'true' } });
     }, 1200);
   }
 
