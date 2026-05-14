@@ -51,18 +51,7 @@
         <h2>{{ visibleRangeLabel() || 'This week' }}</h2>
       </div>
 
-      <label class="jump-selector">
-        <span>Jump</span>
-        <select
-          #jumpSelect
-          [value]="navigationJump()"
-          (change)="setNavigationJump(jumpSelect.value)"
-        >
-          @for (option of navigationJumpOptions; track option.value) {
-            <option [value]="option.value">{{ option.label }}</option>
-          }
-        </select>
-      </label>
+      <button type="button" class="tertiary-btn" (click)="openDatePicker()">Pick date</button>
     </div>
 
     <div class="toolbar-actions">
@@ -165,6 +154,51 @@
       >
         Delete event
       </button>
+    </div>
+  </app-basic-modal>
+
+  <app-basic-modal [isOpen]="isDatePickerOpen()" (closeModal)="closeDatePicker()">
+    <div modal-header>
+      <p class="eyebrow">Select a date</p>
+      <h3>Pick a week to view</h3>
+    </div>
+
+    <div class="date-picker-body">
+      <div class="date-picker-controls">
+        <div class="year-picker">
+          <label for="yearInput">Year</label>
+          <input
+            #yearInput
+            id="yearInput"
+            type="number"
+            [value]="pickerYear()"
+            (change)="pickerYear.set(+yearInput.value)"
+            min="2000"
+            max="2100"
+          />
+        </div>
+
+        <div class="month-navigation">
+          <button type="button" class="ghost-btn" (click)="previousPickerMonth()">←</button>
+          <span class="month-display">{{ getMonthName(pickerMonth()) }}</span>
+          <button type="button" class="ghost-btn" (click)="nextPickerMonth()">→</button>
+        </div>
+      </div>
+
+      <div class="week-picker">
+        @for (week of getWeeksInMonth(pickerYear(), pickerMonth()); track week.week) {
+          <button type="button" class="week-btn" (click)="confirmDatePicker(week.week)">
+            <span class="week-label">Week {{ week.week + 1 }}</span>
+            <span class="week-dates">
+              {{ week.date.toLocaleDateString() }}
+            </span>
+          </button>
+        }
+      </div>
+    </div>
+
+    <div modal-footer class="date-picker-footer">
+      <button type="button" class="secondary-btn" (click)="closeDatePicker()">Cancel</button>
     </div>
   </app-basic-modal>
 </div>

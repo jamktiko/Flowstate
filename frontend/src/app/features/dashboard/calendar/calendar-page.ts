@@ -31,8 +31,6 @@ function endOfWeek(date: Date): Date {
   return value;
 }
 
-type NavigationJumpValue = 'week' | 'fortnight' | 'month' | 'quarter' | 'half-year' | 'year';
-
 @Component({
   selector: 'app-calendar',
   imports: [BasicModal, CalendarWeekViewComponent],
@@ -47,14 +45,6 @@ type NavigationJumpValue = 'week' | 'fortnight' | 'month' | 'quarter' | 'half-ye
 })
 export class CalendarPage implements OnInit {
   readonly CalendarView = CalendarView;
-  readonly navigationJumpOptions: readonly { label: string; value: NavigationJumpValue }[] = [
-    { label: '1 week', value: 'week' },
-    { label: '2 weeks', value: 'fortnight' },
-    { label: '1 month', value: 'month' },
-    { label: '3 months', value: 'quarter' },
-    { label: '6 months', value: 'half-year' },
-    { label: '1 year', value: 'year' },
-  ];
   view = CalendarView.Week;
   viewDate = new Date();
   events = signal<CalendarEvent[]>([]);
@@ -64,8 +54,10 @@ export class CalendarPage implements OnInit {
   infoMessage = signal<string | null>(null);
   errorMessage = signal<string | null>(null);
   visibleRangeLabel = signal('');
-  navigationJump = signal<NavigationJumpValue>('week');
   pendingDeleteEvent = signal<CalendarEvent | null>(null);
+  isDatePickerOpen = signal(false);
+  pickerYear = signal(new Date().getFullYear());
+  pickerMonth = signal(new Date().getMonth());
 
   private calendarApi = inject(CalendarApiService);
   private navBarService = inject(NavBarService);
@@ -114,9 +106,78 @@ export class CalendarPage implements OnInit {
     void this.refreshCalendar();
   }
 
-  setNavigationJump(value: string) {
-    const validValue = this.navigationJumpOptions.find((option) => option.value === value)?.value;
-    this.navigationJump.set(validValue ?? 'week');
+  openDatePicker() {
+    this.pickerYear.set(this.viewDate.getFullYear());
+    this.pickerMonth.set(this.viewDate.getMonth());
+    this.isDatePickerOpen.set(true);
+  }
+
+  closeDatePicker() {
+    this.isDatePickerOpen.set(false);
+  }
+
+  confirmDatePicker(week?: number) {
+    if (week !== undefined) {
+      const newDate = new Date(this.pickerYear(), this.pickerMonth(), 1);
+      const startOfMonth = startOfWeek(newDate);
+      const targetDate = new Date(startOfMonth);
+      targetDate.setDate(targetDate.getDate() + week * 7);
+      this.viewDate = targetDate;
+      this.isDatePickerOpen.set(false);
+      void this.refreshCalendar();
+    }
+  }
+
+  previousPickerMonth() {
+    let month = this.pickerMonth() - 1;
+    let year = this.pickerYear();
+    if (month < 0) {
+      month = 11;
+      year--;
+    }
+    this.pickerYear.set(year);
+    this.pickerMonth.set(month);
+  }
+
+  nextPickerMonth() {
+    let month = this.pickerMonth() + 1;
+    let year = this.pickerYear();
+    if (month > 11) {
+      month = 0;
+      year++;
+    }
+    this.pickerYear.set(year);
+    this.pickerMonth.set(month);
+  }
+
+  getWeeksInMonth(year: number, month: number): { week: number; date: Date }[] {
+    const firstDay = new Date(year, month, 1);
+    const firstWeekStart = startOfWeek(firstDay);
+    const lastDay = new Date(year, month + 1, 0);
+    const lastWeekEnd = endOfWeek(lastDay);
+
+    const weeks: { week: number; date: Date }[] = [];
+    const current = new Date(firstWeekStart);
+    let weekNumber = 0;
+
+    while (current <= lastWeekEnd) {
+      const monthCheck = new Date(current);
+      monthCheck.setDate(monthCheck.getDate() + 3); // Mid-week to check month
+      if (monthCheck.getMonth() === month) {
+        weeks.push({
+          week: weekNumber,
+          date: new Date(current),
+        });
+      }
+      current.setDate(current.getDate() + 7);
+      weekNumber++;
+    }
+
+    return weeks;
+  }
+
+  getMonthName(month: number): string {
+    return new Date(2000, month, 1).toLocaleDateString('en-US', { month: 'long' });
   }
 
   goToToday() {
@@ -190,7 +251,7 @@ export class CalendarPage implements OnInit {
       this.errorMessage.set(null);
 
       const result = await this.calendarApi.deleteCalendarEvent(eventId);
-      await this.refreshCalendar();
+      await this.loadCalendarEvents();
       this.showSuccessMessage(result.message ?? 'Event deleted successfully.');
     } catch (error) {
       this.showErrorMessage(this.formatError(error));
@@ -262,26 +323,7 @@ export class CalendarPage implements OnInit {
 
   private shiftViewDate(direction: -1 | 1) {
     const nextDate = new Date(this.viewDate);
-    const jump = this.navigationJump();
-
-    if (jump === 'week') {
-      nextDate.setDate(nextDate.getDate() + direction * 7);
-      return nextDate;
-    }
-
-    if (jump === 'fortnight') {
-      nextDate.setDate(nextDate.getDate() + direction * 14);
-      return nextDate;
-    }
-
-    const monthSteps = {
-      month: 1,
-      quarter: 3,
-      'half-year': 6,
-      year: 12,
-    } as const;
-
-    nextDate.setMonth(nextDate.getMonth() + direction * monthSteps[jump]);
+    nextDate.setDate(nextDate.getDate() + direction * 7);
     return nextDate;
   }
 
