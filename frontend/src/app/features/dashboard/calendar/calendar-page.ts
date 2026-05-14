@@ -116,7 +116,7 @@ export class CalendarPage implements OnInit {
       const status = await this.calendarApi.getGoogleLinkStatus();
       this.linkedStatus.set(status);
     } catch (error) {
-      this.errorMessage.set(this.formatError(error));
+      this.showErrorMessage(this.formatError(error));
     }
   }
 
@@ -126,7 +126,7 @@ export class CalendarPage implements OnInit {
       const { authUrl } = await this.calendarApi.startGoogleLink();
       window.location.assign(authUrl);
     } catch (error) {
-      this.errorMessage.set(this.formatError(error));
+      this.showErrorMessage(this.formatError(error));
     }
   }
 
@@ -137,9 +137,9 @@ export class CalendarPage implements OnInit {
       await this.calendarApi.unlinkGoogleCalendar();
       await this.refreshConnectionStatus();
       await this.refreshCalendar();
-      this.infoMessage.set('Google Calendar has been unlinked.');
+      this.showSuccessMessage('Google Calendar has been unlinked.');
     } catch (error) {
-      this.errorMessage.set(this.formatError(error));
+      this.showErrorMessage(this.formatError(error));
     } finally {
       this.isSyncing.set(false);
     }
@@ -148,7 +148,7 @@ export class CalendarPage implements OnInit {
   async deleteCalendarEvent(event: CalendarEvent) {
     const eventId = event.meta?._id;
     if (!eventId) {
-      this.errorMessage.set('This calendar event cannot be deleted because it has no saved ID.');
+      this.showErrorMessage('This calendar event cannot be deleted because it has no saved ID.');
       return;
     }
 
@@ -163,9 +163,9 @@ export class CalendarPage implements OnInit {
 
       const result = await this.calendarApi.deleteCalendarEvent(eventId);
       await this.refreshCalendar();
-      this.infoMessage.set(result.message ?? 'Event deleted successfully.');
+      this.showSuccessMessage(result.message ?? 'Event deleted successfully.');
     } catch (error) {
-      this.errorMessage.set(this.formatError(error));
+      this.showErrorMessage(this.formatError(error));
     } finally {
       this.isSyncing.set(false);
     }
@@ -178,9 +178,10 @@ export class CalendarPage implements OnInit {
       const { from, to } = this.currentRange();
       const result = await this.calendarApi.importGoogleEvents(from, to);
       await this.refreshCalendar();
-      this.infoMessage.set(result.message ?? `Imported ${result.count} Google events.`);
+      const message = result.message ?? `Imported ${result.count} Google events.`;
+      this.showSuccessMessage(message);
     } catch (error) {
-      this.errorMessage.set(this.formatError(error));
+      this.showErrorMessage(this.formatError(error));
     } finally {
       this.isSyncing.set(false);
     }
@@ -246,6 +247,20 @@ export class CalendarPage implements OnInit {
 
   formatStatus(status: CalendarEventRecord['status']) {
     return status.charAt(0).toUpperCase() + status.slice(1);
+  }
+
+  private showSuccessMessage(message: string) {
+    this.infoMessage.set(message);
+    setTimeout(() => {
+      this.infoMessage.set(null);
+    }, 3000);
+  }
+
+  private showErrorMessage(message: string) {
+    this.errorMessage.set(message);
+    setTimeout(() => {
+      this.errorMessage.set(null);
+    }, 5000);
   }
 
   private formatError(error: unknown) {
