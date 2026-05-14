@@ -1,0 +1,222 @@
+<div class="toast-container">
+  @if (infoMessage()) {
+    <div class="toast toast-success">{{ infoMessage() }}</div>
+  }
+
+  @if (errorMessage()) {
+    <div class="toast toast-error">{{ errorMessage() }}</div>
+  }
+</div>
+
+<div class="calendar-page">
+  <section class="hero-card">
+    <div>
+      <p class="eyebrow">Calendar sync</p>
+      <h1>Google Calendar integration</h1>
+      <p class="hero-copy">
+        Link your Google account, import external events, and keep Flowstate tasks in the same
+        weekly view.
+      </p>
+    </div>
+
+    <div class="status-stack">
+      <div class="status-pill" [class.connected]="linkedStatus().isLinked">
+        <span class="status-dot"></span>
+        {{ linkedStatus().isLinked ? 'Google connected' : 'Google not connected' }}
+      </div>
+
+      <div class="action-row">
+        @if (linkedStatus().isLinked) {
+          <button
+            type="button"
+            class="secondary-btn"
+            (click)="unlinkGoogleCalendar()"
+            [disabled]="isSyncing()"
+          >
+            Unlink
+          </button>
+        } @else {
+          <button type="button" class="primary-btn" (click)="linkGoogleCalendar()">
+            Link Google Calendar
+          </button>
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="toolbar-card">
+    <div class="toolbar-range-group">
+      <div>
+        <p class="toolbar-label">Visible range</p>
+        <h2>{{ visibleRangeLabel() || 'This week' }}</h2>
+      </div>
+
+      <button type="button" class="tertiary-btn" (click)="openDatePicker()">Pick date</button>
+    </div>
+
+    <div class="toolbar-actions">
+      <button type="button" class="ghost-btn" (click)="goToToday()">Today</button>
+      <button type="button" class="ghost-btn" (click)="goToPreviousPeriod()">Previous</button>
+      <button type="button" class="ghost-btn" (click)="goToNextPeriod()">Next</button>
+      <button type="button" class="ghost-btn" (click)="refreshCalendar()" [disabled]="isLoading()">
+        Refresh
+      </button>
+    </div>
+  </section>
+
+  <section class="calendar-layout">
+    <div class="calendar-panel">
+      <mwl-calendar-week-view [viewDate]="viewDate" [events]="events()"></mwl-calendar-week-view>
+    </div>
+
+    <aside class="events-panel">
+      <div class="panel-header">
+        <h3>Loaded events</h3>
+        <span>{{ events().length }}</span>
+      </div>
+
+      @if (isLoading()) {
+        <div class="empty-state">Loading calendar events...</div>
+      } @else if (events().length === 0) {
+        <div class="empty-state">
+          No events found for this range yet.
+          <br />
+          Create an event or import them from Google Calendar.
+        </div>
+      } @else {
+        <div class="event-list">
+          @for (event of events(); track event.meta?._id) {
+            <article class="event-card">
+              <div class="event-card-head">
+                <strong>{{ event.title }}</strong>
+                <span class="provider-chip" [class.google]="event.meta?.provider === 'google'">
+                  {{ event.meta?.provider ?? 'local' }}
+                </span>
+              </div>
+
+              <p>{{ formatEventWindow(event.meta!) }}</p>
+
+              <div class="event-meta">
+                <span>{{ formatStatus(event.meta!.status) }}</span>
+                @if (event.meta?.linkedCardId) {
+                  <span>Linked card</span>
+                }
+                @if (event.meta?.isAllDay) {
+                  <span>All day</span>
+                }
+              </div>
+
+              @if (event.meta?.description) {
+                <p class="event-description">{{ event.meta?.description }}</p>
+              }
+
+              <button
+                type="button"
+                class="delete-btn"
+                (click)="deleteCalendarEvent(event); $event.stopPropagation()"
+                [disabled]="isSyncing()"
+              >
+                Delete event
+              </button>
+            </article>
+          }
+        </div>
+      }
+    </aside>
+  </section>
+
+  <app-basic-modal
+    [isOpen]="pendingDeleteEvent() !== null"
+    (closeModal)="cancelDeleteCalendarEvent()"
+  >
+    <div modal-header class="delete-modal-header">
+      <p class="delete-modal-eyebrow">Confirm deletion</p>
+      <h3>Delete this event?</h3>
+    </div>
+
+    <div class="delete-modal-body">
+      <p class="delete-modal-copy">
+        This will permanently remove <strong>{{ pendingDeleteEvent()?.title }}</strong
+        >.
+      </p>
+      <p class="delete-modal-hint">This action cannot be undone.</p>
+    </div>
+
+    <div modal-footer class="delete-modal-actions">
+      <button type="button" class="secondary-btn" (click)="cancelDeleteCalendarEvent()">
+        Cancel
+      </button>
+      <button
+        type="button"
+        class="primary-btn delete-confirm-btn"
+        (click)="confirmDeleteCalendarEvent()"
+        [disabled]="isSyncing()"
+      >
+        Delete event
+      </button>
+    </div>
+  </app-basic-modal>
+
+  @if (isDatePickerOpen()) {
+    <div
+      class="date-picker-popover"
+      role="button"
+      tabindex="0"
+      (click)="closeDatePicker()"
+      (keydown.enter)="closeDatePicker()"
+      (keydown.space)="closeDatePicker()"
+    >
+      <div
+        class="date-picker-card"
+        role="dialog"
+        tabindex="0"
+        (click)="$event.stopPropagation()"
+        (keydown.enter)="$event.stopPropagation()"
+        (keydown.space)="$event.stopPropagation()"
+      >
+        <div class="date-picker-header">
+          <p class="eyebrow">Select a date</p>
+          <h3>Pick a week to view</h3>
+        </div>
+
+        <div class="date-picker-body">
+          <div class="date-picker-controls">
+            <div class="year-picker">
+              <label for="yearInput">Year</label>
+              <input
+                #yearInput
+                id="yearInput"
+                type="number"
+                [value]="pickerYear()"
+                (change)="pickerYear.set(+yearInput.value)"
+                min="2000"
+                max="2100"
+              />
+            </div>
+
+            <div class="month-navigation">
+              <button type="button" class="ghost-btn" (click)="previousPickerMonth()">←</button>
+              <span class="month-display">{{ getMonthName(pickerMonth()) }}</span>
+              <button type="button" class="ghost-btn" (click)="nextPickerMonth()">→</button>
+            </div>
+          </div>
+
+          <div class="week-picker">
+            @for (week of getWeeksInMonth(pickerYear(), pickerMonth()); track week.week) {
+              <button type="button" class="week-btn" (click)="confirmDatePicker(week.week)">
+                <span class="week-label">Week {{ week.week + 1 }}</span>
+                <span class="week-dates">
+                  {{ week.date.toLocaleDateString() }}
+                </span>
+              </button>
+            }
+          </div>
+        </div>
+
+        <div class="date-picker-footer">
+          <button type="button" class="secondary-btn" (click)="closeDatePicker()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

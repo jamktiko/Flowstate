@@ -3,7 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthLayout } from '@core/layout/auth-layout/auth-layout';
 import { AuthService } from '@core/auth/auth-service';
-import { environment } from '../../../../environments/environment';
+import { environment } from '@environments/environment';
 
 @Component({
   selector: 'app-login-page',
@@ -85,7 +85,9 @@ export class LoginPage {
     const domain = 'https://eu-north-1sfwo3ekis.auth.eu-north-1.amazoncognito.com';
     const clientId = '4obh8krimbm973e83gte5sfgh1';
     const redirectUri = environment.redirectUri;
-    const scope = encodeURIComponent('email openid profile');
+    const scope = encodeURIComponent(
+      'openid email profile User.Read Calendars.Read Calendars.ReadWrite',
+    );
 
     // Build the URL for the Cognito hosted UI with Microsoft as the identity provider
     const microsoftUrl = `${domain}/oauth2/authorize?identity_provider=Microsoft&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&client_id=${clientId}&scope=${scope}`;

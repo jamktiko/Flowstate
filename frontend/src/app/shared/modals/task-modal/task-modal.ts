@@ -1,6 +1,6 @@
 import { Component, input, output, inject, effect } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Task } from '@core/models/task.model';
+import { Task } from '@core/models/task-model';
 import { BasicModal } from '../basic-modal/basic-modal';
 
 @Component({
@@ -81,7 +81,7 @@ export class TaskModal {
         tags: selectedTags,
       };
 
-      this.saveTask.emit(payload as any);
+      this.saveTask.emit(payload as Task);
       this.onClose();
     }
   }

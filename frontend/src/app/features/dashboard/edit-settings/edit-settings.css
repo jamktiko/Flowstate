@@ -2,6 +2,17 @@
   padding: 1rem;
 }
 
+[modal-header] {
+  width: 100%;
+  text-align: center;
+}
+
+[modal-header] h3 {
+  text-align: center;
+  font-family: kanit, sans-serif;
+  font-weight: 400;
+}
+
 .settings-form {
   display: flex;
   flex-direction: column;
@@ -26,10 +37,12 @@ label {
 }
 
 .form-control {
+  width: 100%;
   padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 1rem;
+  box-sizing: border-box;
 }
 
 .form-control:focus {
@@ -43,6 +56,7 @@ label {
   display: inline-block;
   width: 50px;
   height: 24px;
+  flex-shrink: 0;
 }
 
 .switch input {
@@ -54,23 +68,20 @@ label {
 .slider {
   position: absolute;
   cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background-color: #ccc;
-  transition: .4s;
+  transition: 0.4s;
 }
 
 .slider:before {
   position: absolute;
-  content: "";
+  content: '';
   height: 16px;
   width: 16px;
   left: 4px;
   bottom: 4px;
   background-color: white;
-  transition: .4s;
+  transition: 0.4s;
 }
 
 input:checked + .slider {
@@ -93,14 +104,40 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
+.settings-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
+}
+
+/* Shared button styles */
+.save-btn,
+.cancel-btn {
+  min-width: 90px;
+  height: 36px;
+  padding: 0 1rem;
+
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 18px;
+  cursor: pointer;
+
+  font-family: kanit, sans-serif;
+  font-weight: 500;
+  font-size: 1.1rem;
+  line-height: 1;
+
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
 .save-btn {
   background-color: #4c90ff;
   color: white;
   border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: bold;
 }
 
 .save-btn:hover {
@@ -109,12 +146,33 @@ input:checked + .slider:before {
 
 .cancel-btn {
   background-color: transparent;
-  color: #777;
-  border: none;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
+  color: #060606;
+  border: #cfcfcf solid 1px;
 }
 
 .cancel-btn:hover {
-  color: #555;
+  background-color: #f2f2f2;
+  border-color: #cfcfcf;
+}
+
+@media (max-width: 320px) {
+  .settings-content {
+    padding: 0.75rem;
+  }
+
+  .settings-form {
+    gap: 1.25rem;
+  }
+
+  .settings-actions {
+    gap: 1rem;
+  }
+
+  .save-btn,
+  .cancel-btn {
+    min-width: 74px;
+    height: 34px;
+    padding: 0 0.75rem;
+    font-size: 1rem;
+  }
 }

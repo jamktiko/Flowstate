@@ -10,4 +10,8 @@ export const DASHBOARD_ROUTES: Routes = [
     path: 'board/:id',
     loadComponent: () => import('./board/board-page').then((m) => m.BoardPage),
   },
+  {
+    path: 'calendar',
+    loadComponent: () => import('./calendar/calendar-page').then((m) => m.CalendarPage),
+  },
 ];

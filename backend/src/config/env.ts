@@ -13,6 +13,9 @@ export const validateEnv = (): void => {
     'VAPID_PUBLIC_KEY',
     'VAPID_PRIVATE_KEY',
     'VAPID_SUBJECT',
+    'GOOGLE_CLIENT_ID',
+    'GOOGLE_CLIENT_SECRET',
+    'GOOGLE_CALENDAR_REDIRECT_URI',
   ];
 
   const missing = required.filter((key) => !process.env[key]);

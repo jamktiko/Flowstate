@@ -3,7 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthLayout } from '@core/layout/auth-layout/auth-layout';
 import { AuthService, RegisterResult } from '@core/auth/auth-service';
 import { Router } from '@angular/router';
-import { environment } from '../../../../environments/environment';
+import { environment } from '@environments/environment';
 
 @Component({
   selector: 'app-register-page',
@@ -19,14 +19,14 @@ export class RegisterPage {
 
   registerForm = this.fb.group({
     firstName: ['', Validators.required],
-    surname: ['', Validators.required],
+    lastName: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
   });
 
   async register(): Promise<void> {
     if (this.registerForm.valid) {
-      const { email, password, firstName, surname } = this.registerForm.getRawValue();
+      const { email, password, firstName, lastName } = this.registerForm.getRawValue();
 
       try {
         // result on nyt tyypitetty RegisterResult
@@ -34,7 +34,7 @@ export class RegisterPage {
           email!,
           password!,
           firstName!,
-          surname!,
+          lastName!,
         );
 
         if (result.nextStep?.signUpStep === 'CONFIRM_SIGN_UP') {
@@ -72,7 +72,9 @@ export class RegisterPage {
     const domain = 'https://eu-north-1sfwo3ekis.auth.eu-north-1.amazoncognito.com';
     const clientId = '4obh8krimbm973e83gte5sfgh1';
     const redirectUri = environment.redirectUri;
-    const scope = encodeURIComponent('email openid profile');
+    const scope = encodeURIComponent(
+      'openid email profile User.Read Calendars.Read Calendars.ReadWrite',
+    );
 
     // Build the URL for the Cognito hosted UI with Microsoft as the identity provider
     const microsoftUrl = `${domain}/oauth2/authorize?identity_provider=Microsoft&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&client_id=${clientId}&scope=${scope}`;

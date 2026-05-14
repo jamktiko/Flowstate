@@ -1,8 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
+import { environment } from '@environments/environment';
 import { firstValueFrom } from 'rxjs';
+
 interface AuthResponse {
   data?: {
     accessToken?: string;
@@ -23,19 +24,21 @@ export interface RegisterResult {
 export class AuthService {
   private router = inject(Router);
   private http = inject(HttpClient);
-  private apiUrl = environment.apiUrl;
+  private authApiUrl = `${environment.apiBaseUrl}/auth`;
 
-  async register(email: string, salasana: string, firstName: string, surname: string) {
+  async register(email: string, password: string, firstName: string, lastName: string) {
     try {
-      await firstValueFrom(
-        this.http.post<AuthResponse>(`${this.apiUrl}/register`, {
+      const res = await firstValueFrom(
+        this.http.post(`${this.authApiUrl}/register`, {
           email,
-          password: salasana,
+          password,
           firstName,
-          lastName: surname,
+          lastName,
         }),
       );
 
+      // Delete console.log after testing!
+      console.log('Backend response from /register:', res);
       return { nextStep: { signUpStep: 'CONFIRM_SIGN_UP' } };
     } catch (error) {
       console.error('Error in AuthService.register:', error);
@@ -45,7 +48,9 @@ export class AuthService {
 
   async confirmRegistration(email: string, koodi: string) {
     try {
-      return await firstValueFrom(this.http.post(`${this.apiUrl}/confirm`, { email, code: koodi }));
+      return await firstValueFrom(
+        this.http.post(`${this.authApiUrl}/confirm`, { email, code: koodi }),
+      );
     } catch (error) {
       console.error('Virhe vahvistuksessa:', error);
       throw error;
@@ -55,7 +60,10 @@ export class AuthService {
   async login(email: string, salasana: string) {
     try {
       const res = await firstValueFrom(
-        this.http.post<AuthResponse>(`${this.apiUrl}/login`, { email, password: salasana }),
+        this.http.post<AuthResponse>(`${this.authApiUrl}/login`, {
+          email,
+          password: salasana,
+        }),
       );
 
       if (res.data?.accessToken) {
@@ -95,7 +103,7 @@ export class AuthService {
 
   async handleSocialLogin(code: string): Promise<void> {
     const res = await firstValueFrom(
-      this.http.post<AuthResponse>(`${this.apiUrl}/social-callback`, { code }),
+      this.http.post<AuthResponse>(`${this.authApiUrl}/social-callback`, { code }),
     );
 
     if (res.data?.accessToken) {

@@ -1,47 +1,51 @@
-  <app-basic-modal [isOpen]="isOpen()" (closeModal)="closeModal.emit()">
-    <div modal-header>
-      <h3>Settings</h3>
-    </div>
-    <div class="settings-content">
-      <form [formGroup]="settingsForm" (ngSubmit)="save()" id="settings-form" class="settings-form">
-        
-        <div class="form-group row-group">
-          <label for="darkModeToggle">Dark Mode</label>
-          <label class="switch">
-            <input type="checkbox" id="darkModeToggle" formControlName="darkModeEnabled">
-            <span class="slider round"></span>
-          </label>
-        </div>
+<app-basic-modal [isOpen]="isOpen()" (closeModal)="closeModal.emit()">
+  <div modal-header>
+    <h3>Settings</h3>
+  </div>
+  <div class="settings-content">
+    <form [formGroup]="settingsForm" (ngSubmit)="save()" id="settings-form" class="settings-form">
+      <div class="form-group row-group">
+        <label for="darkModeToggle">Dark Mode</label>
+        <label class="switch">
+          <input type="checkbox" id="darkModeToggle" formControlName="darkModeEnabled" />
+          <span class="slider round"></span>
+        </label>
+      </div>
 
-        <div class="form-group row-group">
-          <label for="notificationsToggle">Notifications</label>
-          <label class="switch">
-            <input type="checkbox" id="notificationsToggle" formControlName="notificationsEnabled">
-            <span class="slider round"></span>
-          </label>
-        </div>
+      <div class="form-group row-group">
+        <label for="notificationsToggle">Notifications</label>
+        <label class="switch">
+          <input type="checkbox" id="notificationsToggle" formControlName="notificationsEnabled" />
+          <span class="slider round"></span>
+        </label>
+      </div>
 
-        @if (settingsForm.get('notificationsEnabled')?.value) {
-          <div class="form-group">
-            <label for="warningDelay">Warning Delay (minutes)</label>
-            <input type="number" id="warningDelay" formControlName="warningDelayMinutes" class="form-control" min="0">
-          </div>
-        }
-
+      @if (settingsForm.get('notificationsEnabled')?.value) {
         <div class="form-group">
-          <label for="landingPage">Default Landing Page</label>
-          <select id="landingPage" formControlName="defaultLandingPage" class="form-control">
-            <option value="dashboard">Dashboard</option>
-            @for (board of boards; track board._id) {
-              <option [value]="board._id">{{ board.name }}</option>
-            }
-          </select>
+          <label for="warningDelay">Warning Delay (minutes)</label>
+          <input
+            type="number"
+            id="warningDelay"
+            formControlName="warningDelayMinutes"
+            class="form-control"
+            min="0"
+          />
         </div>
+      }
 
-      </form>
-    </div>
-    <div modal-footer>
-      <button type="button" class="cancel-btn" (click)="closeModal.emit()">Cancel</button>
-      <button type="submit" form="settings-form" class="save-btn">Save</button>
-    </div>
-  </app-basic-modal>
+      <div class="form-group">
+        <label for="landingPage">Default Landing Page</label>
+        <select id="landingPage" formControlName="defaultLandingPage" class="form-control">
+          <option value="dashboard">Dashboard</option>
+          @for (board of boards; track board._id) {
+            <option [value]="board._id">{{ board.name }}</option>
+          }
+        </select>
+      </div>
+    </form>
+  </div>
+  <div modal-footer class="settings-actions">
+    <button type="button" class="cancel-btn" (click)="closeModal.emit()">Cancel</button>
+    <button type="submit" form="settings-form" class="save-btn">Save</button>
+  </div>
+</app-basic-modal>

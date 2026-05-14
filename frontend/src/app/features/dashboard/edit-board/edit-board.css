@@ -7,7 +7,7 @@ form {
   min-height: 25rem;
   display: flex;
   flex-direction: column;
-  padding-top: 4.5rem;
+  padding-top: 2.25rem;
   box-sizing: border-box;
 }
 
@@ -59,17 +59,18 @@ form {
 
 .actions {
   margin-top: auto;
+  margin-bottom: 1.25rem;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  gap: 2rem;
+  gap: 3rem;
 }
 
 .btn-cancel,
 .btn-add {
   width: 6.25rem;
   height: 2.625rem;
-  border-radius: 999px;
+  border-radius: 18px;
   font-size: 1.125rem;
   font-weight: 500;
   font-family: kanit, sans-serif;
