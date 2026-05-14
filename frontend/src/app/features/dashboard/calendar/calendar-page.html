@@ -45,9 +45,24 @@
   </section>
 
   <section class="toolbar-card">
-    <div>
-      <p class="toolbar-label">Visible range</p>
-      <h2>{{ visibleRangeLabel() || 'This week' }}</h2>
+    <div class="toolbar-range-group">
+      <div>
+        <p class="toolbar-label">Visible range</p>
+        <h2>{{ visibleRangeLabel() || 'This week' }}</h2>
+      </div>
+
+      <label class="jump-selector">
+        <span>Jump</span>
+        <select
+          #jumpSelect
+          [value]="navigationJump()"
+          (change)="setNavigationJump(jumpSelect.value)"
+        >
+          @for (option of navigationJumpOptions; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+      </label>
     </div>
 
     <div class="toolbar-actions">
@@ -120,4 +135,36 @@
       }
     </aside>
   </section>
+
+  <app-basic-modal
+    [isOpen]="pendingDeleteEvent() !== null"
+    (closeModal)="cancelDeleteCalendarEvent()"
+  >
+    <div modal-header class="delete-modal-header">
+      <p class="delete-modal-eyebrow">Confirm deletion</p>
+      <h3>Delete this event?</h3>
+    </div>
+
+    <div class="delete-modal-body">
+      <p class="delete-modal-copy">
+        This will permanently remove <strong>{{ pendingDeleteEvent()?.title }}</strong
+        >.
+      </p>
+      <p class="delete-modal-hint">This action cannot be undone.</p>
+    </div>
+
+    <div modal-footer class="delete-modal-actions">
+      <button type="button" class="secondary-btn" (click)="cancelDeleteCalendarEvent()">
+        Cancel
+      </button>
+      <button
+        type="button"
+        class="primary-btn delete-confirm-btn"
+        (click)="confirmDeleteCalendarEvent()"
+        [disabled]="isSyncing()"
+      >
+        Delete event
+      </button>
+    </div>
+  </app-basic-modal>
 </div>
