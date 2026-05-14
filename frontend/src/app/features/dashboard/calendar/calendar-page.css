@@ -186,6 +186,44 @@ p {
   padding: 1rem 1.25rem;
 }
 
+.toolbar-range-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.jump-selector {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  color: #4a5568;
+  font-weight: 600;
+}
+
+.jump-selector span {
+  color: #4c90ff;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.72rem;
+}
+
+.jump-selector select {
+  appearance: none;
+  border: 1px solid #d8e4fb;
+  border-radius: 999px;
+  background: #f8fbff;
+  color: #1f2a44;
+  padding: 0.65rem 0.9rem;
+  font: inherit;
+  min-width: 9rem;
+}
+
+.jump-selector select:focus {
+  outline: 2px solid rgba(76, 144, 255, 0.22);
+  outline-offset: 2px;
+}
+
 .calendar-layout {
   display: grid;
   grid-template-columns: minmax(0, 1.6fr) minmax(300px, 0.9fr);
@@ -302,6 +340,51 @@ p {
 .provider-chip.google {
   background: #e3f2ff;
   color: #1a73e8;
+}
+
+.delete-modal-header h3 {
+  margin: 0;
+  color: #1f2a44;
+}
+
+.delete-modal-eyebrow {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.75rem;
+  color: #4c90ff;
+  font-weight: 700;
+}
+
+.delete-modal-body {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.delete-modal-copy,
+.delete-modal-hint {
+  margin: 0;
+}
+
+.delete-modal-copy {
+  color: #1f2a44;
+}
+
+.delete-modal-hint {
+  color: #6b7280;
+}
+
+.delete-modal-actions {
+  width: 100%;
+}
+
+.delete-confirm-btn {
+  background: linear-gradient(135deg, #e34a5f, #c92d4b);
+  box-shadow: 0 12px 24px rgba(201, 45, 75, 0.24);
+}
+
+.delete-confirm-btn:hover {
+  transform: translateY(-1px);
 }
 
 @media (max-width: 1200px) {

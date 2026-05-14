@@ -14,6 +14,7 @@ import {
   CalendarEventRecord,
   GoogleCalendarLinkStatus,
 } from '@core/services/calendar-api-service';
+import { BasicModal } from '@shared/modals/basic-modal/basic-modal';
 
 function startOfWeek(date: Date): Date {
   const value = new Date(date);
@@ -30,9 +31,11 @@ function endOfWeek(date: Date): Date {
   return value;
 }
 
+type NavigationJumpValue = 'week' | 'fortnight' | 'month' | 'quarter' | 'half-year' | 'year';
+
 @Component({
   selector: 'app-calendar',
-  imports: [CalendarWeekViewComponent],
+  imports: [BasicModal, CalendarWeekViewComponent],
   providers: [
     provideCalendar({
       provide: DateAdapter,
@@ -44,6 +47,14 @@ function endOfWeek(date: Date): Date {
 })
 export class CalendarPage implements OnInit {
   readonly CalendarView = CalendarView;
+  readonly navigationJumpOptions: readonly { label: string; value: NavigationJumpValue }[] = [
+    { label: '1 week', value: 'week' },
+    { label: '2 weeks', value: 'fortnight' },
+    { label: '1 month', value: 'month' },
+    { label: '3 months', value: 'quarter' },
+    { label: '6 months', value: 'half-year' },
+    { label: '1 year', value: 'year' },
+  ];
   view = CalendarView.Week;
   viewDate = new Date();
   events = signal<CalendarEvent[]>([]);
@@ -53,6 +64,8 @@ export class CalendarPage implements OnInit {
   infoMessage = signal<string | null>(null);
   errorMessage = signal<string | null>(null);
   visibleRangeLabel = signal('');
+  navigationJump = signal<NavigationJumpValue>('week');
+  pendingDeleteEvent = signal<CalendarEvent | null>(null);
 
   private calendarApi = inject(CalendarApiService);
   private navBarService = inject(NavBarService);
@@ -92,17 +105,18 @@ export class CalendarPage implements OnInit {
   }
 
   goToPreviousPeriod() {
-    const nextDate = new Date(this.viewDate);
-    nextDate.setDate(nextDate.getDate() - 7);
-    this.viewDate = nextDate;
+    this.viewDate = this.shiftViewDate(-1);
     void this.refreshCalendar();
   }
 
   goToNextPeriod() {
-    const nextDate = new Date(this.viewDate);
-    nextDate.setDate(nextDate.getDate() + 7);
-    this.viewDate = nextDate;
+    this.viewDate = this.shiftViewDate(1);
     void this.refreshCalendar();
+  }
+
+  setNavigationJump(value: string) {
+    const validValue = this.navigationJumpOptions.find((option) => option.value === value)?.value;
+    this.navigationJump.set(validValue ?? 'week');
   }
 
   goToToday() {
@@ -136,7 +150,7 @@ export class CalendarPage implements OnInit {
       this.errorMessage.set(null);
       await this.calendarApi.unlinkGoogleCalendar();
       await this.refreshConnectionStatus();
-      await this.refreshCalendar();
+      await this.loadCalendarEvents();
       this.showSuccessMessage('Google Calendar has been unlinked.');
     } catch (error) {
       this.showErrorMessage(this.formatError(error));
@@ -145,17 +159,31 @@ export class CalendarPage implements OnInit {
     }
   }
 
-  async deleteCalendarEvent(event: CalendarEvent) {
+  deleteCalendarEvent(event: CalendarEvent) {
     const eventId = event.meta?._id;
     if (!eventId) {
       this.showErrorMessage('This calendar event cannot be deleted because it has no saved ID.');
       return;
     }
 
-    const confirmed = window.confirm(`Delete "${event.title}"? This cannot be undone.`);
-    if (!confirmed) {
+    this.pendingDeleteEvent.set(event);
+  }
+
+  cancelDeleteCalendarEvent() {
+    this.pendingDeleteEvent.set(null);
+  }
+
+  async confirmDeleteCalendarEvent() {
+    const event = this.pendingDeleteEvent();
+    const eventId = event?.meta?._id;
+
+    if (!event || !eventId) {
+      this.pendingDeleteEvent.set(null);
+      this.showErrorMessage('This calendar event cannot be deleted because it has no saved ID.');
       return;
     }
+
+    this.pendingDeleteEvent.set(null);
 
     try {
       this.isSyncing.set(true);
@@ -173,17 +201,10 @@ export class CalendarPage implements OnInit {
 
   async importGoogleEvents() {
     try {
-      this.isSyncing.set(true);
-      this.errorMessage.set(null);
-      const { from, to } = this.currentRange();
-      const result = await this.calendarApi.importGoogleEvents(from, to);
-      await this.refreshCalendar();
-      const message = result.message ?? `Imported ${result.count} Google events.`;
-      this.showSuccessMessage(message);
+      await this.syncGoogleEvents(true);
+      await this.loadCalendarEvents(false);
     } catch (error) {
       this.showErrorMessage(this.formatError(error));
-    } finally {
-      this.isSyncing.set(false);
     }
   }
 
@@ -192,12 +213,11 @@ export class CalendarPage implements OnInit {
       this.isLoading.set(true);
       this.errorMessage.set(null);
 
-      const { from, to } = this.currentRange();
-      const events = await this.calendarApi.getEvents(from, to);
+      if (this.linkedStatus().isLinked) {
+        await this.syncGoogleEvents(false);
+      }
 
-      this.events.set(events.map((event) => this.toCalendarEvent(event)));
-      this.visibleRangeLabel.set(this.formatRangeLabel(from, to));
-      this.infoMessage.set(null);
+      await this.loadCalendarEvents();
     } catch (error) {
       this.errorMessage.set(this.formatError(error));
       this.events.set([]);
@@ -206,10 +226,63 @@ export class CalendarPage implements OnInit {
     }
   }
 
+  private async loadCalendarEvents(clearInfoMessage = true) {
+    const { from, to } = this.currentRange();
+    const events = await this.calendarApi.getEvents(from, to);
+
+    this.events.set(events.map((event) => this.toCalendarEvent(event)));
+    this.visibleRangeLabel.set(this.formatRangeLabel(from, to));
+
+    if (clearInfoMessage) {
+      this.infoMessage.set(null);
+    }
+  }
+
+  private async syncGoogleEvents(showSuccessMessage: boolean) {
+    this.isSyncing.set(true);
+    this.errorMessage.set(null);
+
+    try {
+      const { from, to } = this.currentRange();
+      const result = await this.calendarApi.importGoogleEvents(from, to);
+      if (showSuccessMessage) {
+        const message = result.message ?? `Imported ${result.count} Google events.`;
+        this.showSuccessMessage(message);
+      }
+    } finally {
+      this.isSyncing.set(false);
+    }
+  }
+
   private currentRange() {
     const from = startOfWeek(this.viewDate);
     const to = endOfWeek(this.viewDate);
     return { from, to };
+  }
+
+  private shiftViewDate(direction: -1 | 1) {
+    const nextDate = new Date(this.viewDate);
+    const jump = this.navigationJump();
+
+    if (jump === 'week') {
+      nextDate.setDate(nextDate.getDate() + direction * 7);
+      return nextDate;
+    }
+
+    if (jump === 'fortnight') {
+      nextDate.setDate(nextDate.getDate() + direction * 14);
+      return nextDate;
+    }
+
+    const monthSteps = {
+      month: 1,
+      quarter: 3,
+      'half-year': 6,
+      year: 12,
+    } as const;
+
+    nextDate.setMonth(nextDate.getMonth() + direction * monthSteps[jump]);
+    return nextDate;
   }
 
   private toCalendarEvent(event: CalendarEventRecord): CalendarEvent {
