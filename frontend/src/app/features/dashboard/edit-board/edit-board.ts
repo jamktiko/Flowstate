@@ -45,8 +45,11 @@ export class EditBoardModal {
 
   onSubmit() {
     if (this.boardForm.valid) {
+      // Emits the data to the parent component (list-boards-page)
+      // The parent handles the actual API call to the backend.
+      // We don't call onClose() here anymore because the parent component
+      // will close the modal AFTER the backend request succeeds.
       this.saveBoard.emit(this.boardForm.value as { title: string; description: string });
-      this.onClose();
     }
   }
 }

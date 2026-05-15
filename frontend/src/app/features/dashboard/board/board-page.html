@@ -6,11 +6,31 @@
       @for (column of b.columns; track column.id) {
         <app-list [column]="column"></app-list>
       }
+
+      <div class="add-list-wrapper">
+        @if (isAddingList()) {
+          <div class="add-list-form">
+            <input
+              type="text"
+              [ngModel]="newListName()"
+              (ngModelChange)="newListName.set($event)"
+              placeholder="Enter list title..."
+              (keydown.enter)="addNewList()"
+              (keydown.escape)="cancelAddingList()"
+            />
+            <div class="add-list-actions">
+              <button class="save-btn" (click)="addNewList()">Add list</button>
+              <button class="cancel-btn" (click)="cancelAddingList()">X</button>
+            </div>
+          </div>
+        } @else {
+          <button class="add-list-btn" (click)="isAddingList.set(true)">+ Add another list</button>
+        }
+      </div>
     }
 
     <div class="add-task-wrapper">
       <button class="add-task-btn" (click)="openCreateTaskModal()">+</button>
-
     </div>
   </div>
 
