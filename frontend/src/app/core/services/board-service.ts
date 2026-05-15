@@ -37,7 +37,7 @@ export class BoardService {
 
   // UPDATE: Modify an existing board (e.g., rename, update columns/cards)
   async updateBoard(id: string, boardData: Partial<Board>): Promise<Board> {
-    const res = await firstValueFrom(this.http.put<ApiResponse<Board>>(`${this.apiUrl}/${id}`, boardData));
+    const res = await firstValueFrom(this.http.patch<ApiResponse<Board>>(`${this.apiUrl}/${id}`, boardData));
     return res.data;
   }
 
