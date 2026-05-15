@@ -15,4 +15,15 @@ Amplify.configure({
   },
 });
 
-bootstrapApplication(App, appConfig).catch((err) => console.error(err));
+bootstrapApplication(App, appConfig)
+  .then(() => {
+    // Register custom push service worker separately from ngsw-worker.js.
+    // ngsw-worker.js handles caching — sw-push.js handles push notification events.
+    // Runs in all environments so push works in development too.
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register('/sw-push.js')
+        .catch((err) => console.error('Push service worker registration failed:', err));
+    }
+  })
+  .catch((err) => console.error(err));
