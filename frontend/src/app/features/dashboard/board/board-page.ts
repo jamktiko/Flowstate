@@ -72,7 +72,7 @@ export class BoardPage implements OnInit {
     this.isCreateTaskModalOpen.set(false);
   }
 
-  handleSaveTask(taskData: Task) {
+  async handleSaveTask(taskData: Task) {
     const currentBoard = this.board();
     if (!currentBoard) return;
 
@@ -81,21 +81,25 @@ export class BoardPage implements OnInit {
       currentBoard.columns.find((c) => c.name === 'To Do') || currentBoard.columns[0];
 
     if (todoColumn) {
-      const newCard: Card = {
-        _id: Math.random().toString(36).substring(2, 9),
-        title: taskData.title,
-        description: taskData.description,
-        priority: taskData.priority as 'low' | 'medium' | 'high' | 'urgent',
-        order: todoColumn.cards.length,
-        tags: taskData.tags ? taskData.tags.map((t) => ({ name: t, visible: true })) : [],
-        dueDate: taskData.dueDate ? new Date(taskData.dueDate) : undefined,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
+      try {
+        const payload: Partial<Card> = {
+          title: taskData.title,
+          description: taskData.description,
+          priority: taskData.priority as 'low' | 'medium' | 'high' | 'urgent',
+          order: todoColumn.cards.length,
+          tags: taskData.tags ? taskData.tags.map((t) => ({ name: t, visible: true })) : [],
+          dueDate: taskData.dueDate ? new Date(taskData.dueDate) : undefined,
+        };
 
-      todoColumn.cards.push(newCard);
-      // Trigger update by setting a new reference for the board signal
-      this.board.set({ ...currentBoard });
+        const updatedBoard = await this.boardService.addCard(
+          currentBoard._id,
+          todoColumn.id,
+          payload,
+        );
+        this.board.set(updatedBoard);
+      } catch (error) {
+        console.error('Error adding new task:', error);
+      }
     }
 
     this.closeCreateTaskModal();

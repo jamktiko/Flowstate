@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '@environments/environment';
-import { Board } from '../models/board-model'; // Adjust the import path if this lives elsewhere
+import { Board, Card } from '../models/board-model'; // Adjust the import path if this lives elsewhere
 
 interface ApiResponse<T> {
   success: boolean;
@@ -55,6 +55,17 @@ export class BoardService {
   ): Promise<Board> {
     const res = await firstValueFrom(
       this.http.post<ApiResponse<Board>>(`${this.apiUrl}/${boardId}/columns`, columnData),
+    );
+    return res.data;
+  }
+
+  // CREATE: Add a new card to a specific column
+  async addCard(boardId: string, colId: string, cardData: Partial<Card>): Promise<Board> {
+    const res = await firstValueFrom(
+      this.http.post<ApiResponse<Board>>(
+        `${this.apiUrl}/${boardId}/columns/${colId}/cards`,
+        cardData,
+      ),
     );
     return res.data;
   }
