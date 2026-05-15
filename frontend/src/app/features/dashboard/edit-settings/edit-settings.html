@@ -45,7 +45,37 @@
     </form>
   </div>
   <div modal-footer class="settings-actions">
+    <button type="button" class="delete-btn" (click)="openDeleteConfirm()">Delete account</button>
     <button type="button" class="cancel-btn" (click)="closeModal.emit()">Cancel</button>
     <button type="submit" form="settings-form" class="save-btn">Save</button>
+  </div>
+</app-basic-modal>
+
+<app-basic-modal [isOpen]="deleteConfirmOpen" (closeModal)="closeDeleteConfirm()">
+  <div modal-header>
+    <h3>Delete account?</h3>
+  </div>
+
+  <div class="delete-warning-content">
+    <p class="delete-warning-text">
+      This will permanently delete your account, boards, calendar events, and all related data. This
+      action cannot be undone.
+    </p>
+
+    @if (deleteError) {
+      <p class="delete-error" role="alert">{{ deleteError }}</p>
+    }
+  </div>
+
+  <div modal-footer class="delete-actions">
+    <button type="button" class="cancel-btn" (click)="closeDeleteConfirm()">Cancel</button>
+    <button
+      type="button"
+      class="delete-confirm-btn"
+      (click)="deleteAccount()"
+      [disabled]="isDeletingAccount"
+    >
+      Delete account
+    </button>
   </div>
 </app-basic-modal>

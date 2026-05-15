@@ -19,6 +19,12 @@ interface EmailAvailabilityResponse {
   };
   message?: string;
 }
+interface DeleteUserResponse {
+  data?: {
+    message?: string;
+  };
+  message?: string;
+}
 export interface RegisterResult {
   nextStep: {
     signUpStep: string;
@@ -95,6 +101,12 @@ export class AuthService {
       console.error('Virhe kirjautumisessa:', error);
       throw error;
     }
+  }
+
+  async deleteAccount(): Promise<void> {
+    await firstValueFrom(
+      this.http.delete<DeleteUserResponse>(`${environment.apiBaseUrl}/users/me`),
+    );
   }
 
   // Check if a user is currently logged in
