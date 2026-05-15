@@ -96,6 +96,8 @@ export const deleteUserController = async (req: Request, res: Response) => {
     await deleteUser(user._id);
     return sendSuccess(res, { message: 'User deleted successfully' });
   } catch (error) {
-    return sendError(res, 'Internal server error', 500);
+    const message =
+      error instanceof Error ? error.message : 'Internal server error';
+    return sendError(res, message, 500);
   }
 };
