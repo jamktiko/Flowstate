@@ -7,4 +7,6 @@ export const environment = {
   },
   apiBaseUrl: '/api',
   redirectUri: window.location.origin + '/auth/callback',
+  vapidPublicKey:
+    'BHshBtnpEdhfb2QbI23sqWqf8fosKNkOpkBo99XTeTQOT1xBsaLydDhAMiGdCo3tHpOxZgB4zlZe8bRBjGzsV6o',
 };

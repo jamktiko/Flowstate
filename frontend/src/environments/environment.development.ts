@@ -6,4 +6,6 @@ export const environment = {
   },
   apiBaseUrl: 'http://localhost:8080/api',
   redirectUri: 'http://localhost:4200/auth/callback',
+  vapidPublicKey:
+    'BHshBtnpEdhfb2QbI23sqWqf8fosKNkOpkBo99XTeTQOT1xBsaLydDhAMiGdCo3tHpOxZgB4zlZe8bRBjGzsV6o',
 };
