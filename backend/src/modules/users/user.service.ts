@@ -21,7 +21,7 @@ const deleteCognitoUserBySub = async (cognitoSub: string) => {
   const userPoolId = process.env.COGNITO_USER_POOL_ID;
 
   if (!userPoolId) {
-    throw new Error('Cognito user pool is not configured');
+    return false;
   }
 
   const users = await cognitoClient.send(
