@@ -18,6 +18,7 @@ export class RegisterPage {
   private authService = inject(AuthService);
   private router = inject(Router);
   registrationError: string | null = null;
+  isCheckingEmail = false;
 
   registerForm = this.fb.group({
     firstName: ['', Validators.required],
@@ -57,8 +58,7 @@ export class RegisterPage {
             backendMessage.toLowerCase().includes('already registered') ||
             backendMessage.toLowerCase().includes('already exists')
           ) {
-            this.registrationError =
-              'This email is already registered. Please sign in or reset your password.';
+            this.registrationError = 'This email is already registered.';
             return;
           }
 
@@ -72,6 +72,30 @@ export class RegisterPage {
     } else {
       this.registerForm.markAllAsTouched();
     }
+  }
+
+  async checkEmailAvailability(): Promise<void> {
+    const email = this.registerForm.controls.email.value?.trim();
+
+    if (!email || this.registerForm.controls.email.invalid) {
+      return;
+    }
+
+    this.isCheckingEmail = true;
+    try {
+      const result = await this.authService.checkEmailAvailability(email);
+      this.registrationError = result.available
+        ? null
+        : (result.message ?? 'This email is already registered.');
+    } catch (error: unknown) {
+      console.error('Email availability check failed:', error);
+    } finally {
+      this.isCheckingEmail = false;
+    }
+  }
+
+  clearRegistrationError() {
+    this.registrationError = null;
   }
   // This method initiates the Google Sign-In flow using AWS Cognito's hosted UI
   signInWithGoogle() {

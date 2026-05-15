@@ -4,6 +4,7 @@ import {
   SignUpCommand,
   InitiateAuthCommand,
   ConfirmSignUpCommand,
+  ListUsersCommand,
 } from '@aws-sdk/client-cognito-identity-provider';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
@@ -52,17 +53,74 @@ const getSocialRedirectUri = (req: Request): string => {
   return `${requestOrigin}/auth/callback`;
 };
 
+const duplicateAccountMessage =
+  'This email is already registered. Please sign in or reset your password.';
+
+const getTrimmedEmail = (value: unknown): string => String(value || '').trim();
+
 //comment to launch backend tests in CI/CD pipeline to check if tests go through!!!!
+
+/**
+ * POST /api/auth/check-email
+ */
+export const checkEmailAvailabilityController = async (
+  req: Request,
+  res: Response,
+) => {
+  const email = getTrimmedEmail(req.body.email);
+
+  if (!email) {
+    return sendError(res, 'Email is required', 400);
+  }
+
+  const escapedEmail = email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+  try {
+    const existingUser = await User.findOne({
+      email: new RegExp(`^${escapedEmail}$`, 'i'),
+    });
+
+    if (existingUser) {
+      return sendSuccess(res, {
+        available: false,
+        message: duplicateAccountMessage,
+      });
+    }
+
+    const clientId = process.env.COGNITO_CLIENT_ID;
+
+    if (!clientId) {
+      return sendError(res, 'Cognito is not configured', 500);
+    }
+
+    const cognitoUsers = await cognitoClient.send(
+      new ListUsersCommand({
+        UserPoolId: process.env.COGNITO_USER_POOL_ID,
+        Filter: `email = "${email}"`,
+        Limit: 1,
+      }),
+    );
+
+    if ((cognitoUsers.Users?.length ?? 0) > 0) {
+      return sendSuccess(res, {
+        available: false,
+        message: duplicateAccountMessage,
+      });
+    }
+
+    return sendSuccess(res, { available: true });
+  } catch (error) {
+    console.error('Email availability check error:', error);
+    return sendError(res, 'Could not verify email availability', 400);
+  }
+};
 
 /**
  * POST /api/auth/register
  */
 export const registerController = async (req: Request, res: Response) => {
   const { email: rawEmail, password, firstName, lastName } = req.body;
-  const email = String(rawEmail || '').trim();
-
-  const duplicateAccountMessage =
-    'This email is already registered. Please sign in or reset your password.';
+  const email = getTrimmedEmail(rawEmail);
 
   try {
     const escapedEmail = email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');

@@ -12,6 +12,13 @@ interface AuthResponse {
   };
   message?: string;
 }
+interface EmailAvailabilityResponse {
+  data?: {
+    available?: boolean;
+    message?: string;
+  };
+  message?: string;
+}
 export interface RegisterResult {
   nextStep: {
     signUpStep: string;
@@ -44,6 +51,19 @@ export class AuthService {
       console.error('Error in AuthService.register:', error);
       throw error;
     }
+  }
+
+  async checkEmailAvailability(email: string): Promise<{ available: boolean; message?: string }> {
+    const res = await firstValueFrom(
+      this.http.post<EmailAvailabilityResponse>(`${this.authApiUrl}/check-email`, {
+        email,
+      }),
+    );
+
+    return {
+      available: !!res.data?.available,
+      message: res.data?.message,
+    };
   }
 
   async confirmRegistration(email: string, koodi: string) {

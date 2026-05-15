@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { checkAuth } from './auth.middleware'; // Preserving existing middleware
 import {
+  checkEmailAvailabilityController,
   registerController,
   loginController,
   confirmRegistrationController,
@@ -17,6 +18,9 @@ const authRouter = Router();
 
 // POST /api/auth/register - Cognito signup + createUser()
 authRouter.post('/register', registerController);
+
+// POST /api/auth/check-email - lightweight duplicate email check
+authRouter.post('/check-email', checkEmailAvailabilityController);
 
 // POST /api/auth/login - Cognito login, returns AccessToken
 authRouter.post('/login', loginController);
