@@ -23,7 +23,7 @@ export class EditSettings implements OnInit {
   pushSupported = false;
 
   settingsForm = this.fb.group({
-    notificationsEnabled: [true],
+    notificationsEnabled: [false],
     warningDelayMinutes: [15, [Validators.min(0)]],
     defaultLandingPage: ['dashboard'],
     darkModeEnabled: [false],
