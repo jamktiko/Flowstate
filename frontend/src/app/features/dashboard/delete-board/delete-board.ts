@@ -1,6 +1,7 @@
-import { Component, input, output, inject } from '@angular/core';
+import { Component, input, output, inject, signal } from '@angular/core';
 import { BasicModal } from '@shared/modals/basic-modal/basic-modal';
-import { FakeDatabaseService } from '@shared/fake-database/fake-database-service';
+import { BoardService } from '@core/services/board-service';
+import { Board } from '@core/models/board-model';
 
 @Component({
   selector: 'app-delete-board',
@@ -15,14 +16,18 @@ export class DeleteBoardModal {
   closeModal = output<void>();
   boardDeleted = output<string>();
 
-  private db = inject(FakeDatabaseService);
+  private boardService = inject(BoardService);
+  boards = signal<Board[]>([]);
 
-  deleteBoard() {
-    // Delete board from FakeDatabaseService
-    this.db.boards = this.db.boards.filter((b) => b._id !== this.boardId());
-    console.log(`Deleted board ${this.boardId()}`);
+  async deleteBoard() {
+    try {
+      await this.boardService.deleteBoard(this.boardId());
+      console.log(`Deleted board ${this.boardId()}`);
 
-    this.boardDeleted.emit(this.boardId());
-    this.closeModal.emit();
+      this.boardDeleted.emit(this.boardId());
+      this.closeModal.emit();
+    } catch (error) {
+      console.error('Error deleting board:', error);
+    }
   }
 }

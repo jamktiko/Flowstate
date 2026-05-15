@@ -4,6 +4,11 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '@environments/environment';
 import { Board } from '../models/board-model'; // Adjust the import path if this lives elsewhere
 
+interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -14,22 +19,26 @@ export class BoardService {
 
   // CREATE: Add a new board
   async createBoard(name: string): Promise<Board> {
-    return await firstValueFrom(this.http.post<Board>(this.apiUrl, { name }));
+    const res = await firstValueFrom(this.http.post<ApiResponse<Board>>(this.apiUrl, { name }));
+    return res.data;
   }
 
   // READ: Get all boards for the logged-in user
   async getBoards(): Promise<Board[]> {
-    return await firstValueFrom(this.http.get<Board[]>(this.apiUrl));
+    const res = await firstValueFrom(this.http.get<ApiResponse<Board[]>>(this.apiUrl));
+    return res.data;
   }
 
   // READ: Get a specific board by its ID
   async getBoardById(id: string): Promise<Board> {
-    return await firstValueFrom(this.http.get<Board>(`${this.apiUrl}/${id}`));
+    const res = await firstValueFrom(this.http.get<ApiResponse<Board>>(`${this.apiUrl}/${id}`));
+    return res.data;
   }
 
   // UPDATE: Modify an existing board (e.g., rename, update columns/cards)
   async updateBoard(id: string, boardData: Partial<Board>): Promise<Board> {
-    return await firstValueFrom(this.http.put<Board>(`${this.apiUrl}/${id}`, boardData));
+    const res = await firstValueFrom(this.http.put<ApiResponse<Board>>(`${this.apiUrl}/${id}`, boardData));
+    return res.data;
   }
 
   // DELETE: Remove a board
