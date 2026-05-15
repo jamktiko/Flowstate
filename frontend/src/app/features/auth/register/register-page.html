@@ -39,7 +39,7 @@
       </p>
     </div>
 
-    <button class="submit-btn" type="submit" [disabled]="registerForm.invalid">Sign up</button>
+    <button class="submit-btn" type="submit" [disabled]="!canSubmit()">Sign up</button>
   </form>
 
   <div class="social-section">
