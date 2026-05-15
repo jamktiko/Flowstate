@@ -4,6 +4,7 @@ import { BasicModal } from '@shared/modals/basic-modal/basic-modal';
 import { FakeDatabaseService } from '@shared/fake-database/fake-database-service';
 import { Board } from '@core/models/board-model';
 import { PushNotificationService } from '@core/services/push-notification.service';
+import { AuthService } from '@core/auth/auth-service';
 
 @Component({
   selector: 'app-edit-settings',
@@ -18,9 +19,13 @@ export class EditSettings implements OnInit {
   private fb = inject(FormBuilder);
   private db = inject(FakeDatabaseService);
   private pushService = inject(PushNotificationService);
+  private authService = inject(AuthService);
 
   boards: Board[] = [];
   pushSupported = false;
+  deleteConfirmOpen = false;
+  isDeletingAccount = false;
+  deleteError: string | null = null;
 
   settingsForm = this.fb.group({
     notificationsEnabled: [false],
@@ -53,5 +58,32 @@ export class EditSettings implements OnInit {
   save() {
     console.log('Settings saved', this.settingsForm.value);
     this.closeModal.emit();
+  }
+
+  openDeleteConfirm() {
+    this.deleteError = null;
+    this.deleteConfirmOpen = true;
+  }
+
+  closeDeleteConfirm() {
+    this.deleteConfirmOpen = false;
+    this.deleteError = null;
+  }
+
+  async deleteAccount() {
+    this.isDeletingAccount = true;
+    this.deleteError = null;
+
+    try {
+      await this.authService.deleteAccount();
+      this.deleteConfirmOpen = false;
+      this.closeModal.emit();
+      await this.authService.logout();
+    } catch (error) {
+      console.error('Account deletion failed:', error);
+      this.deleteError = 'Could not delete the account. Please try again.';
+    } finally {
+      this.isDeletingAccount = false;
+    }
   }
 }

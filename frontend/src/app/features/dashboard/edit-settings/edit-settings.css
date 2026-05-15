@@ -108,12 +108,15 @@ input:checked + .slider:before {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 3rem;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
 /* Shared button styles */
 .save-btn,
-.cancel-btn {
+.cancel-btn,
+.delete-btn,
+.delete-confirm-btn {
   min-width: 90px;
   height: 36px;
   padding: 0 1rem;
@@ -155,6 +158,45 @@ input:checked + .slider:before {
   border-color: #cfcfcf;
 }
 
+.delete-btn,
+.delete-confirm-btn {
+  background-color: #d93025;
+  color: #fff;
+  border: none;
+}
+
+.delete-btn:hover,
+.delete-confirm-btn:hover {
+  background-color: #b81f16;
+}
+
+.delete-warning-content {
+  padding: 0 1rem 0.5rem;
+}
+
+.delete-warning-text {
+  margin: 0;
+  color: #4b5563;
+  text-align: left;
+  line-height: 1.5;
+}
+
+.delete-error {
+  margin: 0.75rem 0 0;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background: #fff1f1;
+  border: 1px solid #f2b4b4;
+  color: #9d174d;
+}
+
+.delete-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
 @media (max-width: 320px) {
   .settings-content {
     padding: 0.75rem;
@@ -169,7 +211,9 @@ input:checked + .slider:before {
   }
 
   .save-btn,
-  .cancel-btn {
+  .cancel-btn,
+  .delete-btn,
+  .delete-confirm-btn {
     min-width: 74px;
     height: 34px;
     padding: 0 0.75rem;

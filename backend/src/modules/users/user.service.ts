@@ -1,5 +1,10 @@
 import { Types } from 'mongoose';
 import {
+  AdminDeleteUserCommand,
+  CognitoIdentityProviderClient,
+  ListUsersCommand,
+} from '@aws-sdk/client-cognito-identity-provider';
+import {
   User,
   IUser,
   IUserPreferences,
@@ -7,6 +12,41 @@ import {
 } from './user.model';
 import { Board } from '../boards/board.model';
 import { CalendarEvent } from '../calendar/calendarEvent.model';
+
+const cognitoClient = new CognitoIdentityProviderClient({
+  region: process.env.COGNITO_REGION,
+});
+
+const deleteCognitoUserBySub = async (cognitoSub: string) => {
+  const userPoolId = process.env.COGNITO_USER_POOL_ID;
+
+  if (!userPoolId) {
+    return false;
+  }
+
+  const users = await cognitoClient.send(
+    new ListUsersCommand({
+      UserPoolId: userPoolId,
+      Filter: `sub = "${cognitoSub}"`,
+      Limit: 1,
+    }),
+  );
+
+  const username = users.Users?.[0]?.Username;
+
+  if (!username) {
+    return false;
+  }
+
+  await cognitoClient.send(
+    new AdminDeleteUserCommand({
+      UserPoolId: userPoolId,
+      Username: username,
+    }),
+  );
+
+  return true;
+};
 
 //Comment to launch deploy workflow on push to main branch
 
@@ -115,6 +155,9 @@ export const syncBoardName = async (
 export const deleteUser = async (userId: Types.ObjectId) => {
   const user = await User.findById(userId);
   if (!user) return null;
+
+  await deleteCognitoUserBySub(user.cognitoSub);
+
   return await Promise.all([
     User.findByIdAndDelete(userId),
     Board.deleteMany({ userId }),
