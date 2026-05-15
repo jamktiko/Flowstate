@@ -33,25 +33,23 @@ export class EditSettings implements OnInit {
     this.boards = this.db.boards;
     this.pushSupported = this.pushService.isSupported();
 
-    // Set toggle to reflect actual browser subscription state —
-    // not just what the form defaults to
     if (this.pushSupported) {
       const hasSubscription = await this.pushService.hasActiveSubscription();
-      this.settingsForm.patchValue({ notificationsEnabled: hasSubscription });
+      this.settingsForm.patchValue({ notificationsEnabled: hasSubscription }, { emitEvent: false });
     }
+
+    this.settingsForm.get('notificationsEnabled')?.valueChanges.subscribe(async (enabled) => {
+      if (enabled) {
+        const success = await this.pushService.enableNotifications();
+        if (!success) {
+          this.settingsForm.patchValue({ notificationsEnabled: false }, { emitEvent: false });
+        }
+      } else {
+        await this.pushService.disableNotifications();
+      }
+    });
   }
 
-  async onNotificationsToggle(enabled: boolean) {
-    if (enabled) {
-      const success = await this.pushService.enableNotifications();
-      // If user denied browser permission, revert the toggle back to OFF
-      if (!success) {
-        this.settingsForm.patchValue({ notificationsEnabled: false });
-      }
-    } else {
-      await this.pushService.disableNotifications();
-    }
-  }
   save() {
     console.log('Settings saved', this.settingsForm.value);
     this.closeModal.emit();
