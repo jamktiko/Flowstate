@@ -53,8 +53,7 @@ const getSocialRedirectUri = (req: Request): string => {
   return `${requestOrigin}/auth/callback`;
 };
 
-const duplicateAccountMessage =
-  'This email is already registered. Please sign in or reset your password.';
+const duplicateAccountMessage = 'This email is already registered.';
 
 const getTrimmedEmail = (value: unknown): string => String(value || '').trim();
 
