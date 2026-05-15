@@ -299,6 +299,7 @@ p {
 
 .date-picker-footer {
   width: 100%;
+  margin-top: 1rem;
 }
 
 .date-picker-popover {
