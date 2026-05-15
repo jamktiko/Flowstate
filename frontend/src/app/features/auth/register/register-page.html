@@ -18,7 +18,16 @@
 
     <div>
       <label for="email">Email</label>
-      <input id="email" type="email" formControlName="email" />
+      <input
+        id="email"
+        type="email"
+        formControlName="email"
+        (blur)="checkEmailAvailability()"
+        (input)="clearRegistrationError()"
+      />
+      @if (isCheckingEmail) {
+        <p class="field-hint">Checking email availability...</p>
+      }
     </div>
 
     <div>
