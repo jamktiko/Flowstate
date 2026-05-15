@@ -299,12 +299,14 @@ p {
 
 .date-picker-footer {
   width: 100%;
+  margin-top: 1rem;
 }
 
 .date-picker-popover {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
+  position: fixed;
+  top: 8rem;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 1200;
   min-width: 320px;
 }
@@ -341,7 +343,8 @@ p {
 
 .calendar-panel {
   padding: 1rem;
-  overflow: hidden;
+  height: calc(100vh - 22rem);
+  overflow-y: auto;
 }
 
 .events-panel {
@@ -349,6 +352,8 @@ p {
   display: grid;
   gap: 0.85rem;
   align-content: start;
+  height: calc(100vh - 22rem);
+  overflow-y: auto;
 }
 
 .panel-header {
