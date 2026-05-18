@@ -72,11 +72,11 @@ export const checkEmailAvailabilityController = async (
     return sendError(res, 'Email is required', 400);
   }
 
-  const escapedEmail = email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  //const escapedEmail = email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
   try {
     const existingUser = await User.findOne({
-      email: new RegExp(`^${escapedEmail}$`, 'i'),
+      email: { $eq: email.toLowerCase() },
     });
 
     if (existingUser) {
@@ -122,9 +122,9 @@ export const registerController = async (req: Request, res: Response) => {
   const email = getTrimmedEmail(rawEmail);
 
   try {
-    const escapedEmail = email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    //const escapedEmail = email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const existingUser = await User.findOne({
-      email: new RegExp(`^${escapedEmail}$`, 'i'),
+      email: { $eq: email.toLowerCase() },
     });
     if (existingUser) {
       return sendError(res, duplicateAccountMessage, 409);
@@ -279,7 +279,9 @@ export const socialCallbackController = async (req: Request, res: Response) => {
 
     // If not found, try to find by email and link accounts, or create new user
     if (!user) {
-      const existingUserByEmail = await User.findOne({ email: email });
+      const existingUserByEmail = await User.findOne({
+        email: { $eq: email.toLowerCase() },
+      });
 
       // Link existing user to new social login if email matches
       if (existingUserByEmail) {
