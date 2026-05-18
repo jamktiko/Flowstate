@@ -66,6 +66,11 @@ export const initiateLinkingController = async (
 
     const authUrl = initiateLinking(userId);
 
+    console.log(
+      '✅ Google Calendar OAuth auth URL returned to client:',
+      authUrl,
+    );
+
     return sendSuccess(res, { authUrl, message: 'Redirect user to this URL' });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
