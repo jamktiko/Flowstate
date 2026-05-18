@@ -85,18 +85,22 @@ Health check: GET http://localhost:8080/api/health
 
 ## Help
 
-Any advise for common problems or issues.
+For common issues, check that all environment variables are set correctly in your `.env` file.
 
-```
-command to run if program contains helper info
-```
+If the backend fails to start, run:
+
+    npm run dev
+
+and check the error message — it will tell you which environment variable is missing.
+
+For frontend issues, make sure the backend is running on port 8080 before starting the Angular dev server.
 
 ## Authors
 
-- Jeremia Vepsäläinen — Git Manager / Project Manager
-- Jani Saari — Product Owner
-- Jesse Kokki — Cloud Architect
-- Annika Järvinen — Scrum Master
+- Jeremia Vepsäläinen — Git Manager / Project Manager / Backend
+- Jani Saari — Product Owner / Frontend
+- Jesse Kokki — Cloud Architect / Backend
+- Annika Järvinen — Scrum Master / Frontend
 
 ## Version History
 
