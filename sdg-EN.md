@@ -66,7 +66,7 @@ This software is necessary because it helps users organize tasks, manage time, a
 <!-- How is the server capacity required by the software taken into account? -->
 <!-- How does the software or its development utilise artifical intelligence? -->
 
-The software minimizes energy consumption by using a lightweight interface that loads quickly and uses less CPU. It loads only the data the user currently needs instead of everything at once, which reduces unnecessary processing. The app also avoids excessive refreshes, animations, and live updates so it does not waste resources in the background. In addition, only essential data is stored, and heavy attachments or duplicate records are avoided. Dark mode is also supported, which can reduce screen power use on some devices and make the app more comfortable to use for longer periods.
+The software minimizes energy consumption by using a lightweight interface that loads quickly and uses less CPU. It loads only the data the user currently needs instead of everything at once, which reduces unnecessary processing. The app also avoids excessive refreshes, animations, and live updates so it does not waste resources in the background. In addition, only essential data is stored, and heavy attachments or duplicate records are avoided. Dark mode is also supported, which can reduce screen power use on some devices and make the app more comfortable to use for longer periods. The app is also available as a Progressive Web App (PWA), which reduces energy use by allowing users to access it directly from their home screen without opening a full browser session each time.
 
 ### 4. In which ways might the software indirectly increase or decrease the consumption of natural resources?
 
