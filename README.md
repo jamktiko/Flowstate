@@ -97,10 +97,10 @@ For frontend issues, make sure the backend is running on port 8080 before starti
 
 ## Authors
 
-- Jeremia Vepsäläinen — Git Manager / Project Manager
-- Jani Saari — Product Owner
-- Jesse Kokki — Cloud Architect
-- Annika Järvinen — Scrum Master
+- Jeremia Vepsäläinen — Git Manager / Project Manager / Backend
+- Jani Saari — Product Owner / Frontend
+- Jesse Kokki — Cloud Architect / Backend
+- Annika Järvinen — Scrum Master / Frontend
 
 ## Version History
 
