@@ -1,15 +1,45 @@
 <app-auth-layout>
-  <h2>Confirm Your Account</h2>
-  <p>
-    We sent a 6-digit code to: <strong>{{ email }}</strong>
-  </p>
-
-  <form [formGroup]="confirmForm" (ngSubmit)="onConfirm()">
-    <div>
-      <label for="code">Verification Code</label>
-      <input id="code" type="text" formControlName="code" placeholder="123456" maxlength="6" />
+  <section class="confirm-shell">
+    <div class="hero-copy">
+      <p class="eyebrow">Account setup</p>
+      <h2>Confirm your account</h2>
+      <p class="subtitle">
+        We sent a 6-digit code to <strong>{{ email }}</strong
+        >.
+      </p>
     </div>
 
-    <button type="submit" [disabled]="confirmForm.invalid">Verify Account</button>
-  </form>
+    <div class="confirm-card" [class.confirm-card--success]="isSuccess()">
+      <ng-container *ngIf="!isSuccess(); else successState">
+        <form [formGroup]="confirmForm" (ngSubmit)="onConfirm()">
+          <div class="field-group">
+            <label for="code">Verification Code</label>
+            <input
+              id="code"
+              type="text"
+              formControlName="code"
+              placeholder="123456"
+              maxlength="6"
+              inputmode="numeric"
+              autocomplete="one-time-code"
+            />
+          </div>
+
+          <p class="error" *ngIf="errorMessage()">{{ errorMessage() }}</p>
+
+          <button type="submit" [disabled]="confirmForm.invalid || isSubmitting()">
+            {{ isSubmitting() ? 'Verifying...' : 'Verify Account' }}
+          </button>
+        </form>
+      </ng-container>
+
+      <ng-template #successState>
+        <div class="success-state">
+          <div class="success-badge">Verified</div>
+          <h3>{{ statusMessage() }}</h3>
+          <p>You do not need to click anything. We’ll take you to the login page automatically.</p>
+        </div>
+      </ng-template>
+    </div>
+  </section>
 </app-auth-layout>
