@@ -13,12 +13,11 @@ import { EditBoardModal } from '../edit-board/edit-board';
 import { DeleteBoardModal } from '../delete-board/delete-board';
 import { Board } from '@core/models/board-model';
 import { EditSettings } from '../edit-settings/edit-settings';
-import { ViewSelector } from '../view-selector/view-selector';
 import { BoardService } from '@core/services/board-service';
 
 @Component({
   selector: 'app-boards-page',
-  imports: [EditBoardModal, DeleteBoardModal, EditSettings, ViewSelector],
+  imports: [EditBoardModal, DeleteBoardModal, EditSettings],
   templateUrl: './list-boards-page.html',
   styleUrl: './list-boards-page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,7 +28,6 @@ export class BoardsPage implements OnInit {
   boards = signal<Board[]>([]);
 
   isSettingsModalOpen = signal(false);
-  isViewSelectorModalOpen = signal(false);
 
   isEditModalOpen = signal(false);
   editingBoardId = signal<string | null>(null);
@@ -115,6 +113,10 @@ export class BoardsPage implements OnInit {
 
   private navBarService: NavBarService = inject(NavBarService);
   private router = inject(Router);
+
+  goToCalendar() {
+    this.router.navigate(['/dashboard/calendar']);
+  }
 
   constructor() {
     // 1. Initialize navbar components when accessing this
