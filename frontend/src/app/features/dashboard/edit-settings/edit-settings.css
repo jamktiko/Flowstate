@@ -104,12 +104,39 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
+/* Settings buttons */
 .settings-actions {
+  width: 100%;
+  max-width: 250px;
+  margin: 0 auto;
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+
+  gap: 3rem;
+  box-sizing: border-box;
+}
+
+[modal-footer].settings-actions {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.delete-btn {
+  align-self: flex-start;
+  margin-left: -12px;
+}
+
+.cancel-save-row {
+  width: 100%;
+
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
+
+  gap: 2rem;
+  box-sizing: border-box;
 }
 
 /* Shared button styles */
@@ -170,6 +197,7 @@ input:checked + .slider:before {
   background-color: #b81f16;
 }
 
+/* Delete confirmation modal */
 .delete-warning-content {
   padding: 0 1rem 0.5rem;
 }
@@ -191,10 +219,12 @@ input:checked + .slider:before {
 }
 
 .delete-actions {
+  width: 100%;
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 1rem;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 @media (max-width: 320px) {
@@ -207,7 +237,12 @@ input:checked + .slider:before {
   }
 
   .settings-actions {
+    max-width: 250px;
     gap: 1rem;
+  }
+
+  .cancel-save-row {
+    gap: 1.5rem;
   }
 
   .save-btn,
@@ -218,5 +253,15 @@ input:checked + .slider:before {
     height: 34px;
     padding: 0 0.75rem;
     font-size: 1rem;
+  }
+}
+@media (min-width: 321px) {
+  .settings-actions {
+    max-width: 380px; /* sama leveys kuin select/lomake desktopissä */
+  }
+
+  .delete-btn {
+    align-self: flex-start;
+    margin-left: 16px;
   }
 }
