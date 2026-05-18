@@ -125,8 +125,14 @@ export function extractUserIdFromState(state: string): Types.ObjectId | null {
 export function initiateLinking(userId: Types.ObjectId): string {
   const state = generateState(userId);
   const googleService = getGoogleCalendarService();
+  const authUrl = googleService.getAuthUrl(state);
+  const redirectUri = new URL(authUrl).searchParams.get('redirect_uri');
 
-  return googleService.getAuthUrl(state);
+  console.log(
+    `✅ Google Calendar OAuth auth URL redirect URI: ${redirectUri || 'unknown'}`,
+  );
+
+  return authUrl;
 }
 
 /**
