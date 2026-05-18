@@ -1,4 +1,4 @@
-import { Component, input, signal } from '@angular/core';
+import { Component, input, output, signal } from '@angular/core';
 import { Card } from '@core/models/board-model';
 import { EditTask } from './edit-task/edit-task';
 
@@ -10,6 +10,8 @@ import { EditTask } from './edit-task/edit-task';
 })
 export class Task {
   card = input.required<Card>();
+  taskUpdated = output<Card>();
+  taskDeleted = output<Card>();
 
   isMenuOpen = signal(false);
   isEditModalOpen = signal(false);
@@ -26,13 +28,11 @@ export class Task {
 
   deleteTask() {
     this.isMenuOpen.set(false);
-    console.log('Delete task clicked', this.card());
-    // TODO: Delete task
+    this.taskDeleted.emit(this.card());
   }
 
   onTaskSaved(updatedCard: Card) {
-    console.log('Task saved:', updatedCard);
     this.isEditModalOpen.set(false);
-    // TODO: Emit up to the parent list/board component or call a service to update the card
+    this.taskUpdated.emit(updatedCard);
   }
 }

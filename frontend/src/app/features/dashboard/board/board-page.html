@@ -4,7 +4,11 @@
   <div class="board-container">
     @if (board(); as b) {
       @for (column of b.columns; track column.id) {
-        <app-list [column]="column"></app-list>
+        <app-list 
+          [column]="column" 
+          (taskUpdated)="handleUpdateTask($event, column.id)"
+          (taskDeleted)="handleDeleteTask($event.card, $event.columnId)"
+        ></app-list>
       }
 
       <div class="add-list-wrapper">

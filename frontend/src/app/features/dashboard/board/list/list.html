@@ -5,7 +5,11 @@
 
   <div class="list-cards">
     @for (card of column().cards; track card._id) {
-      <app-task [card]="card"></app-task>
+      <app-task 
+        [card]="card" 
+        (taskUpdated)="taskUpdated.emit($event)"
+        (taskDeleted)="taskDeleted.emit({ card: $event, columnId: column().id })"
+      ></app-task>
     }
   </div>
 

@@ -1,6 +1,6 @@
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { Task } from './task/task';
-import { Column } from '@core/models/board-model';
+import { Column, Card } from '@core/models/board-model';
 
 @Component({
   selector: 'app-list',
@@ -10,4 +10,6 @@ import { Column } from '@core/models/board-model';
 })
 export class List {
   column = input.required<Column>();
+  taskUpdated = output<Card>();
+  taskDeleted = output<{ card: Card; columnId: string }>();
 }

@@ -12,7 +12,7 @@ export interface Card {
   _id: string; // ObjectId
   title: string;
   description?: string;
-  priority?: 'low' | 'medium' | 'high' | 'urgent';
+  priority: 'low' | 'medium' | 'high';
   order: number;
   tags?: Tag[];
   dueDate?: Date;
