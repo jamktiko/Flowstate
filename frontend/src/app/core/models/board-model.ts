@@ -1,5 +1,5 @@
 export interface Tag {
-  name: string;
+  name: 'backend' | 'security' | 'frontend' | 'urgent';
   visible: boolean;
 }
 
@@ -14,7 +14,7 @@ export interface Card {
   description?: string;
   priority?: 'low' | 'medium' | 'high' | 'urgent';
   order: number;
-  tags: Tag[];
+  tags?: Tag[];
   dueDate?: Date;
   linkedEventId?: string; // ObjectId
   notifications?: NotificationOverride;

@@ -16,3 +16,13 @@
     <p class="task-description">{{ card().description }}</p>
   }
 </div>
+
+@if (isEditModalOpen()) {
+  <app-edit-task
+    [isOpen]="isEditModalOpen()"
+    [initialData]="card()"
+    (closeModal)="isEditModalOpen.set(false)"
+    (saveTask)="onTaskSaved($event)"
+  >
+  </app-edit-task>
+}

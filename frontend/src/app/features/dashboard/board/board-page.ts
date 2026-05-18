@@ -2,7 +2,6 @@ import { Component, signal, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { List } from './list/list';
 import { TaskModal } from '@shared/modals/task-modal/task-modal';
-import { Task } from '@core/models/task-model';
 import { ActivatedRoute } from '@angular/router';
 import { BoardService } from '@core/services/board-service';
 import { Board, Card } from '@core/models/board-model';
@@ -72,7 +71,7 @@ export class BoardPage implements OnInit {
     this.isCreateTaskModalOpen.set(false);
   }
 
-  async handleSaveTask(taskData: Task) {
+  async handleSaveTask(taskData: Card) {
     const currentBoard = this.board();
     if (!currentBoard) return;
 
@@ -87,7 +86,7 @@ export class BoardPage implements OnInit {
           description: taskData.description,
           priority: taskData.priority as 'low' | 'medium' | 'high' | 'urgent',
           order: todoColumn.cards.length,
-          tags: taskData.tags ? taskData.tags.map((t) => ({ name: t, visible: true })) : [],
+          tags: taskData.tags || [],
           dueDate: taskData.dueDate ? new Date(taskData.dueDate) : undefined,
         };
 
