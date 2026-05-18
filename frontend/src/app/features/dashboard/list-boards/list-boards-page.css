@@ -20,7 +20,7 @@
   margin: 0 0 26px;
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 18px;
 
   font-size: 18px;
   font-weight: 700;
@@ -121,6 +121,51 @@ button:active {
   transform: scale(0.97);
 }
 
+.calendar-button {
+  height: 35px;
+  padding: 0 15px 0 11px;
+
+  border: 1px solid #4c90ff;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #141414;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  font-family: kanit, Helvetica, sans-serif;
+  font-size: 17px;
+  font-weight: 500;
+
+  cursor: pointer;
+  line-height: 1;
+}
+
+.calendar-button:hover {
+  border: 2px solid #4c90ff;
+}
+
+.calendar-button:active {
+  transform: scale(0.97);
+}
+
+.calendar-icon {
+  width: 19px;
+  height: 19px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.calendar-icon svg {
+  width: 19px;
+  height: 19px;
+  display: block;
+  color: #353535;
+}
+
 /* Tablet */
 @media (min-width: 600px) {
   .content {
@@ -136,7 +181,6 @@ button:active {
     padding: 0 24px;
   }
 }
-
 /* Desktop */
 @media (min-width: 900px) {
   .content {
@@ -144,7 +188,7 @@ button:active {
   }
 
   .page-title {
-    font-size: 24px;
+    font-size: 20px;
     margin-bottom: 34px;
   }
 
@@ -165,16 +209,6 @@ button:active {
   .add-board-btn {
     margin-top: 56px;
   }
-}
-.page-title {
-  margin: 0 0 26px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-
-  font-size: 18px;
-  font-weight: 700;
-  color: #111;
 }
 
 .boards-menu-btn {
