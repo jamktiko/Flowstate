@@ -3,7 +3,8 @@ import mongoose from 'mongoose';
 /**
  * Connects to MongoDB using the MONGO_URI environment variable.
  * autoIndex: true in development — creates indexes on startup.
- * autoIndex: false recommended for production — too slow on large collections.
+ * autoIndex: false in production — prevents index rebuilds on every restart
+ * which can lock collections and cause downtime on large datasets.
  */
 export const connectDB = async (): Promise<void> => {
   const MONGO_URI = process.env.MONGO_URI || '';
@@ -13,7 +14,7 @@ export const connectDB = async (): Promise<void> => {
   }
 
   await mongoose.connect(MONGO_URI, {
-    autoIndex: true, // change to false before production
+    autoIndex: process.env.NODE_ENV !== 'production',
   });
 
   console.log('✅ MongoDB connected');
