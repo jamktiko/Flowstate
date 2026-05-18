@@ -5,6 +5,7 @@ import {
   InitiateAuthCommand,
   ConfirmSignUpCommand,
   ListUsersCommand,
+  AdminLinkProviderForUserCommand,
 } from '@aws-sdk/client-cognito-identity-provider';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
@@ -285,6 +286,42 @@ export const socialCallbackController = async (req: Request, res: Response) => {
 
       // Link existing user to new social login if email matches
       if (existingUserByEmail) {
+        // Try to link the federated (social) identity to the existing Cognito user
+        try {
+          const providerName = decodedToken?.identities?.[0]?.providerName;
+          const providerUserId = decodedToken?.identities?.[0]?.userId;
+
+          if (providerName && providerUserId) {
+            await cognitoClient.send(
+              new AdminLinkProviderForUserCommand({
+                UserPoolId: process.env.COGNITO_USER_POOL_ID,
+                DestinationUser: {
+                  ProviderName: 'Cognito',
+                  ProviderAttributeName: 'Username',
+                  ProviderAttributeValue: existingUserByEmail.email,
+                },
+                SourceUser: {
+                  ProviderName: providerName,
+                  ProviderAttributeName: 'Cognito_Subject',
+                  ProviderAttributeValue: providerUserId,
+                },
+              }),
+            );
+
+            console.log('Linked social provider to existing Cognito user:', {
+              email: existingUserByEmail.email,
+              providerName,
+              providerUserId,
+            });
+          } else {
+            console.warn(
+              'Provider identity not present in token — skipping AdminLinkProviderForUser. Will link in MongoDB only.',
+            );
+          }
+        } catch (linkErr) {
+          console.error('Failed to link provider in Cognito:', linkErr);
+        }
+
         existingUserByEmail.cognitoSub = sub;
         await existingUserByEmail.save();
         user = existingUserByEmail;
