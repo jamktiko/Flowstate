@@ -400,6 +400,8 @@ export function initGoogleCalendarService(): GoogleCalendarService {
     redirectUri,
   });
 
+  console.log(`✅ Google Calendar OAuth redirect URI: ${redirectUri}`);
+
   return googleCalendarService;
 }
 

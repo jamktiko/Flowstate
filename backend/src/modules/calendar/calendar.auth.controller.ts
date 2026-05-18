@@ -66,6 +66,11 @@ export const initiateLinkingController = async (
 
     const authUrl = initiateLinking(userId);
 
+    console.log(
+      '✅ Google Calendar OAuth auth URL returned to client:',
+      authUrl,
+    );
+
     return sendSuccess(res, { authUrl, message: 'Redirect user to this URL' });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
@@ -81,6 +86,11 @@ export const initiateLinkingController = async (
  */
 export const oauthCallbackController = async (req: Request, res: Response) => {
   try {
+    console.log('✅ Google Calendar OAuth callback received:', {
+      url: req.originalUrl,
+      query: req.query,
+    });
+
     const frontendBaseUrl = getFrontendBaseUrl(req);
 
     // Extract authorization code and state from query parameters

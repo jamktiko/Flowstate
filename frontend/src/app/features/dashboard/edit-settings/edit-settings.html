@@ -2,10 +2,12 @@
   <div modal-header>
     <h3>Settings</h3>
   </div>
+
   <div class="settings-content">
     <form [formGroup]="settingsForm" (ngSubmit)="save()" id="settings-form" class="settings-form">
       <div class="form-group row-group">
         <label for="darkModeToggle">Dark Mode</label>
+
         <label class="switch">
           <input type="checkbox" id="darkModeToggle" formControlName="darkModeEnabled" />
           <span class="slider round"></span>
@@ -15,6 +17,7 @@
       @if (pushSupported) {
         <div class="form-group row-group">
           <label for="notificationsToggle">Notifications</label>
+
           <label class="switch">
             <input
               type="checkbox"
@@ -46,8 +49,10 @@
 
       <div class="form-group">
         <label for="landingPage">Default Landing Page</label>
+
         <select id="landingPage" formControlName="defaultLandingPage" class="form-control">
           <option value="dashboard">Dashboard</option>
+
           @for (board of boards; track board._id) {
             <option [value]="board._id">{{ board.name }}</option>
           }
@@ -55,10 +60,15 @@
       </div>
     </form>
   </div>
+
   <div modal-footer class="settings-actions">
     <button type="button" class="delete-btn" (click)="openDeleteConfirm()">Delete account</button>
-    <button type="button" class="cancel-btn" (click)="closeModal.emit()">Cancel</button>
-    <button type="submit" form="settings-form" class="save-btn">Save</button>
+
+    <div class="cancel-save-row">
+      <button type="button" class="cancel-btn" (click)="closeModal.emit()">Cancel</button>
+
+      <button type="submit" form="settings-form" class="save-btn">Save</button>
+    </div>
   </div>
 </app-basic-modal>
 
@@ -80,6 +90,7 @@
 
   <div modal-footer class="delete-actions">
     <button type="button" class="cancel-btn" (click)="closeDeleteConfirm()">Cancel</button>
+
     <button
       type="button"
       class="delete-confirm-btn"

@@ -11,25 +11,23 @@ import { NavBarService } from '@core/layout/nav-bar/nav-bar-service';
 import { Router } from '@angular/router';
 import { EditBoardModal } from '../edit-board/edit-board';
 import { DeleteBoardModal } from '../delete-board/delete-board';
-import { FakeDatabaseService } from '@shared/fake-database/fake-database-service';
 import { Board } from '@core/models/board-model';
 import { EditSettings } from '../edit-settings/edit-settings';
-import { ViewSelector } from '../view-selector/view-selector';
+import { BoardService } from '@core/services/board-service';
 
 @Component({
   selector: 'app-boards-page',
-  imports: [EditBoardModal, DeleteBoardModal, EditSettings, ViewSelector],
+  imports: [EditBoardModal, DeleteBoardModal, EditSettings],
   templateUrl: './list-boards-page.html',
   styleUrl: './list-boards-page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BoardsPage implements OnInit {
-  private db = inject(FakeDatabaseService);
+  private boardService = inject(BoardService);
 
   boards = signal<Board[]>([]);
 
   isSettingsModalOpen = signal(false);
-  isViewSelectorModalOpen = signal(false);
 
   isEditModalOpen = signal(false);
   editingBoardId = signal<string | null>(null);
@@ -43,8 +41,15 @@ export class BoardsPage implements OnInit {
     return this.boards().find((b) => b._id === id) || null;
   });
 
-  ngOnInit() {
-    this.boards.set(this.db.boards);
+  async ngOnInit() {
+    try {
+      const boards = await this.boardService.getBoards();
+      this.boards.set(boards);
+    } catch (error) {
+      console.error('Error loading boards. Did the session expire?', error);
+      // Failsafe: Ensure UI still functions without data returning
+      this.boards.set([]);
+    }
   }
 
   // Add the method to handle navigation
@@ -77,41 +82,41 @@ export class BoardsPage implements OnInit {
     this.deletingBoardId.set(null);
   }
 
-  handleSaveBoard(boardData: { title: string; description: string }) {
+  async handleSaveBoard(boardData: { title: string; description: string }) {
     const idToEdit = this.editingBoardId();
-    if (idToEdit !== null) {
-      // Edit existing (updating mock db as well)
-      const board = this.db.boards.find((b) => b._id === idToEdit);
-      if (board) board.name = boardData.title;
-    } else {
-      // Create new (updating mock db as well)
-      const newBoard: Board = {
-        _id: Math.random().toString(36).substring(2, 9),
-        userId: 'currentUser',
-        name: boardData.title,
-        columns: [
-          { id: 'col_1', name: 'To Do', order: 0, cards: [] },
-          { id: 'col_2', name: 'In Progress', order: 1, cards: [] },
-          { id: 'col_3', name: 'Done', order: 2, cards: [] },
-        ],
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
-      this.db.boards.push(newBoard);
-    }
+    try {
+      if (idToEdit !== null) {
+        // Edit existing
+        await this.boardService.updateBoard(idToEdit, { name: boardData.title });
+      } else {
+        // Create new
+        await this.boardService.createBoard(boardData.title);
+      }
 
-    // Refresh signal with DB data
-    this.boards.set([...this.db.boards]);
-    this.closeEditModal();
+      // Refresh boards
+      const boards = await this.boardService.getBoards();
+      this.boards.set(boards);
+      this.closeEditModal();
+    } catch (error) {
+      console.error('Error saving board:', error);
+    }
   }
 
-  handleBoardDeleted() {
-    // Refresh the signal array from the db which now excludes the deleted board
-    this.boards.set([...this.db.boards]);
+  async handleBoardDeleted() {
+    try {
+      const boards = await this.boardService.getBoards();
+      this.boards.set(boards);
+    } catch (error) {
+      console.error('Error refreshing boards after deletion', error);
+    }
   }
 
   private navBarService: NavBarService = inject(NavBarService);
   private router = inject(Router);
+
+  goToCalendar() {
+    this.router.navigate(['/dashboard/calendar']);
+  }
 
   constructor() {
     // 1. Initialize navbar components when accessing this
@@ -129,8 +134,12 @@ export class BoardsPage implements OnInit {
   }
 
   // Delete after checking everything works
-  logDatabase() {
-    console.log(JSON.parse(JSON.stringify(this.db.boards)));
-    // JSON.stringify forces the console to snapshot the exact current state
+  async logDatabase() {
+    try {
+      const boards = await this.boardService.getBoards();
+      console.log('Database returned:', JSON.parse(JSON.stringify(boards)));
+    } catch (error) {
+      console.error('Failed to log database:', error);
+    }
   }
 }
