@@ -1,87 +1,180 @@
-h2 {
-  font-family: 'Kanit', Arial, sans-serif;
-  font-weight: 500;
-  font-size: 20px;
-  text-align: center;
-  margin: 0 0 22px;
-  margin-bottom: 60px;
-  color: #000;
+:host {
+  display: block;
+  min-height: 100%;
+  background:
+    radial-gradient(circle at top, rgba(79, 141, 247, 0.14), transparent 40%),
+    linear-gradient(180deg, #f6f8fc 0%, #eef3fb 100%);
 }
 
-p {
-  font-family: 'Kanit', Arial, sans-serif;
-  font-size: 14px;
-  color: #333;
-  text-align: center;
-  margin: 30px 0 22px;
-  line-height: 1.4;
+.confirm-shell {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 88px 20px 40px;
 }
 
-p strong {
-  font-weight: 600;
+.hero-copy {
+  text-align: center;
+  margin-bottom: 22px;
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  font-family: 'Kanit', Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: #4f8df7;
 }
 
-form {
-  width: 100%;
+h2 {
+  margin: 0;
+  font-family: 'Kanit', Arial, sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: #122033;
 }
 
-form div {
-  margin-bottom: 25px;
+.subtitle {
+  margin: 12px 0 0;
+  font-family: 'Kanit', Arial, sans-serif;
+  font-size: 15px;
+  color: #425466;
+  line-height: 1.5;
+}
+
+.subtitle strong {
+  color: #1f5fd6;
+  font-weight: 600;
+}
+
+.confirm-card {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(146, 164, 190, 0.25);
+  border-radius: 24px;
+  box-shadow: 0 18px 50px rgba(18, 32, 51, 0.08);
+  padding: 28px;
+  backdrop-filter: blur(10px);
+}
+
+.field-group {
+  margin-bottom: 18px;
 }
 
 label {
   display: block;
   margin-bottom: 8px;
   font-family: 'Kanit', Arial, sans-serif;
-  font-size: 16px;
-  font-style: italic;
-  font-weight: 500;
+  font-size: 15px;
+  font-weight: 600;
+  color: #122033;
 }
 
 input {
   width: 100%;
-  height: 43px;
-  padding: 0 10px;
-  border: 1px solid #cfddea;
-  border-radius: 8px;
-  background: #f9fafb;
-  font-family: 'Kanit', Arial, sans-serif;
-  font-size: 14px;
+  height: 48px;
+  padding: 0 14px;
+  border: 1px solid #cdd8e7;
+  border-radius: 14px;
+  background: #fff;
   box-sizing: border-box;
+  font-family: 'Kanit', Arial, sans-serif;
+  font-size: 16px;
+  color: #122033;
   outline: none;
+  letter-spacing: 0.18em;
+  text-align: center;
 }
 
 input:focus {
-  border-color: #8fb8ff;
-  box-shadow: 0 0 0 2px rgba(79, 141, 247, 0.15);
+  border-color: #4f8df7;
+  box-shadow: 0 0 0 4px rgba(79, 141, 247, 0.12);
+}
+
+.error {
+  margin: 0 0 16px;
+  color: #c83d3d;
+  font-family: 'Kanit', Arial, sans-serif;
+  font-size: 14px;
 }
 
 button {
-  display: block;
-  width: 220px;
-  height: 40px;
-  margin: 28px auto 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 48px;
   border: 0;
-  border-radius: 22px;
-  background: #4f8df7;
-  color: #f9fafb;
-  font-family: Arial, sans-serif;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #4f8df7 0%, #2f6de1 100%);
+  color: #fff;
+  font-family: 'Kanit', Arial, sans-serif;
   font-size: 16px;
   font-weight: 600;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 button:not(:disabled):hover {
-  background-color: #3c7be0;
   cursor: pointer;
+  transform: translateY(-1px);
+  box-shadow: 0 12px 24px rgba(47, 109, 225, 0.24);
 }
 
 button:disabled {
-  opacity: 0.6;
+  opacity: 0.72;
   cursor: not-allowed;
 }
-:host {
-  display: block;
-  padding-top: 80px;
-  background-color: #f9fafb;
+
+.success-state {
+  text-align: center;
+  padding: 10px 6px 4px;
+}
+
+.success-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(48, 180, 120, 0.12);
+  color: #1d7f55;
+  font-family: 'Kanit', Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.success-state h3 {
+  margin: 0;
+  font-family: 'Kanit', Arial, sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: #122033;
+}
+
+.success-state p {
+  margin: 12px 0 0;
+  font-family: 'Kanit', Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #425466;
+}
+
+@media (max-width: 640px) {
+  .confirm-shell {
+    padding-top: 64px;
+  }
+
+  .confirm-card {
+    padding: 22px 18px;
+    border-radius: 20px;
+  }
+
+  h2 {
+    font-size: 24px;
+  }
 }
