@@ -1,10 +1,14 @@
 // Callback component for handling social login redirects
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@core/auth/auth-service';
 
 @Component({
-  template: '<div class="loading-spinner">Finalizing login...</div>',
+  selector: 'app-callback',
+  imports: [],
+  templateUrl: './callback.html',
+  styleUrl: './callback.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthCallbackComponent implements OnInit {
   private route = inject(ActivatedRoute);
