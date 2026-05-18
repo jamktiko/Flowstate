@@ -1,9 +1,13 @@
 {
-  "name": "flowstate",
-  "short_name": "flowstate",
+  "name": "Flowstate",
+  "short_name": "Flowstate",
+  "description": "A task manager for students — boards, deadlines, and calendar sync in one place.",
   "display": "standalone",
+  "orientation": "portrait",
   "scope": "./",
   "start_url": "./",
+  "background_color": "#ffffff",
+  "theme_color": "#4c90ff",
   "icons": [
     {
       "src": "icons/icon-72x72.png",
