@@ -81,6 +81,11 @@ export const initiateLinkingController = async (
  */
 export const oauthCallbackController = async (req: Request, res: Response) => {
   try {
+    console.log('✅ Google Calendar OAuth callback received:', {
+      url: req.originalUrl,
+      query: req.query,
+    });
+
     const frontendBaseUrl = getFrontendBaseUrl(req);
 
     // Extract authorization code and state from query parameters
