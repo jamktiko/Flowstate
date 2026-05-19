@@ -66,11 +66,7 @@
 
   <section class="calendar-layout">
     <div class="calendar-panel">
-      <mwl-calendar-week-view
-        [viewDate]="viewDate"
-        [events]="events()"
-        (eventClicked)="openEventDetail($event.event)"
-      ></mwl-calendar-week-view>
+      <mwl-calendar-week-view [viewDate]="viewDate" [events]="events()"></mwl-calendar-week-view>
     </div>
 
     <aside class="events-panel">
