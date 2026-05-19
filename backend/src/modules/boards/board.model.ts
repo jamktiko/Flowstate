@@ -5,7 +5,7 @@ import { Schema, model, Document, Types } from 'mongoose';
 // ─────────────────────────────────────────────
 
 export interface ITag {
-  name: 'backend' | 'security' | 'frontend' | 'urgent'; // NEEDS TO BE CHANGED
+  name: string;
   visible: boolean;
 }
 
@@ -54,11 +54,7 @@ export interface IBoard extends Document {
 
 const TagSchema = new Schema<ITag>(
   {
-    name: {
-      type: String,
-      enum: ['backend', 'security', 'frontend', 'urgent'], // NEED TO BE CHANGED
-      required: true,
-    },
+    name: { type: String, required: true },
     visible: { type: Boolean, required: true, default: false },
   },
   { _id: false },
