@@ -226,11 +226,13 @@
       </div>
     </div>
   }
-  <app-calendar-event-detail
-    [isOpen]="isDetailOpen()"
-    [event]="selectedEvent()"
-    (closeModal)="isDetailOpen.set(false)"
-    (eventDeleted)="onEventDeleted()"
-    (eventUnlinked)="onEventUnlinked()"
-  />
+  @if (isDetailOpen()) {
+    <app-calendar-event-detail
+      [isOpen]="isDetailOpen()"
+      [event]="selectedEvent()"
+      (closeModal)="isDetailOpen.set(false)"
+      (eventDeleted)="onEventDeleted()"
+      (eventUnlinked)="onEventUnlinked()"
+    />
+  }
 </div>
