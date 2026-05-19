@@ -130,7 +130,7 @@ export class BoardPage implements OnInit {
     }
   }
 
-  async handleSaveTask(taskData: Task) {
+  async handleSaveTask(taskData: Card) {
     const currentBoard = this.board();
     if (!currentBoard) return;
 
