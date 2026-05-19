@@ -132,14 +132,4 @@ export class BoardsPage implements OnInit {
       this.navBarService.reset();
     });
   }
-
-  // Delete after checking everything works
-  async logDatabase() {
-    try {
-      const boards = await this.boardService.getBoards();
-      console.log('Database returned:', JSON.parse(JSON.stringify(boards)));
-    } catch (error) {
-      console.error('Failed to log database:', error);
-    }
-  }
 }
