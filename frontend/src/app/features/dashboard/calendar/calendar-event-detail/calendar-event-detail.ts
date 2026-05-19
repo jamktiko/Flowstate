@@ -44,8 +44,15 @@ export class CalendarEventDetail {
     this.error.set(null);
 
     try {
-      await this.calendarApi.unlinkEventFromCard(e._id);
-      this.eventUnlinked.emit(e._id);
+      if (e.provider === 'local') {
+        // Local events were created by Flowstate — delete entirely
+        await this.calendarApi.deleteCalendarEvent(e._id);
+        this.eventDeleted.emit(e._id);
+      } else {
+        // External events (Google/Microsoft) — just unlink, keep in calendar
+        await this.calendarApi.unlinkEventFromCard(e._id);
+        this.eventUnlinked.emit(e._id);
+      }
       this.closeModal.emit();
     } catch (err: unknown) {
       this.error.set(err instanceof Error ? err.message : 'Failed to unlink event');

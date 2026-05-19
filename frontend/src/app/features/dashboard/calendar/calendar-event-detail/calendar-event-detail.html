@@ -45,7 +45,13 @@
             (click)="unlinkFromCard()"
             [disabled]="isUnlinking()"
           >
-            {{ isUnlinking() ? 'Unlinking...' : 'Unlink from card' }}
+            {{
+              isUnlinking()
+                ? 'Unlinking...'
+                : event()?.provider === 'local'
+                  ? 'Remove from calendar'
+                  : 'Unlink from card'
+            }}
           </button>
         </div>
       } @else {
