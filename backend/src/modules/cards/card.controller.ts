@@ -138,12 +138,15 @@ export async function createCalendarEventFromCardController(
   const columnId = req.params.colId;
   const cardId = new Types.ObjectId(req.params.cardId);
 
-  const { board, eventId } = await createCalendarEventFromCard(
-    boardId,
-    userId,
-    columnId,
-    cardId,
-  );
-
-  sendSuccess(res, { board, eventId }, 201);
+  try {
+    const { board, eventId } = await createCalendarEventFromCard(
+      boardId,
+      userId,
+      columnId,
+      cardId,
+    );
+    sendSuccess(res, { board, eventId }, 201);
+  } catch (error: any) {
+    sendError(res, error.message, 400);
+  }
 }
