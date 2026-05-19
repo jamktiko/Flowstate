@@ -132,10 +132,10 @@ describe('Board model — card validation', () => {
     ).rejects.toThrow(mongoose.Error.ValidationError);
   });
 
-  it('rejects a card with an invalid tag name', async () => {
+  it('rejects a card with an empty tag name', async () => {
     const card = {
       ...makeCard(),
-      tags: [{ name: 'design', visible: true }], // 'design' not in enum
+      tags: [{ name: '', visible: true }], // empty string not allowed
     };
     const col = makeColumn({ cards: [card] as any });
 
