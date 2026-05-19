@@ -103,7 +103,7 @@ export const oauthCallbackController = async (req: Request, res: Response) => {
         : String(error_description || 'OAuth flow cancelled or failed');
       // Redirect to frontend with error (or return error response)
       return res.redirect(
-        `${frontendBaseUrl}/calendar-error?error=${encodeURIComponent(errorMsg)}`,
+        `${frontendBaseUrl}/dashboard/calendar-error?error=${encodeURIComponent(errorMsg)}`,
       );
     }
 
@@ -118,19 +118,19 @@ export const oauthCallbackController = async (req: Request, res: Response) => {
 
       // Success — redirect to frontend success page with user ID as confirmation
       return res.redirect(
-        `${frontendBaseUrl}/calendar-linked?success=true&userId=${user._id}`,
+        `${frontendBaseUrl}/dashboard/calendar-linked?success=true&userId=${user._id}`,
       );
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : 'Unknown error';
       return res.redirect(
-        `${frontendBaseUrl}/calendar-error?error=${encodeURIComponent(errorMsg)}`,
+        `${frontendBaseUrl}/dashboard/calendar-error?error=${encodeURIComponent(errorMsg)}`,
       );
     }
   } catch (error) {
     const frontendBaseUrl = getFrontendBaseUrl(req);
     const message = error instanceof Error ? error.message : 'Unknown error';
     return res.redirect(
-      `${frontendBaseUrl}/calendar-error?error=${encodeURIComponent(message)}`,
+      `${frontendBaseUrl}/dashboard/calendar-error?error=${encodeURIComponent(message)}`,
     );
   }
 };
