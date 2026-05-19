@@ -154,8 +154,8 @@ export const deleteColumnController = async (req: Request, res: Response) => {
 
     const boardId = new Types.ObjectId(req.params.id);
     const colId = req.params.colId; // string — not an ObjectId
-    await deleteColumn(boardId, userId, colId);
-    return sendSuccess(res, { message: 'Column deleted successfully' });
+    const board = await deleteColumn(boardId, userId, colId);
+    return sendSuccess(res, board);
   } catch (error) {
     return sendError(res, 'Internal server error', 500);
   }

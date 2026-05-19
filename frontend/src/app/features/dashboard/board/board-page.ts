@@ -232,4 +232,25 @@ export class BoardPage implements OnInit {
       this.board.set(currentBoard);
     }
   }
+
+  async handleDeleteList(columnId: string) {
+    const currentBoard = this.board();
+    if (!currentBoard) return;
+
+    // Optional: confirm if list is not empty, but we'll try to delete anyway.
+    // The backend might reject it if it contains cards (based on "must be empty first" comment).
+    try {
+      // Optimistically update UI
+      const updatedColumns = currentBoard.columns.filter((col) => col.id !== columnId);
+      this.board.set({ ...currentBoard, columns: updatedColumns });
+
+      const returnedBoard = await this.boardService.deleteColumn(currentBoard._id, columnId);
+      this.board.set(returnedBoard);
+    } catch (error) {
+      console.error('Error deleting list:', error);
+      // Revert if error occurs, e.g. list was not empty.
+      this.board.set(currentBoard);
+      alert('Could not delete the list. Please ensure it is empty first.');
+    }
+  }
 }

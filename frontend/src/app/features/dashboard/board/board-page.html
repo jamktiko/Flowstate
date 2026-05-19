@@ -9,6 +9,7 @@
           [boardId]="b._id"
           (taskUpdated)="handleUpdateTask($event, column.id)"
           (taskDeleted)="handleDeleteTask($event.card, $event.columnId)"
+          (listDeleted)="handleDeleteList($event)"
           (cardDropped)="onCardMoved($event)"
         ></app-list>
       }
