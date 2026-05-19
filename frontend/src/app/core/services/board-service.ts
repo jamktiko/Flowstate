@@ -59,6 +59,14 @@ export class BoardService {
     return res.data;
   }
 
+  // DELETE: Remove a column from a board
+  async deleteColumn(boardId: string, colId: string): Promise<Board> {
+    const res = await firstValueFrom(
+      this.http.delete<ApiResponse<Board>>(`${this.apiUrl}/${boardId}/columns/${colId}`),
+    );
+    return res.data;
+  }
+
   // CREATE: Add a new card to a specific column
   async addCard(boardId: string, colId: string, cardData: Partial<Card>): Promise<Board> {
     const res = await firstValueFrom(

@@ -1,6 +1,9 @@
 <div class="list-container" mwlDroppable (drop)="handleDrop($event)">
   <div class="list-header">
     <h3 class="list-title">{{ column().name }}</h3>
+    <button class="delete-list-btn" (click)="listDeleted.emit(column().id)" title="Delete List">
+      <span class="material-icons">delete</span>
+    </button>
   </div>
 
   <div class="list-cards">

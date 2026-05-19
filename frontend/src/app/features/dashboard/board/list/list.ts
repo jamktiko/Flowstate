@@ -12,6 +12,7 @@ import { DraggableDirective, DroppableDirective, DropEvent } from 'angular-dragg
 export class List {
   column = input.required<Column>();
   boardId = input.required<string>();
+  listDeleted = output<string>();
   taskUpdated = output<Card>();
   taskDeleted = output<{ card: Card; columnId: string }>();
   cardDropped = output<{

@@ -51,6 +51,23 @@
   color: #000000;
 }
 
+.delete-list-btn {
+  background: none;
+  border: none;
+  color: #6b778c;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.delete-list-btn:hover {
+  background-color: #ebecf0;
+  color: #172b4d;
+}
+
 .list-options {
   color: #6b778c;
   cursor: pointer;

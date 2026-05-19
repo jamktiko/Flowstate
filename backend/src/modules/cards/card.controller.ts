@@ -84,8 +84,8 @@ export const deleteCardController = async (req: Request, res: Response) => {
     const colId = req.params.colId; // string — client-generated, not ObjectId
     const cardId = new Types.ObjectId(req.params.cardId); // convert string param to ObjectId
 
-    await deleteCard(boardId, userId, colId, cardId);
-    return sendSuccess(res, { message: 'Card deleted successfully' });
+    const board = await deleteCard(boardId, userId, colId, cardId);
+    return sendSuccess(res, board);
   } catch (error) {
     return sendError(res, 'Internal server error', 500);
   }
