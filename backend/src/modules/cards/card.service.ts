@@ -5,6 +5,7 @@
  */
 import { Types } from 'mongoose';
 import { Board, IBoard, ICard } from '../boards/board.model';
+import { CalendarEvent } from '../calendar/calendarEvent.model';
 
 // ─────────────────────────────────────────────
 // Helper — find board and verify ownership
@@ -279,4 +280,71 @@ export async function moveCard(
 
   // persist all in-memory changes to database
   return await board.save();
+}
+/**
+ * Creates a calendar event from a card's due date and links them bidirectionally.
+ * startTime defaults to 08:00, endTime to 09:00 on the due date.
+ * @throws If card has no due date
+ * @throws If card is already linked to a calendar event
+ */
+export async function createCalendarEventFromCard(
+  boardId: Types.ObjectId,
+  userId: Types.ObjectId,
+  columnId: string,
+  cardId: Types.ObjectId,
+): Promise<{ board: IBoard; eventId: Types.ObjectId }> {
+  const board = await findBoardForUser(boardId, userId);
+
+  const column = board.columns.find((col) => col.id === columnId);
+  if (!column) throw new Error('Column not found');
+
+  const card = column.cards.find((c) => c._id.toString() === cardId.toString());
+  if (!card) throw new Error('Card not found');
+
+  if (!card.dueDate) {
+    throw new Error('Card must have a due date to create a calendar event');
+  }
+
+  if (card.linkedEventId) {
+    throw new Error('Card is already linked to a calendar event');
+  }
+
+  // Build start/end times from due date — 08:00 to 09:00 on the due date
+  const startTime = new Date(card.dueDate);
+  startTime.setHours(8, 0, 0, 0);
+
+  const endTime = new Date(card.dueDate);
+  endTime.setHours(9, 0, 0, 0);
+
+  // Create the calendar event
+  const event = await CalendarEvent.create({
+    userId,
+    provider: 'local',
+    externalEventId: `card-${cardId.toString()}`,
+    title: card.title,
+    description: card.description ?? '',
+    startTime,
+    endTime,
+    isAllDay: false,
+    status: 'confirmed',
+    linkedCardId: cardId,
+    linkedBoardId: boardId,
+  });
+
+  // Link event back to card
+  await Board.findOneAndUpdate(
+    { _id: boardId, userId },
+    {
+      $set: {
+        'columns.$[col].cards.$[card].linkedEventId': event._id,
+      },
+    },
+    {
+      arrayFilters: [{ 'col.id': columnId }, { 'card._id': cardId }],
+    },
+  );
+
+  // Refetch board to return updated state
+  const updatedBoard = await findBoardForUser(boardId, userId);
+  return { board: updatedBoard, eventId: event._id as Types.ObjectId };
 }
