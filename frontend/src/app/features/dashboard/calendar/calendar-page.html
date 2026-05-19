@@ -66,7 +66,11 @@
 
   <section class="calendar-layout">
     <div class="calendar-panel">
-      <mwl-calendar-week-view [viewDate]="viewDate" [events]="events()"></mwl-calendar-week-view>
+      <mwl-calendar-week-view
+        [viewDate]="viewDate"
+        [events]="events()"
+        (eventClicked)="openEventDetail($event.event)"
+      ></mwl-calendar-week-view>
     </div>
 
     <aside class="events-panel">
@@ -86,7 +90,14 @@
       } @else {
         <div class="event-list">
           @for (event of events(); track event.meta?._id) {
-            <article class="event-card">
+            <article
+              class="event-card"
+              role="button"
+              tabindex="0"
+              (click)="openEventDetail(event)"
+              (keydown.enter)="openEventDetail(event)"
+              (keydown.space)="openEventDetail(event)"
+            >
               <div class="event-card-head">
                 <strong>{{ event.title }}</strong>
                 <span class="provider-chip" [class.google]="event.meta?.provider === 'google'">
@@ -219,4 +230,11 @@
       </div>
     </div>
   }
+  <app-calendar-event-detail
+    [isOpen]="isDetailOpen()"
+    [event]="selectedEvent()"
+    (closeModal)="isDetailOpen.set(false)"
+    (eventDeleted)="onEventDeleted()"
+    (eventUnlinked)="onEventUnlinked()"
+  />
 </div>
