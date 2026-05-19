@@ -11,14 +11,14 @@ import { DraggableDirective, DroppableDirective, DropEvent } from 'angular-dragg
 })
 export class List {
   column = input.required<Column>();
+  boardId = input.required<string>();
   taskUpdated = output<Card>();
   taskDeleted = output<{ card: Card; columnId: string }>();
   cardDropped = output<{
     dropData: { card: Card; sourceColumnId: string };
     dropColumnId: string;
   }>();
-
-  handleDrop(event: DropEvent<any>) {
+  handleDrop(event: DropEvent<{ card: Card; sourceColumnId: string }>) {
     if (event.dropData) {
       this.cardDropped.emit({
         dropData: event.dropData,
