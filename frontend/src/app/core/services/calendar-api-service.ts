@@ -5,7 +5,7 @@ import { environment } from '@environments/environment';
 
 export interface CalendarEventRecord {
   _id: string;
-  provider: 'google' | 'microsoft';
+  provider: 'google' | 'microsoft' | 'local';
   externalEventId: string;
   title: string;
   description?: string;
