@@ -5,17 +5,17 @@
 
   <div class="list-cards">
     @for (card of column().cards; track card._id) {
-       <div
+      <div
         mwlDraggable
         [dropData]="{ card: card, sourceColumnId: column().id }"
         [dragActiveClass]="'is-dragging'"
       >
-       <app-task 
+      <app-task 
         [card]="card" 
         (taskUpdated)="taskUpdated.emit($event)"
         (taskDeleted)="taskDeleted.emit({ card: $event, columnId: column().id })"
       ></app-task>
-     </div>
+    </div>
     }
   </div>
 
