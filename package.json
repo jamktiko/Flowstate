@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "@aws-sdk/client-cognito-identity-provider": "^3.1043.0"
+    "@aws-sdk/client-cognito-identity-provider": "^3.1043.0",
+    "angular-draggable-droppable": "^9.0.1"
   }
 }

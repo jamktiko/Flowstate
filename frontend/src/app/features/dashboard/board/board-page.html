@@ -4,7 +4,7 @@
   <div class="board-container">
     @if (board(); as b) {
       @for (column of b.columns; track column.id) {
-        <app-list [column]="column"></app-list>
+        <app-list [column]="column" (cardDropped)="onCardMoved($event)"></app-list>
       }
 
       <div class="add-list-wrapper">
