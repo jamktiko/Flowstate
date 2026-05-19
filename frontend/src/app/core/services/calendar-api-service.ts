@@ -106,4 +106,7 @@ export class CalendarApiService {
 
     return response.data ?? { message: 'Event deleted successfully' };
   }
+  async unlinkEventFromCard(eventId: string): Promise<void> {
+    await firstValueFrom(this.http.delete(`${this.calendarApiUrl}/${eventId}/link`));
+  }
 }
