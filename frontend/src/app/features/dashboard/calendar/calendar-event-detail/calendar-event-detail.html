@@ -1,0 +1,73 @@
+<app-basic-modal [isOpen]="isOpen()" (closeModal)="closeModal.emit()">
+  <div modal-header>
+    <h3>{{ event()?.title }}</h3>
+  </div>
+
+  <div class="event-detail-body">
+    <div class="detail-row">
+      <span class="detail-label">Provider</span>
+      <span class="provider-chip" [class.google]="event()?.provider === 'google'">
+        {{ event()?.provider ?? 'local' }}
+      </span>
+    </div>
+
+    <div class="detail-row">
+      <span class="detail-label">Time</span>
+      @if (event()?.isAllDay) {
+        <span>All day</span>
+      } @else {
+        <span
+          >{{ formatDateTime(event()!.startTime) }} — {{ formatDateTime(event()!.endTime) }}</span
+        >
+      }
+    </div>
+
+    <div class="detail-row">
+      <span class="detail-label">Status</span>
+      <span class="status-badge {{ event()?.status }}">{{ formatStatus(event()!.status) }}</span>
+    </div>
+
+    @if (event()?.description) {
+      <div class="detail-row">
+        <span class="detail-label">Description</span>
+        <p class="detail-description">{{ event()?.description }}</p>
+      </div>
+    }
+
+    <div class="detail-row link-row">
+      <span class="detail-label">Linked card</span>
+      @if (event()?.linkedCardId) {
+        <div class="link-actions">
+          <span class="linked-badge">✅ Linked to a card</span>
+          <button
+            type="button"
+            class="btn-unlink"
+            (click)="unlinkFromCard()"
+            [disabled]="isUnlinking()"
+          >
+            {{
+              isUnlinking()
+                ? 'Unlinking...'
+                : event()?.provider === 'local'
+                  ? 'Remove from calendar'
+                  : 'Unlink from card'
+            }}
+          </button>
+        </div>
+      } @else {
+        <span class="not-linked">Not linked to any card</span>
+      }
+    </div>
+
+    @if (error()) {
+      <p class="error-message">{{ error() }}</p>
+    }
+  </div>
+
+  <div modal-footer class="event-detail-footer">
+    <button type="button" class="btn-delete" (click)="deleteEvent()" [disabled]="isDeleting()">
+      {{ isDeleting() ? 'Deleting...' : 'Delete event' }}
+    </button>
+    <button type="button" class="btn-close" (click)="closeModal.emit()">Close</button>
+  </div>
+</app-basic-modal>

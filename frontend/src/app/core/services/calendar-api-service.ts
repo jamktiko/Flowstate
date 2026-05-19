@@ -5,7 +5,7 @@ import { environment } from '@environments/environment';
 
 export interface CalendarEventRecord {
   _id: string;
-  provider: 'google' | 'microsoft';
+  provider: 'google' | 'microsoft' | 'local';
   externalEventId: string;
   title: string;
   description?: string;
@@ -105,5 +105,8 @@ export class CalendarApiService {
     );
 
     return response.data ?? { message: 'Event deleted successfully' };
+  }
+  async unlinkEventFromCard(eventId: string): Promise<void> {
+    await firstValueFrom(this.http.delete(`${this.calendarApiUrl}/${eventId}/link`));
   }
 }

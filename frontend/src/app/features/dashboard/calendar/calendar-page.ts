@@ -15,6 +15,7 @@ import {
   GoogleCalendarLinkStatus,
 } from '@core/services/calendar-api-service';
 import { BasicModal } from '@shared/modals/basic-modal/basic-modal';
+import { CalendarEventDetail } from './calendar-event-detail/calendar-event-detail';
 
 function startOfWeek(date: Date): Date {
   const value = new Date(date);
@@ -33,7 +34,7 @@ function endOfWeek(date: Date): Date {
 
 @Component({
   selector: 'app-calendar',
-  imports: [BasicModal, CalendarWeekViewComponent],
+  imports: [BasicModal, CalendarWeekViewComponent, CalendarEventDetail],
   providers: [
     provideCalendar({
       provide: DateAdapter,
@@ -58,6 +59,8 @@ export class CalendarPage implements OnInit {
   isDatePickerOpen = signal(false);
   pickerYear = signal(new Date().getFullYear());
   pickerMonth = signal(new Date().getMonth());
+  selectedEvent = signal<CalendarEventRecord | null>(null);
+  isDetailOpen = signal(false);
 
   private calendarApi = inject(CalendarApiService);
   private navBarService = inject(NavBarService);
@@ -83,7 +86,6 @@ export class CalendarPage implements OnInit {
   async ngOnInit() {
     await this.refreshConnectionStatus();
 
-    // Auto-import Google events if user just linked their account
     const justLinked = this.route.snapshot.queryParamMap.get('justLinked') === 'true';
     if (justLinked && this.linkedStatus().isLinked) {
       await this.importGoogleEvents();
@@ -94,6 +96,19 @@ export class CalendarPage implements OnInit {
 
   setView(view: CalendarView) {
     this.view = view;
+  }
+
+  openEventDetail(event: CalendarEvent) {
+    this.selectedEvent.set(event.meta as CalendarEventRecord);
+    this.isDetailOpen.set(true);
+  }
+
+  onEventDeleted() {
+    void this.loadCalendarEvents();
+  }
+
+  onEventUnlinked() {
+    void this.loadCalendarEvents();
   }
 
   goToPreviousPeriod() {
@@ -162,7 +177,7 @@ export class CalendarPage implements OnInit {
 
     while (current <= lastWeekEnd) {
       const monthCheck = new Date(current);
-      monthCheck.setDate(monthCheck.getDate() + 3); // Mid-week to check month
+      monthCheck.setDate(monthCheck.getDate() + 3);
       if (monthCheck.getMonth() === month) {
         weeks.push({
           week: weekNumber,
@@ -226,7 +241,6 @@ export class CalendarPage implements OnInit {
       this.showErrorMessage('This calendar event cannot be deleted because it has no saved ID.');
       return;
     }
-
     this.pendingDeleteEvent.set(event);
   }
 
@@ -249,7 +263,6 @@ export class CalendarPage implements OnInit {
     try {
       this.isSyncing.set(true);
       this.errorMessage.set(null);
-
       const result = await this.calendarApi.deleteCalendarEvent(eventId);
       await this.loadCalendarEvents();
       this.showSuccessMessage(result.message ?? 'Event deleted successfully.');
@@ -342,7 +355,6 @@ export class CalendarPage implements OnInit {
     if (event.provider === 'google') {
       return { primary: '#1a73e8', secondary: '#dcebff' };
     }
-
     return { primary: '#0f766e', secondary: '#d7f5f2' };
   }
 
@@ -353,10 +365,7 @@ export class CalendarPage implements OnInit {
   formatEventWindow(event: CalendarEventRecord) {
     const start = new Date(event.startTime);
     const end = new Date(event.endTime);
-    if (event.isAllDay) {
-      return 'All day';
-    }
-
+    if (event.isAllDay) return 'All day';
     return `${start.toLocaleString()} - ${end.toLocaleTimeString()}`;
   }
 
@@ -366,23 +375,16 @@ export class CalendarPage implements OnInit {
 
   private showSuccessMessage(message: string) {
     this.infoMessage.set(message);
-    setTimeout(() => {
-      this.infoMessage.set(null);
-    }, 3000);
+    setTimeout(() => this.infoMessage.set(null), 3000);
   }
 
   private showErrorMessage(message: string) {
     this.errorMessage.set(message);
-    setTimeout(() => {
-      this.errorMessage.set(null);
-    }, 5000);
+    setTimeout(() => this.errorMessage.set(null), 5000);
   }
 
   private formatError(error: unknown) {
-    if (error instanceof Error) {
-      return error.message;
-    }
-
+    if (error instanceof Error) return error.message;
     return 'Something went wrong while loading the calendar.';
   }
 }
