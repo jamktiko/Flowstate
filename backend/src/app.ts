@@ -17,6 +17,7 @@ import calendarSyncRouter from './modules/calendar/calendar.sync.routes';
 import pushRouter from './modules/push/push.routes';
 
 const app = express();
+app.set('trust proxy', 1);
 
 // ─────────────────────────────────────────────
 // Security middleware
@@ -53,6 +54,10 @@ const authRateLimit = rateLimit({
 // ─────────────────────────────────────────────
 // API router for health/root endpoints
 // ─────────────────────────────────────────────
+
+app.get('/', (req, res) => {
+  res.status(200).send('Backend API is running. Use /api/* for endpoints.');
+});
 
 const router = express.Router();
 
