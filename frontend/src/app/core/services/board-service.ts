@@ -70,6 +70,32 @@ export class BoardService {
     return res.data;
   }
 
+  // UPDATE: Modify an existing card
+  async updateCard(
+    boardId: string,
+    colId: string,
+    cardId: string,
+    cardData: Partial<Card>,
+  ): Promise<Board> {
+    const res = await firstValueFrom(
+      this.http.patch<ApiResponse<Board>>(
+        `${this.apiUrl}/${boardId}/columns/${colId}/cards/${cardId}`,
+        cardData,
+      ),
+    );
+    return res.data;
+  }
+
+  // DELETE: Remove a card from a specific column
+  async deleteCard(boardId: string, colId: string, cardId: string): Promise<Board> {
+    const res = await firstValueFrom(
+      this.http.delete<ApiResponse<Board>>(
+        `${this.apiUrl}/${boardId}/columns/${colId}/cards/${cardId}`,
+      ),
+     );
+    return res.data;
+  }
+
   // UPDATE: Move a card to a different column or reorder
   async moveCard(
     boardId: string,

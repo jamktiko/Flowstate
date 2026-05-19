@@ -1,9 +1,28 @@
 <div class="task-card">
   <div class="task-header">
     <h4 class="task-title">{{ card().title }}</h4>
-    <span class="task-actions">&#8942;</span>
+    <div class="task-actions-wrapper">
+      <button class="task-actions" (click)="toggleMenu($event)">&#8942;</button>
+
+      @if (isMenuOpen()) {
+        <div class="dropdown-menu">
+          <button class="dropdown-item" (click)="editTask()">Edit</button>
+          <button class="dropdown-item delete" (click)="deleteTask()">Delete</button>
+        </div>
+      }
+    </div>
   </div>
   @if (card().description) {
     <p class="task-description">{{ card().description }}</p>
   }
 </div>
+
+@if (isEditModalOpen()) {
+  <app-edit-task
+    [isOpen]="isEditModalOpen()"
+    [initialData]="card()"
+    (closeModal)="isEditModalOpen.set(false)"
+    (saveTask)="onTaskSaved($event)"
+  >
+  </app-edit-task>
+}

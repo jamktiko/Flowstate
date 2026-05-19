@@ -1,7 +1,6 @@
 import { Component, input, output, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BasicModal } from '@shared/modals/basic-modal/basic-modal';
-import { FakeDatabaseService } from '@shared/fake-database/fake-database-service';
 import { Board } from '@core/models/board-model';
 import { PushNotificationService } from '@core/services/push-notification.service';
 import { AuthService } from '@core/auth/auth-service';
@@ -17,7 +16,6 @@ export class EditSettings implements OnInit {
   closeModal = output<void>();
 
   private fb = inject(FormBuilder);
-  private db = inject(FakeDatabaseService);
   private pushService = inject(PushNotificationService);
   private authService = inject(AuthService);
 
@@ -35,7 +33,6 @@ export class EditSettings implements OnInit {
   });
 
   async ngOnInit() {
-    this.boards = this.db.boards;
     this.pushSupported = this.pushService.isSupported();
 
     if (this.pushSupported) {

@@ -2,7 +2,6 @@ import { Component, signal, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { List } from './list/list';
 import { TaskModal } from '@shared/modals/task-modal/task-modal';
-import { Task } from '@core/models/task-model';
 import { ActivatedRoute } from '@angular/router';
 import { BoardService } from '@core/services/board-service';
 import { Board, Card } from '@core/models/board-model';
@@ -144,9 +143,9 @@ export class BoardPage implements OnInit {
         const payload: Partial<Card> = {
           title: taskData.title,
           description: taskData.description,
-          priority: taskData.priority as 'low' | 'medium' | 'high' | 'urgent',
+          priority: taskData.priority as 'low' | 'medium' | 'high',
           order: todoColumn.cards.length,
-          tags: taskData.tags ? taskData.tags.map((t) => ({ name: t, visible: true })) : [],
+          tags: taskData.tags || [],
           dueDate: taskData.dueDate ? new Date(taskData.dueDate) : undefined,
         };
 
@@ -162,5 +161,75 @@ export class BoardPage implements OnInit {
     }
 
     this.closeCreateTaskModal();
+  }
+
+  async handleUpdateTask(updatedCard: Card, columnId: string) {
+    const currentBoard = this.board();
+    if (!currentBoard) return;
+
+    const updatedColumns = currentBoard.columns.map((col) => {
+      if (col.id === columnId) {
+        return {
+          ...col,
+          cards: col.cards.map((card) => (card._id === updatedCard._id ? updatedCard : card)),
+        };
+      }
+      return col;
+    });
+
+    try {
+      // Optimistically update the UI to feel instant
+      const objParams = { ...currentBoard, columns: updatedColumns };
+      this.board.set(objParams);
+
+      // Persist the specific task change to the database
+      const returnedBoard = await this.boardService.updateCard(
+        currentBoard._id,
+        columnId,
+        updatedCard._id,
+        {
+          title: updatedCard.title,
+          description: updatedCard.description,
+          priority: updatedCard.priority,
+          tags: updatedCard.tags,
+          dueDate: updatedCard.dueDate,
+        },
+      );
+
+      this.board.set(returnedBoard);
+    } catch (error) {
+      console.error('Error updating task:', error);
+      // Revert if error occurs
+      this.board.set(currentBoard);
+    }
+  }
+
+  async handleDeleteTask(deletedCard: Card, columnId: string) {
+    const currentBoard = this.board();
+    if (!currentBoard) return;
+
+    try {
+      // Optimitically update UI
+      const updatedColumns = currentBoard.columns.map((col) => {
+        if (col.id === columnId) {
+          return {
+            ...col,
+            cards: col.cards.filter((card) => card._id !== deletedCard._id),
+          };
+        }
+        return col;
+      });
+      this.board.set({ ...currentBoard, columns: updatedColumns });
+
+      const returnedBoard = await this.boardService.deleteCard(
+        currentBoard._id,
+        columnId,
+        deletedCard._id,
+      );
+      this.board.set(returnedBoard);
+    } catch (error) {
+      console.error('Error deleting task:', error);
+      this.board.set(currentBoard);
+    }
   }
 }

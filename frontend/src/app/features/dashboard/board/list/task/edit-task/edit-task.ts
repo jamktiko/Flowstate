@@ -1,15 +1,15 @@
 import { Component, input, output, inject, effect } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { BasicModal } from '../basic-modal/basic-modal';
 import { Card } from '@core/models/board-model';
+import { BasicModal } from '@shared/modals/basic-modal/basic-modal';
 
 @Component({
-  selector: 'app-task-modal',
+  selector: 'app-edit-task',
   imports: [ReactiveFormsModule, BasicModal],
-  templateUrl: './task-modal.html',
-  styleUrl: './task-modal.css',
+  templateUrl: './edit-task.html',
+  styleUrl: './edit-task.css', // You can copy task-modal.css styles here
 })
-export class TaskModal {
+export class EditTask {
   isOpen = input<boolean>(false);
   initialData = input<Partial<Card> | null>(null);
 
@@ -55,21 +55,12 @@ export class TaskModal {
               urgent: existingTagNames.includes('urgent'),
             },
           });
-        } else {
-          this.taskForm.reset({
-            priority: 'medium',
-            tags: { backend: false, security: false, frontend: false, urgent: false },
-          });
         }
       }
     });
   }
 
   onClose() {
-    this.taskForm.reset({
-      priority: 'medium',
-      tags: { backend: false, security: false, frontend: false, urgent: false },
-    });
     this.closeModal.emit();
   }
 
@@ -83,6 +74,7 @@ export class TaskModal {
         .map((key) => ({ name: key, visible: true }));
 
       const payload = {
+        ...this.initialData(),
         ...formValue,
         tags: mappedTags,
       };

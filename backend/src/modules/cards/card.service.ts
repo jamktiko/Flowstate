@@ -46,6 +46,7 @@ export async function createCard(
   // Build the new card object — _id must be generated manually since
   // cards are embedded and don't go through their own Mongoose model
   const newCard = {
+    _id: new Types.ObjectId(),
     title: cardData.title.trim(),
     order: cardData.order ?? 0,
     // optional fields — only include if provided, schema defaults handle the rest
