@@ -69,7 +69,7 @@ export class CalendarPage implements OnInit {
     this.navBarService.customBackAction.set(() => {
       void this.router.navigate(['/dashboard']);
     });
-    this.navBarService.showSettingsButton.set(true);
+    this.navBarService.showSettingsButton.set(false);
     this.navBarService.customSettingsAction.set(() => {
       void this.refreshCalendar();
     });
