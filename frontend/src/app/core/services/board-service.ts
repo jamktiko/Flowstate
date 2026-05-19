@@ -92,6 +92,23 @@ export class BoardService {
       this.http.delete<ApiResponse<Board>>(
         `${this.apiUrl}/${boardId}/columns/${colId}/cards/${cardId}`,
       ),
+     );
+    return res.data;
+  }
+
+  // UPDATE: Move a card to a different column or reorder
+  async moveCard(
+    boardId: string,
+    cardId: string,
+    sourceColId: string,
+    targetColId: string,
+    newOrder: number
+  ): Promise<Board> {
+    const res = await firstValueFrom(
+      this.http.patch<ApiResponse<Board>>(
+        `${this.apiUrl}/${boardId}/cards/${cardId}/move`,
+        { sourceColId, targetColId, newOrder }
+      )
     );
     return res.data;
   }

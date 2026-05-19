@@ -8,6 +8,7 @@
           [column]="column" 
           (taskUpdated)="handleUpdateTask($event, column.id)"
           (taskDeleted)="handleDeleteTask($event.card, $event.columnId)"
+          (cardDropped)="onCardMoved($event)"
         ></app-list>
       }
 

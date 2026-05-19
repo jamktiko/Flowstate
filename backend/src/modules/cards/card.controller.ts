@@ -113,6 +113,7 @@ export const moveCardController = async (req: Request, res: Response) => {
     );
     return sendSuccess(res, board);
   } catch (error) {
+    console.error('moveCard error', error);
     return sendError(res, 'Internal server error', 500);
   }
 };

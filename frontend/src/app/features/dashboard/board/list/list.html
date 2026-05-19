@@ -1,15 +1,21 @@
-<div class="list-container">
+<div class="list-container" mwlDroppable (drop)="handleDrop($event)">
   <div class="list-header">
     <h3 class="list-title">{{ column().name }}</h3>
   </div>
 
   <div class="list-cards">
     @for (card of column().cards; track card._id) {
-      <app-task 
+       <div
+        mwlDraggable
+        [dropData]="{ card: card, sourceColumnId: column().id }"
+        [dragActiveClass]="'is-dragging'"
+      >
+       <app-task 
         [card]="card" 
         (taskUpdated)="taskUpdated.emit($event)"
         (taskDeleted)="taskDeleted.emit({ card: $event, columnId: column().id })"
       ></app-task>
+     </div>
     }
   </div>
 
