@@ -56,6 +56,15 @@ describe('GET /api/health', () => {
   });
 });
 
+describe('GET /', () => {
+  it('returns 200 for EB health checks', async () => {
+    const res = await request(app).get('/');
+
+    expect(res.status).toBe(200);
+    expect(res.text).toContain('running');
+  });
+});
+
 // ─────────────────────────────────────────────
 // Auth-guarded route
 // ─────────────────────────────────────────────
