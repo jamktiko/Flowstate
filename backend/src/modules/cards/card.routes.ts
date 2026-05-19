@@ -5,6 +5,7 @@ import {
   updateCardController,
   deleteCardController,
   moveCardController,
+  createCalendarEventFromCardController,
 } from './card.controller';
 
 const router = Router();
@@ -37,5 +38,13 @@ router.delete(
 // Moves a card within the same column or to a different column
 // sourceColId, targetColId, newOrder come from request body
 router.patch('/:boardId/cards/:cardId/move', checkAuth, moveCardController);
+
+// POST /api/boards/:boardId/columns/:colId/cards/:cardId/calendar
+// Creates a calendar event from a card and links them bidirectionally
+router.post(
+  '/:boardId/columns/:colId/cards/:cardId/calendar',
+  checkAuth,
+  createCalendarEventFromCardController,
+);
 
 export default router;
