@@ -1,0 +1,142 @@
+.event-detail-body {
+  display: grid;
+  gap: 1rem;
+  padding: 0.5rem 0;
+}
+
+.detail-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.detail-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #6b7280;
+}
+
+.detail-description {
+  margin: 0;
+  color: #374151;
+  line-height: 1.5;
+}
+
+.provider-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.3rem 0.6rem;
+  background: #e8f0ff;
+  color: #2d5ab7;
+  font-size: 0.8rem;
+  text-transform: capitalize;
+  width: fit-content;
+}
+
+.provider-chip.google {
+  background: #e3f2ff;
+  color: #1a73e8;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  width: fit-content;
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.status-badge.tentative {
+  background: #fef3c7;
+  color: #92400e;
+}
+.status-badge.cancelled {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.link-row {
+  padding-top: 0.5rem;
+  border-top: 1px solid #f3f4f6;
+}
+
+.link-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.linked-badge {
+  color: #065f46;
+  font-weight: 600;
+}
+
+.not-linked {
+  color: #9ca3af;
+  font-size: 0.85rem;
+}
+
+.btn-unlink {
+  appearance: none;
+  border: 1px solid #f6c2c2;
+  background: #fff1f1;
+  color: #9d174d;
+  border-radius: 999px;
+  padding: 0.4rem 0.85rem;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.btn-unlink:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.error-message {
+  color: #991b1b;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.event-detail-footer {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.btn-delete {
+  appearance: none;
+  border: none;
+  background: linear-gradient(135deg, #e34a5f, #c92d4b);
+  color: #fff;
+  padding: 0.6rem 1.25rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+}
+
+.btn-delete:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.btn-close {
+  appearance: none;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  padding: 0.6rem 1.25rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+}
