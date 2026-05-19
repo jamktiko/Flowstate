@@ -2,7 +2,13 @@ import { Request, Response } from 'express';
 import { Types } from 'mongoose';
 import { getUserByCognitoSub } from '../users/user.service';
 import { sendSuccess, sendError } from '../../utils/responseHelpers';
-import { createCard, deleteCard, updateCard, moveCard } from './card.service';
+import {
+  createCard,
+  deleteCard,
+  updateCard,
+  moveCard,
+  createCalendarEventFromCard,
+} from './card.service';
 
 // ─────────────────────────────────────────────
 // Helper — resolves cognitoSub → MongoDB user._id
@@ -117,3 +123,30 @@ export const moveCardController = async (req: Request, res: Response) => {
     return sendError(res, 'Internal server error', 500);
   }
 };
+/**
+ * POST /api/boards/:boardId/columns/:colId/cards/:cardId/calendar
+ * Creates a calendar event from a card and links them bidirectionally.
+ */
+export async function createCalendarEventFromCardController(
+  req: Request,
+  res: Response,
+): Promise<void> {
+  const userId = await resolveUserId(req, res);
+  if (!userId) return;
+
+  const boardId = new Types.ObjectId(req.params.boardId);
+  const columnId = req.params.colId;
+  const cardId = new Types.ObjectId(req.params.cardId);
+
+  try {
+    const { board, eventId } = await createCalendarEventFromCard(
+      boardId,
+      userId,
+      columnId,
+      cardId,
+    );
+    sendSuccess(res, { board, eventId }, 201);
+  } catch (error: any) {
+    sendError(res, error.message, 400);
+  }
+}

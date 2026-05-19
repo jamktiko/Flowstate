@@ -10,12 +10,14 @@
         [dropData]="{ card: card, sourceColumnId: column().id }"
         [dragActiveClass]="'is-dragging'"
       >
-      <app-task 
-        [card]="card" 
-        (taskUpdated)="taskUpdated.emit($event)"
-        (taskDeleted)="taskDeleted.emit({ card: $event, columnId: column().id })"
-      ></app-task>
-    </div>
+        <app-task
+          [card]="card"
+          [boardId]="boardId()"
+          [colId]="column().id"
+          (taskUpdated)="taskUpdated.emit($event)"
+          (taskDeleted)="taskDeleted.emit({ card: $event, columnId: column().id })"
+        ></app-task>
+      </div>
     }
   </div>
 

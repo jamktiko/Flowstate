@@ -1,4 +1,11 @@
-<div class="task-card">
+<div
+  class="task-card"
+  (click)="openDetail()"
+  (keydown.enter)="openDetail()"
+  (keydown.space)="openDetail()"
+  role="button"
+  tabindex="0"
+>
   <div class="task-header">
     <h4 class="task-title">{{ card().title }}</h4>
     <div class="task-actions-wrapper">
@@ -17,12 +24,22 @@
   }
 </div>
 
+@if (isDetailOpen()) {
+  <app-task-detail
+    [isOpen]="isDetailOpen()"
+    [card]="card()"
+    [boardId]="boardId()"
+    [colId]="colId()"
+    (closeModal)="isDetailOpen.set(false)"
+    (calendarEventCreated)="isDetailOpen.set(false)"
+  ></app-task-detail>
+}
+
 @if (isEditModalOpen()) {
   <app-edit-task
     [isOpen]="isEditModalOpen()"
     [initialData]="card()"
     (closeModal)="isEditModalOpen.set(false)"
     (saveTask)="onTaskSaved($event)"
-  >
-  </app-edit-task>
+  ></app-edit-task>
 }

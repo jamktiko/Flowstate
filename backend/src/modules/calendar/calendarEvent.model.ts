@@ -6,7 +6,7 @@ import { Schema, model, Document, Types } from 'mongoose';
 
 export interface ICalendarEvent extends Document {
   userId: Types.ObjectId;
-  provider: 'google' | 'microsoft';
+  provider: 'google' | 'microsoft' | 'local';
   externalEventId: string; // ID from Google / Microsoft API
   title: string;
   description?: string;
@@ -37,7 +37,11 @@ const CalendarEventSchema = new Schema<ICalendarEvent>(
       required: true,
       index: true,
     },
-    provider: { type: String, enum: ['google', 'microsoft'], required: true },
+    provider: {
+      type: String,
+      enum: ['google', 'microsoft', 'local'],
+      required: true,
+    },
     externalEventId: { type: String, required: true },
     title: { type: String, required: true, trim: true },
     description: { type: String, default: '' },
