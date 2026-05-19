@@ -146,7 +146,7 @@ export function makeCalendarEvent(
   overrides: Omit<CalendarEventInput, 'userId'> = {},
 ): CalendarEventInput & {
   userId: Types.ObjectId;
-  provider: 'google' | 'microsoft';
+  provider: 'google' | 'microsoft' | 'local';
   externalEventId: string;
   title: string;
   startTime: Date;
