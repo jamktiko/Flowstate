@@ -12,9 +12,9 @@
       <button class="task-actions" (click)="toggleMenu($event)">&#8942;</button>
 
       @if (isMenuOpen()) {
-        <div class="dropdown-menu">
-          <button class="dropdown-item" (click)="editTask()">Edit</button>
-          <button class="dropdown-item delete" (click)="deleteTask()">Delete</button>
+        <div class="dropdown-menu" [style.top.px]="menuTop()" [style.right.px]="menuRight()">
+          <button class="dropdown-item" (click)="editTask($event)">Edit</button>
+          <button class="dropdown-item delete" (click)="deleteTask($event)">Delete</button>
         </div>
       }
     </div>
